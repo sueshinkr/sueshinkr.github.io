@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "하나부터 열까지 몽땅 처음해보는 즐겁고도 슬픈 개발일지"
+title                    : "맨땅에서 시작하는 초보 개발일지"
 title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "이름짓는게 제일 힘든 초보 개발자"
@@ -25,8 +25,7 @@ url                      : https://sueshinkr.github.io/blog
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
-logo                     : #"![hPdeXq7sF-Hb_AOJt6TIDA](https://user-images.githubusercontent.com/100945798/157239156-553369e6-5453-49d4-9637-c3139aec1e81.png)"
-
+logo                     : "/assets/images/로고.jpg"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
@@ -85,7 +84,7 @@ facebook:
   username               :
   app_id                 :
   publisher              :
-og_image                 : # Open Graph/Twitter default site image
+og_image                 : "/assets/images/로고.jpg"
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
@@ -104,7 +103,7 @@ analytics:
 # Site Author
 author:
   name             : "뭐든 해보고싶은 개발자"
-  avatar           : #"![hPdeXq7sF-Hb_AOJt6TIDA](https://user-images.githubusercontent.com/100945798/157239156-553369e6-5453-49d4-9637-c3139aec1e81.png)"
+  avatar           : "/assets/images/로고.jpg"
   bio              : "하고싶은건 많고 시간은 없고"
   location         : "South Korea"
   email            :
