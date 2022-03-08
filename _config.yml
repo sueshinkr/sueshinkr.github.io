@@ -25,7 +25,7 @@ url                      : https://sueshinkr.github.io/blog
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
-logo                     : "/assets/images/로고.jpg"
+logo                     : "./assets/images/로고.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
@@ -84,7 +84,7 @@ facebook:
   username               :
   app_id                 :
   publisher              :
-og_image                 : "/assets/images/로고.jpg"
+og_image                 : "./assets/images/로고.png"
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
@@ -103,7 +103,7 @@ analytics:
 # Site Author
 author:
   name             : "뭐든 해보고싶은 개발자"
-  avatar           : "/assets/images/로고.jpg"
+  avatar           : "./assets/images/로고.png"
   bio              : "하고싶은건 많고 시간은 없고"
   location         : "South Korea"
   email            :
