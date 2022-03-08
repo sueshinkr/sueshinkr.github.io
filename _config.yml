@@ -21,7 +21,7 @@ title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
 name                     : "이름짓는게 제일 힘든 초보 개발자"
 description              : "빨리 졸업하고싶다"
-url                      : https://sueshinkr.github.io/blog
+url                      : https://sueshinkr.github.io/
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
