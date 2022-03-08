@@ -104,7 +104,7 @@ analytics:
 # Site Author
 author:
   name             : "뭐든 해보고싶은 개발자"
-  avatar           : "![hPdeXq7sF-Hb_AOJt6TIDA](https://user-images.githubusercontent.com/100945798/157239156-553369e6-5453-49d4-9637-c3139aec1e81.png)"
+  avatar           : #"![hPdeXq7sF-Hb_AOJt6TIDA](https://user-images.githubusercontent.com/100945798/157239156-553369e6-5453-49d4-9637-c3139aec1e81.png)"
   bio              : "하고싶은건 많고 시간은 없고"
   location         : "South Korea"
   email            :
