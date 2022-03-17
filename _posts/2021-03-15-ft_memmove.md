@@ -1,12 +1,12 @@
 ---
 title:  "[libft] ft_memmove"
-excerpt: "memmove"
+excerpt: "memmove 함수 구현"
 
 categories:
   - 42seoul
 tags:
   - libft
-last_modified_at: 2021-03-15T08:06:00-05:00
+date: 2022.03.15 23:00:48
 ---
 
 # memmove?
@@ -34,7 +34,7 @@ printf("%s\n", dst);
 코드 실행 결과
 ```c
 12345fghijklmnop
-````
+```
 memcopy와 마찬가지로 복사할 src의 맨 마지막에 있을 NULL을 고려하여 size를 설정해야한다.
 
 ##### 의문점 및 생각해볼점    
