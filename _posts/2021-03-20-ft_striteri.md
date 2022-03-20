@@ -49,7 +49,7 @@ abcdef
 
 ***
 
-# ft_strmapi 구현
+# ft_striteri 구현
 
 ```c
 void	ft_striteri(char *str, void (*func)(unsigned int, char*))
