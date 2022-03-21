@@ -64,7 +64,6 @@ void	ft_striteri(char *str, void (*func)(unsigned int, char*))
 	}
 }
 
-
 ```
 구현에 특별히 고려해야 할 점은 없었다.    
 덧) 함수 이름의 iteri는 iterate + i인 것 같다. 문자열 str의 인덱스 i에 해당하는 문자들에 반복적으로 함수 func를 적용하는거라고 이해하면 될 듯 하다.    
