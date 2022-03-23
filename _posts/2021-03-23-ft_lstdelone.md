@@ -29,7 +29,7 @@ typedef struct s_list
 
 ##### ex)    
 ```c
-static void	ft_del(void *content)
+static void	del(void *content)
 {
 	free(content);
 }
@@ -39,7 +39,7 @@ int	main(void)
 	t_list	*list;
 
 	list = ft_lstnew(ft_strdup("abcde"));
-	ft_lstdelone(list, &ft_del);
+	ft_lstdelone(list, &del);
 }
 ```
 코드 실행 결과
