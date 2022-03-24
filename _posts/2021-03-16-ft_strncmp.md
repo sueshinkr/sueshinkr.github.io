@@ -53,7 +53,7 @@ BSD Library Functions Manual에 따르면 **The	comparison is done using unsigne
 
 ## strncmp의 리턴값
 직접 여러 케이스들을 넣고 실험해본 결과 **s1[i] - s2[i]**의 값이 반환되는 것을 확인하였다.    
-예를들어 s1="abcdefgh"이고 s2="abcdefg"라면 끝까지 비교했을 때 h와 \0이 비교되어 h의 ascii값인 104가 반환된다. 반대라면 -104가 반환될테고.     
+예를들어 s1="abcdefgh"이고 s2="abcdefg"라면 끝까지 비교했을 때 h와 \0이 비교되어 h의 ascii값인 104가 반환된다. 반대라면 -104가 반환된다.     
 
 ***
 
