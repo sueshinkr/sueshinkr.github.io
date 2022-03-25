@@ -35,7 +35,13 @@ abcdefghijklmnop
 str1과 str2가 이어진 새로운 문자열이 정상적으로 만들어졌다.    
 
 ##### 의문점 및 생각해볼점    
-딱히 없다.    
+1. [strcat과의 차이점](#strcat과는-무엇이-다른가)    
+
+***
+
+## strcat과는 무엇이 다른가
+strcat도 문자열 dst 뒤에 src를 붙이는 것이므로 비슷하다고 볼 수 있지만, 결정적으로 strcat은 원본 dst에 src를 더하는 과정이지만 strjoin은 아예 새로운 문자열을 만들어낸다는 차이점이 있다.    
+
 
 ***
 
@@ -66,5 +72,5 @@ char	*ft_strjoin(char const *str1, char const *str2)
 }
 
 ```
-
+str1과 str2의 길이 합 + 맨 뒤 NUL을 넣어줄 크기까지 할당을 한 후, 순서대로 str1과 str2의 문자들을 받아와 채운다.    
 
