@@ -26,14 +26,14 @@ date: 2022.03.20 22:00:00
 ```c
 void	func(unsigned int i, char *c)
 {
-	c += i;
+	*c += i;
 }
 
 int	main()
 {
 	char	str[] = "aaaaaa";
 
-	ft_striteri(str, *func);
+	ft_striteri(str, &func);
 	printf("%s\n", str);
 }
 

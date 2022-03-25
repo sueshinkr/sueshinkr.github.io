@@ -6,7 +6,7 @@ categories:
   - 42seoul
 tags:
   - libft
-date: 2022.03.21 12:30:00
+date: 2022.03.21 19:30:00
 ---
 
 # putendl_fd?
