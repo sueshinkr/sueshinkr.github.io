@@ -3,9 +3,10 @@ title:  "[libft] ft_strlcat"
 excerpt: "strlcat 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - 42seoul, libft
+toc: true
 date: 2022.03.16 10:00:48
 ---
 

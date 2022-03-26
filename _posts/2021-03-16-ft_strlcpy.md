@@ -3,9 +3,10 @@ title:  "[libft] ft_strlcpy"
 excerpt: "strlcpy 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - 42seoul, libft
+toc: true
 date: 2022.03.16 08:00:48
 ---
 

@@ -3,9 +3,10 @@ title:  "[libft] ft_memmove"
 excerpt: "memmove 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - 42seoul, libft
+toc: true
 date: 2022.03.15 23:00:48
 ---
 
