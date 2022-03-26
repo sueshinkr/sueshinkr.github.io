@@ -27,7 +27,7 @@ typedef struct s_list
 ## 구현해야할 함수 기능    
 :  Iterates the list ’lst’ and applies the function ’f’ to the content of each element.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  리스트의 모든 원소들의 content에 함수 f를 적용한다.    
 
 ## ex)    

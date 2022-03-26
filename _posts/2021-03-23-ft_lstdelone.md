@@ -27,7 +27,7 @@ typedef struct s_list
 ## 구현해야할 함수 기능    
 :  Takes as a parameter an element and frees the memory of the element’s content using the function ’del’ given as a parameter and free the element. The memory of ’next’ must not be freed.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  두 번째 매개변수로 받은 del 함수를 이용해 첫번째 매개변수로 받은 원소 lst의 요소 content의 메모리를 free하고, 원소도 free한다. 요소 next의 메모리는 free되지 않아야 한다.    
 
 ## ex)    

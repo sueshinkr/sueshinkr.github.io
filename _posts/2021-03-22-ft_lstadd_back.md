@@ -27,7 +27,7 @@ typedef struct s_list
 ## 구현해야할 함수 기능    
 :  Adds the element ’new’ at the end of the list.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  리스트의 맨 뒤에 원소 'new'를 추가한다.    
 
 ## ex)    

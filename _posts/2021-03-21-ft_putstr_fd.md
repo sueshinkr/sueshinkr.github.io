@@ -22,7 +22,7 @@ date: 2022.03.21 18:30:00
 ## 구현해야할 함수 기능    
 :  Outputs the string ’s’ to the given file descriptor.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  주어진 file descriptor 문자열 's'를 출력한다.    
 
 ## ex)    
@@ -50,5 +50,5 @@ void	ft_putstr_fd(char *str, int fd)
 }
 
 ```
-str에 저장되어있는 문자열을 전부 다 출력해야하므로 write 함수에서 str에 저장되어있는 데이터에서 ft_strlen(str)만큼의 바이트를 입력받도록 했다.    
+str에 저장되어있는 문자열을 전부 다 출력해야하므로, write 함수에서 str에 저장되어있는 데이터로부터 ft_strlen(str)만큼의 바이트를 입력받도록 했다.    
 

@@ -24,9 +24,9 @@ date: 2022.03.16 10:00:48
 :  The strlcat() function appends the NUL-terminated string src to the end of dst. It will append at most size - strlen(dst) - 1 bytes, NUL-terminating the result.    
 The strlcpy() and strlcat() functions return the total length of the string they tried to create. For strlcat() that means the initial length of dst plus the length of src.    
 
-## 내멋대로 해석    
-:  strlcat은 dst뒤에 src를 붙여 총 길이가 size가 되도록 만든다.    
-정확히는 size - dst의 길이 - 1만큼 src를 복사해 dst 뒤에 붙이고, 마지막에 \0을 넣어준다. 리턴값은 원래 dst의 길이 + src의 길이. 
+## 해석 및 부연설명    
+:  strlcat은 dst뒤에 src를 붙여 총 길이(NUL 포함)가 size가 되도록 만든다.    
+정확히는 size - dst의 길이 - 1만큼 src를 복사해 dst 뒤에 붙이고, 마지막에 \0을 넣어준다. 리턴값은 원래 dst의 길이 + src의 길이이다. 
 
 ## ex)    
 ```c
@@ -49,7 +49,7 @@ printf("%s\n", dst);
 
 ## size별로 나눈 case
 경우에 따라 어떻게 작동하는지가 조금씩 다른데    
-1. size가 dst의 길이보다 작다면 그냥 size + src의 길이를 리턴하고 끝낸다.    
+1. size가 dst의 길이보다 작다면 따로 문자열을 조작하는 과정 없이 size + src의 길이를 리턴하고 끝낸다.    
 2. size가 dst의 길이보다 클 경우 마지막에 \0을 넣어줄 한자리를 빼고 총 길이가 size - 1이 되도록 dst뒤에 src를 붙여나간다.    
 물론 마지막엔 \0을 넣어준 후 원래 dst의 길이 + src의 길이를 리턴한다.    
 3. size가 dst의 길이 + src의 길이보다 클 경우엔 src가 끝날때까지만 붙여넣고 마지막에 \0을 넣어준다.    

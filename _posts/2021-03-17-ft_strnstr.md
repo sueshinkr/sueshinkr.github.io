@@ -24,7 +24,7 @@ date: 2022.03.17 13:30:48
 :  The strnstr() function locates the first occurrence of the null-terminated string little in the string big, where not more than len characters are searched.    
 Characters that appear after a ‘\0’ character are not searched..    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  strchr에서 한발 더 나아가 문자열을 검색하는 함수이다.    
 little에 해당하는 문자열이 big에 있다면 그 시작주소를 반환하고, 없다면 NULL을 반환한다. 만약 little이 빈 문자열이라면 그냥 big을 반환한다.    
 str계열 함수답게 NULL에서는 작동을 멈추게 된다.    
@@ -82,6 +82,5 @@ char	*ft_strnstr(const char *big, const char *little, size_t size)
 
 ```
 little = ""일 경우를 찾아내기 위해 !little_len 조건을 추가로 걸어주었다.    
-strnstr도 const char *로 받아서 char *로 반환하는 것에 주의.    
-더 효율적으로 동작하도록 짤 수 있는 방법이 있을 것 같은데...    
+strnst 함수도 const char *로 받아서 char *로 반환하는 것에 주의해야한다.    
 

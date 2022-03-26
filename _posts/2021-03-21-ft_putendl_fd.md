@@ -22,7 +22,7 @@ date: 2022.03.21 19:30:00
 ## 구현해야할 함수 기능    
 :  Outputs the string ’s’ to the given file descriptor, followed by a newline.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  주어진 file descriptor 문자열 's'를 출력한 뒤 개행을 출력한다.    
 
 ## ex)    

@@ -22,7 +22,7 @@ date: 2022.03.18 15:30:48
 ## 구현해야할 함수 기능    
 :  Allocates (with malloc(3)) and returns a copy of ’s1’ with the characters specified in ’set’ removed from the beginning and the end of the string.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  문자열 s1에서 문자열 set에 들어있는 문자들을 앞뒤로 잘라낸 문자열을 새롭게 할당하여 반환한다. 할당 실패시에서는 NULL을 반환한다.    
 
 ## ex)    
@@ -101,7 +101,7 @@ static int	set_end(char const *str, char const *set)
 char	*ft_strtrim(char const *str, char const *set)
 {
 	char	*trimstr;
-	int		i;
+	char	*result;
 	int		start_i;
 	int		end_i;
 
@@ -112,14 +112,11 @@ char	*ft_strtrim(char const *str, char const *set)
 	trimstr = (char *)malloc((end_i - start_i + 2) * sizeof(char));
 	if (!trimstr)
 		return (NULL);
-	i = 0;
-	while (i < end_i - start_i + 1)
-	{
-		trimstr[i] = str[start_i + i];
-		i++;
-	}
-	trimstr[i] = 0;
-	return (trimstr);
+	result = trimstr;
+	while (end_i - start_i + 1 > 0)
+		*trimstr++ = *(str + start_i++);
+	*trimstr = 0;
+	return (result);
 }
 
 ```

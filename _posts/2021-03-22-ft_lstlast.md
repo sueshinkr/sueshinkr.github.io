@@ -27,7 +27,7 @@ typedef struct s_list
 ## 구현해야할 함수 기능    
 :  Returns the last element of the list.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  리스트의 맨 마지막 원소를 반환한다.    
 
 ## ex)    

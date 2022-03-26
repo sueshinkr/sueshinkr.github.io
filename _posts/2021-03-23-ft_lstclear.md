@@ -27,7 +27,7 @@ typedef struct s_list
 ## 구현해야할 함수 기능    
 :  Deletes and frees the given element and every successor of that element, using the function ’del’ and free(3). Finally, the pointer to the list must be set to NULL.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  두 번째 매개변수로 받은 del 함수를 이용해 리스트의 모든 원소들을 free하고 삭제한다.     
 
 ## ex)    

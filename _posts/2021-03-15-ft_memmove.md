@@ -24,7 +24,7 @@ date: 2022.03.15 23:00:48
 :   The memmove() function copies n bytes from memory area src to memory area dst.    
 The memory areas may overlap: copying takes place as though the bytes in src are first copied into a temporary array that does not overlap src or dst, and the bytes are then copied from the temporary array to dst.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  memcpy와 같은 기능을 수행하지만, 메모리가 overlap 되어있을 경우를 생각해 src의 데이터를 src나 dst와 overlap되지 않는 곳에 카피해놓은 후에 dst로 복사하는 과정을 거친다.  
 
 ## ex)    
@@ -58,9 +58,11 @@ memcpy에서 문제가 되었던 두 메모리가 overlap 되어있을 경우의
 ```c
 void	*ft_memmove(void *dst, const void *src, size_t size)
 {
-	void	*start;
+	void	*result;
 
-	start = dst;
+	result = dst;
+	if (dst == src)
+		return (result);
 	if (dst < src)
 	{
 		while (size-- > 0)
@@ -71,7 +73,7 @@ void	*ft_memmove(void *dst, const void *src, size_t size)
 		while (size-- > 0)
 			*(unsigned char *)(dst + size) = *(unsigned char *)(src + size);
 	}	
-	return (start);
+	return (result);
 }
 ```
 malloc을 사용할 수 없어 버퍼를 만들 수 없고, mac기준 매뉴얼에는 버퍼를 사용한다는 말 자체가 없이 'the copy is always done in a non-destructive manner'라고만 적혀있다. 그래서 경우를 나누어 처리하였는데    
@@ -79,4 +81,6 @@ malloc을 사용할 수 없어 버퍼를 만들 수 없고, mac기준 매뉴얼�
 앞에서부터 차례대로 복사하면 아무런 문제가 생기지 않는다.    
 2. dst값이 src보다 클 때    
 앞에서부터 복사하면 메모리가 덮어씌워지는 문제가 생긴다. 간단하게 뒤에서부터 넣어주면 데이터가 정상적으로 복사된다.    
+
+dst와 src가 둘다 NULL일 경우는 ft_memcpy함수와 같은 방식으로, 원 memmove와 같은 값이 반환되도록 구현했다.
 

@@ -27,7 +27,7 @@ typedef struct s_list
 ## 구현해야할 함수 기능    
 :  Adds the element ’new’ at the beginning of the list.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  원소 'new'를 리스트의 맨 앞에 추가한다. 이 때 첫번째 매개변수는 리스트 맨 앞에 위치한 원소의 주소를 나타내는 포인터이고, 두번째 매개변수는 리스트에 추가할 원소이다.    
 
 ## ex)    

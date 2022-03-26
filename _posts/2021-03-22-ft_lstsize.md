@@ -27,7 +27,7 @@ typedef struct s_list
 ## 구현해야할 함수 기능    
 :  Counts the number of elements in a list.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  리스트에 포함되어있는 원소의 갯수를 샌다.    
 
 ## ex)    

@@ -22,7 +22,7 @@ date: 2022.03.20 22:00:00
 ## 구현해야할 함수 기능    
 :  Applies the function f to each character of the string passed as argument, and passing its index as first argument. Each character is passed by address to f to be modified if necessary.    
 
-## 내멋대로 해석    
+## 해석 및 부연설명    
 :  문자열 s의 각 문자에 함수 f를 적용시킨다. strmapi와는 달리 새 문자열을 생성하지 않고, 대신 함수 포인터의 두번째 매개변수로 각 문자의 주소값을 사용하여 기존 문자열에 저장되어있는 값들을 변화시킨다.    
 
 ## ex)    
@@ -57,14 +57,11 @@ abcdef
 ```c
 void	ft_striteri(char *str, void (*func)(unsigned int, char*))
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
-	while (str[i])
-	{
-		func(i, &str[i]);
-		i++;
-	}
+	while (*str)
+		func(i++, str++);
 }
 
 ```
