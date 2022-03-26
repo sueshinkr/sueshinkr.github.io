@@ -7,6 +7,7 @@ categories:
 tags:
   - 42seoul, libft
 toc: true
+toc_sticky: true
 date: 2022.03.16 08:00:48
 ---
 
