@@ -3,9 +3,12 @@ title:  "[libft] ft_putchar_fd"
 excerpt: "putchar_fd 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.21 18:00:00
 ---
 
@@ -16,13 +19,13 @@ date: 2022.03.21 18:00:00
     void ft_putchar_fd(char c, int fd);
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Outputs the character ’c’ to the given file descriptor.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  주어진 file descriptor 문자 'c'를 출력한다.    
 
-##### ex)    
+## ex)    
 ```c
 ft_putchar_fd('a', 1);
 
@@ -33,7 +36,7 @@ a
 ```
 지정한 file descriptor(1)에 정상적으로 문자 'a'가 출력되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [file descriptor?](#file-descriptor란)
 2. [표준 입출력?](#표준-입출력-스트림)
 

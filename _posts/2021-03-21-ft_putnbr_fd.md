@@ -3,9 +3,12 @@ title:  "[libft] ft_putnbr_fd"
 excerpt: "putnbr_fd 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.21 20:50:00
 ---
 
@@ -16,13 +19,13 @@ date: 2022.03.21 20:50:00
     void ft_putnbr_fd(int n, int fd);
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Outputs the integer ’n’ to the given file descriptor.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  주어진 file descriptor 정수 'n'을 출력한다    
 
-##### ex)    
+## ex)    
 ```c
 ft_putnbr_fd(2147483647, 1);
 
@@ -33,7 +36,7 @@ ft_putnbr_fd(2147483647, 1);
 ```
 지정한 file descriptor(1)에 정상적으로 정수 2147483647이 출력되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 딱히 없다.    
 
 ***

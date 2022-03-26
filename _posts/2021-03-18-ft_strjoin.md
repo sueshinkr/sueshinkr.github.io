@@ -3,9 +3,12 @@ title:  "[libft] ft_strjoin"
 excerpt: "strjoin 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.18 15:00:48
 ---
 
@@ -16,13 +19,13 @@ date: 2022.03.18 15:00:48
     char *ft_strjoin(char const *s1, char const *s2);
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Allocates (with malloc(3)) and returns a new string, which is the result of the concatenation of ’s1’ and ’s2’.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  문자열 s1과 s2를 합한 문자열을 새롭게 할당하여 반환한다. 할당 실패시에서는 NULL을 반환한다.        
 
-##### ex)    
+## ex)    
 ```c
 char	str1[] = "abcdefg";
 char	str2[] = "hijklmnop";
@@ -34,7 +37,7 @@ abcdefghijklmnop
 ```
 str1과 str2가 이어진 새로운 문자열이 정상적으로 만들어졌다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [strcat과의 차이점](#strcat과는-무엇이-다른가)    
 
 ***

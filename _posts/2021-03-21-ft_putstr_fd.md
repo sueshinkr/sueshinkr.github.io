@@ -3,9 +3,12 @@ title:  "[libft] ft_putstr_fd"
 excerpt: "putstr_fd 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.21 18:30:00
 ---
 
@@ -16,13 +19,13 @@ date: 2022.03.21 18:30:00
     void ft_putstr_fd(char *s, int fd);
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Outputs the string ’s’ to the given file descriptor.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  주어진 file descriptor 문자열 's'를 출력한다.    
 
-##### ex)    
+## ex)    
 ```c
 ft_putstr_fd("abcde", 1);
 
@@ -33,7 +36,7 @@ abcde
 ```
 지정한 file descriptor(1)에 정상적으로 문자열 "abcde"가 출력되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 putchar_fd 함수에서 다 짚고 넘어간 것 같다.    
 
 ***

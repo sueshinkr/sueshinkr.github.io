@@ -3,9 +3,12 @@ title:  "[libft] ft_strmapi"
 excerpt: "strmapi 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.20 13:30:48
 ---
 
@@ -16,13 +19,13 @@ date: 2022.03.20 13:30:48
     char *ft_strmapi(char const *s, char (*f)(unsigned int, char));
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Applies the function ’f’ to each character of the string ’s’ , and passing its index as first argument to create a new string (with malloc(3)) resulting from successive applications of ’f’.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  문자열 s의 각 문자에 함수 f가 적용된(해당 문자의 인덱스를 함수 f의 첫번째 인자로 사용) 새로운 문자열을 생성하여 반환한다. 할당 실패시엔 NULL을 반환한다.    
 
-##### ex)    
+## ex)    
 ```c
 char	func(unsigned int i, char c)
 {
@@ -44,7 +47,7 @@ abcdef
 ```
 문자열 str의 각 문자에 함수 func가 적용된 문자열이 정상적으로 만들어졌다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [함수 포인터?](#함수-포인터)    
 
 ***

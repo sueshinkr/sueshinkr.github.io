@@ -5,9 +5,10 @@ excerpt: "strlcpy 함수 구현"
 categories:
   - libft
 tags:
-  - 42seoul, libft
+  - [42seoul, libft]
 toc: true
 toc_sticky: true
+toc_label: "목차"
 date: 2022.03.16 08:00:48
 ---
 
@@ -19,17 +20,17 @@ date: 2022.03.16 08:00:48
     size_t strlcpy(char *dst, const char *src, size_t size);
 ```
 
-##### Linux manpage description    
+## Linux manpage description    
 : The strlcpy() function copies up to size - 1 characters from the NUL-terminated string src to dst, NUL-terminating the result.    
 The strlcpy() and strlcat() functions return the total length of the string they tried to create. For strlcpy() that means the length of src.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  memcpy에서 봤던 strncpy의 특징처럼 strlcpy도 뒤에 NULL이 있는지를 검사하여 찾는순간 복사를 종료한다. 다만 strncpy과 다른점은 
 1. **strncpy**는 dst를 반환하지만, **strlcpy**는 src의 길이를 반환한다.
 2. src의 길이가 size보다 작을 경우 **strncpy**는 남은부분을 전부 \0으로 채우지만, **strlcpy**는 하나만 채우고 끝낸다.
 3. src의 길이가 size보다 클 경우 **strncpy**는 size만큼만 복사하고 종료되어 0이 붙지 않지만, **strlcpy**는 size가 존재할 경우(1 이상)엔 무조건 뒤에 \0을 붙여준다.
 
-##### ex)    
+## ex)    
 ```c
 char	dst[] = "abcdefghijklmnop";
 char	src[] = "12345";
@@ -42,7 +43,7 @@ printf("%s\n", dst);
 ```
 size만큼 복사가 끝나거나 src가 끝나면 그 뒤에 NUL을 붙여주니 따로 NUL을 어떻게 붙여줄지 고려할 필요가 없다.
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [strncpy와의 차이점은?](#strncpy와의-차이점)    
 2. [restrict?](#restrict란)    
 

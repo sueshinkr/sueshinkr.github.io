@@ -3,9 +3,12 @@ title:  "[libft] ft_strnstr"
 excerpt: "strnstr 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.17 13:30:48
 ---
 
@@ -17,16 +20,16 @@ date: 2022.03.17 13:30:48
     char *strnstr(const char *big, const char *little, size_t len);
 ```
 
-##### Linux manpage description    
+## Linux manpage description    
 :  The strnstr() function locates the first occurrence of the null-terminated string little in the string big, where not more than len characters are searched.    
 Characters that appear after a ‘\0’ character are not searched..    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  strchr에서 한발 더 나아가 문자열을 검색하는 함수이다.    
 little에 해당하는 문자열이 big에 있다면 그 시작주소를 반환하고, 없다면 NULL을 반환한다. 만약 little이 빈 문자열이라면 그냥 big을 반환한다.    
 str계열 함수답게 NULL에서는 작동을 멈추게 된다.    
 
-##### ex)    
+## ex)    
 ```c
 char	str[] = "abcdefghijk";
 char	find[] = "efg";
@@ -38,7 +41,7 @@ efghijk
 ```
 정상적으로 str 문자열 내부의 "efg"를 찾아 주소가 반환되었다.     
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [""과 NULL의 차이](#""-vs-null)
 
 ***

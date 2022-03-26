@@ -3,9 +3,12 @@ title:  "[libft] ft_strncmp"
 excerpt: "strncmp 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.16 22:00:48
 ---
 
@@ -17,17 +20,17 @@ date: 2022.03.16 22:00:48
     int strncmp(const char *s1, const char *s2, size_t n);
 ```
 
-##### Linux manpage description    
+## Linux manpage description    
 :  The strcmp() function compares the two strings s1 and s2. The locale is not taken into account (for a locale-aware comparison, see strcoll(3)).    
 It returns an integer less than, equal to, or greater than zero if s1 is found, respectively, to be less than, to match, or be greater than s2.    
 The strncmp() function is similar, except it compares only the first (at most) n bytes of s1 and s2.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  strcmp는 문자열 s1과 s2를 비교하는 함수다. 한글자씩 비교하면서 s1이 작으면 음수, 같으면 0, 크면 양수를 리턴한다.    
 strncmp는 strcmp에서 n글자만 비교하는 기능이 추가된 함수다.    
 참고로 첫째줄 괄호에 나와있는 locale은 사용자 인터페이스에서 사용되는 언어, 지역 설정, 출력 형식 등을 정의하는 문자열이라고 하는데, strcmp에서는 고려하지 않는다고 한다.    
 
-##### ex)    
+## ex)    
 ```c
 char	s1[] = "abcdefg";
 char	s2[] = "abcdddd";
@@ -39,7 +42,7 @@ printf("%d\n", strncmp(s1, s2, 5));
 ```
 다섯번째 문자인 e와 d중 s1의 e가 더 크므로 1이 반환되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [비교방식](#비교하는-값의-형식)    
 2. [정확한 리턴값은?](#strncmp의-리턴값)    
 

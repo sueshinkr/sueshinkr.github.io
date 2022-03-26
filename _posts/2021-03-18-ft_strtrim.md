@@ -3,9 +3,12 @@ title:  "[libft] ft_strtrim"
 excerpt: "strtrim 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.18 15:30:48
 ---
 
@@ -16,13 +19,13 @@ date: 2022.03.18 15:30:48
     char *ft_strtrim(char const *s1, char const *set);
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Allocates (with malloc(3)) and returns a copy of ’s1’ with the characters specified in ’set’ removed from the beginning and the end of the string.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  문자열 s1에서 문자열 set에 들어있는 문자들을 앞뒤로 잘라낸 문자열을 새롭게 할당하여 반환한다. 할당 실패시에서는 NULL을 반환한다.    
 
-##### ex)    
+## ex)    
 ```c
 char	str[] = "abcaafgdefgff";
 char	set[] = "abfg";
@@ -34,7 +37,7 @@ caafgde
 ```
 "abfg" 에 포함되어있는 ab와 fgff가 잘린 나머지가 정상적으로 할당되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [정확한 작동방식?](#ftstrtrim의-문자열-처리)
 2. [문자가 전부 다 잘렸을 경우](#빈-문자열-처리)
 

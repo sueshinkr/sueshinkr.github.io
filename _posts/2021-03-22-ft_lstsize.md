@@ -3,9 +3,12 @@ title:  "[libft] ft_lstsize"
 excerpt: "lstsize 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.22 18:00:48
 ---
 
@@ -21,13 +24,13 @@ typedef struct s_list
     int ft_lstsize(t_list *lst);
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Counts the number of elements in a list.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  리스트에 포함되어있는 원소의 갯수를 샌다.    
 
-##### ex)    
+## ex)    
 ```c
 t_list	*list1;
 t_list	*list2;
@@ -47,7 +50,7 @@ printf("%d\n", ft_lstsize(list1));
 ```
 리스트의 갯수가 정상적으로 출력되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [포인터 매개변수](#함수에-전달하여-값-바꾸기)    
 
 ***

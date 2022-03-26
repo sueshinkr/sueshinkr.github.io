@@ -3,9 +3,12 @@ title:  "[libft] ft_lstclear"
 excerpt: "lstclear 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.23 23:30:48
 ---
 
@@ -21,13 +24,13 @@ typedef struct s_list
     void ft_lstclear(t_list **lst, void (*del)(void *));
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Deletes and frees the given element and every successor of that element, using the function ’del’ and free(3). Finally, the pointer to the list must be set to NULL.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  두 번째 매개변수로 받은 del 함수를 이용해 리스트의 모든 원소들을 free하고 삭제한다.     
 
-##### ex)    
+## ex)    
 ```c
 static void	ft_del(void *content)
 {
@@ -60,7 +63,7 @@ int	main(void)
 ```
 할당되었던 메모리들이 정상적으로 free되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 딱히 없다.    
 
 ***

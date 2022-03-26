@@ -3,9 +3,12 @@ title:  "[libft] ft_lstiter"
 excerpt: "lstiter 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.24 00:30:00
 ---
 
@@ -21,13 +24,13 @@ typedef struct s_list
     void ft_lstiter(t_list *lst, void (*f)(void *));
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Iterates the list ’lst’ and applies the function ’f’ to the content of each element.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  리스트의 모든 원소들의 content에 함수 f를 적용한다.    
 
-##### ex)    
+## ex)    
 ```c
 static void	func(void *content)
 {
@@ -64,7 +67,7 @@ bcdef
 ```
 리스트의 모든 원소들에 함수 func가 정상적으로 적용되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 딱히 없다.    
 
 ***

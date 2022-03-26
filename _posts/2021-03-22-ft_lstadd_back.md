@@ -3,9 +3,12 @@ title:  "[libft] ft_lstadd_back"
 excerpt: "lstadd_back 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.22 19:30:48
 ---
 
@@ -21,13 +24,13 @@ typedef struct s_list
     void ft_lstadd_back(t_list **lst, t_list *new);
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Adds the element ’new’ at the end of the list.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  리스트의 맨 뒤에 원소 'new'를 추가한다.    
 
-##### ex)    
+## ex)    
 ```c
 t_list	*start;
 t_list	*list1;
@@ -54,7 +57,7 @@ abcde
 ```
 리스트의 마지막 노드에 정상적으로 노드들이 추가되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [NULL로 초기화](#segmentation-fault)
 
 ***

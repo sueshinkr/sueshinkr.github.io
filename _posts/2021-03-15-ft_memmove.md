@@ -5,8 +5,10 @@ excerpt: "memmove 함수 구현"
 categories:
   - libft
 tags:
-  - 42seoul, libft
+  - [42seoul, libft]
 toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.15 23:00:48
 ---
 
@@ -18,14 +20,14 @@ date: 2022.03.15 23:00:48
     void *memmove(void *dst, const void *src, size_t n);
 ```
 
-##### Linux manpage description    
+## Linux manpage description    
 :   The memmove() function copies n bytes from memory area src to memory area dst.    
 The memory areas may overlap: copying takes place as though the bytes in src are first copied into a temporary array that does not overlap src or dst, and the bytes are then copied from the temporary array to dst.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  memcpy와 같은 기능을 수행하지만, 메모리가 overlap 되어있을 경우를 생각해 src의 데이터를 src나 dst와 overlap되지 않는 곳에 카피해놓은 후에 dst로 복사하는 과정을 거친다.  
 
-##### ex)    
+## ex)    
 ```c
 char	dst[] = "abcdefghijklmnop";
 char	src[] = "12345";
@@ -38,7 +40,7 @@ printf("%s\n", dst);
 ```
 memcopy와 마찬가지로 복사할 src의 맨 마지막에 있을 NULL을 고려하여 size를 설정해야한다.
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [memcpy와의 차이점은?](#memcpy와의-차이점)    
 
 ***

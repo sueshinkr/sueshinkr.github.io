@@ -3,9 +3,12 @@ title:  "[libft] ft_lstdelone"
 excerpt: "lstdelone 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.23 22:30:48
 ---
 
@@ -21,13 +24,13 @@ typedef struct s_list
     void ft_lstdelone(t_list *lst, void (*del)(void *));
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Takes as a parameter an element and frees the memory of the element’s content using the function ’del’ given as a parameter and free the element. The memory of ’next’ must not be freed.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  두 번째 매개변수로 받은 del 함수를 이용해 첫번째 매개변수로 받은 원소 lst의 요소 content의 메모리를 free하고, 원소도 free한다. 요소 next의 메모리는 free되지 않아야 한다.    
 
-##### ex)    
+## ex)    
 ```c
 static void	del(void *content)
 {
@@ -53,7 +56,7 @@ int	main(void)
 ```
 할당되었던 메모리들이 정상적으로 free되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 1. [free(): invalid pointer](#잘못된-free)
 
 ***

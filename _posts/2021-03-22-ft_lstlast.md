@@ -3,9 +3,12 @@ title:  "[libft] ft_lstlast"
 excerpt: "lstlast 함수 구현"
 
 categories:
-  - 42seoul
-tags:
   - libft
+tags:
+  - [42seoul, libft]
+toc: true
+toc_sticky: true
+toc_label: "목차"
 date: 2022.03.22 19:00:48
 ---
 
@@ -21,13 +24,13 @@ typedef struct s_list
     t_list *ft_lstlast(t_list *lst);
 ```
 
-##### 구현해야할 함수 기능    
+## 구현해야할 함수 기능    
 :  Returns the last element of the list.    
 
-##### 내멋대로 해석    
+## 내멋대로 해석    
 :  리스트의 맨 마지막 원소를 반환한다.    
 
-##### ex)    
+## ex)    
 ```c
 t_list	*list1;
 t_list	*list2;
@@ -47,7 +50,7 @@ printf("%s\n", (char *)ft_lstlast(list1)->content);
 ```
 정상적으로 마지막 원소인 list3가 반환되었다.    
 
-##### 의문점 및 생각해볼점    
+# 의문점 및 생각해볼점    
 딱히 없다.    
 
 ***
