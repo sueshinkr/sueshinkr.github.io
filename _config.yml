@@ -290,3 +290,11 @@ defaults:
       share: true
       related: true
       sidebar_main: true
+
+# Analytics
+analytics:
+  provider               : "google-gtag" 
+                          # false (default), "google", "google-universal", "google-gtag", "custom"
+  google:
+    tracking_id          : "G-VWY5KH5N4N"
+    anonymize_ip         : # true, false (default)
