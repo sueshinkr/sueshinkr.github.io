@@ -58,13 +58,16 @@ abcde
 리스트의 마지막 노드에 정상적으로 노드들이 추가되었다.    
 
 # 의문점 및 생각해볼점    
-1. [NULL로 초기화](#segmentation-fault)
+1. [잘못된 메모리 접근](#segmentation-fault)
 
 ***
 
 ## segmentation fault
 위 ex에서 **start = NULL** 부분을 빠트렸을경우 바로 segmentation fault에 빠져버렸다.    
-lstadd_back 함수는 리스트 이중포인터를 매개변수로 받는데, 여기서 초기화되지 않은 포인터변수인 start에 &을 붙여 전달할 경우 메모리 접근에 문제가 생기는 모양이다. 이런 경우들을 조심해야 할 것 같다.    
+처음 start가 ft_lstadd_back 함수로 전달되면 우선 if문에서 NULL인지 아닌지를 검사하는데, 이 때 start는 NULL이 아니므로 else문이 실행되어 ft_lstlast 함수로 전달된다.    
+바로 여기서 문제가 생긴다. ft_lstlast함수에서는 while문에서 lst->next != NULL 조건을 체크하지만, 매개변수로 가져온 start->next는 초기화되지 않은 값으로 단순히 아무 주소나 가리키고있을 뿐이다.    
+따라서 lst = lst->next가 한번 실행된 후의 lst->next는 존재할 수 없다. 여기서 segmentation fault가 발생한 것이었다.    
+그렇기에 start를 NULL로 지정하여 맨 처음에는 원소 new를 그대로 start에 넣어주는 것으로 해결할 수 있었다.     
 
 ***
 
