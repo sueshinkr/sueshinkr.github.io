@@ -293,7 +293,7 @@ defaults:
 
 # Analytics
 analytics:
-  provider               : "google-gtag" 
+  provider               : "google" 
                           # false (default), "google", "google-universal", "google-gtag", "custom"
   google:
     tracking_id          : "G-VWY5KH5N4N"
