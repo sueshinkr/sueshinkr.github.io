@@ -28,7 +28,7 @@ typedef struct s_list
 :  Deletes and frees the given element and every successor of that element, using the function ’del’ and free(3). Finally, the pointer to the list must be set to NULL.    
 
 ## 해석 및 부연설명    
-:  두 번째 매개변수로 받은 del 함수를 이용해 리스트의 모든 원소들을 free하고 삭제한다.     
+:  두 번째 매개변수로 받은 `del` 함수를 이용해 리스트의 모든 원소들을 `free`하고 삭제한다.     
 
 ## ex)    
 ```c
@@ -61,7 +61,7 @@ int	main(void)
 ==30970== 
 ==30970== All heap blocks were freed -- no leaks are possible
 ```
-할당되었던 메모리들이 정상적으로 free되었다.    
+할당되었던 메모리들이 정상적으로 `free`되었다.    
 
 # 의문점 및 생각해볼점    
 딱히 없다.    
@@ -86,4 +86,4 @@ void	ft_lstclear(t_list **lst, void (*del)(void *))
 
 ```
 
-리스트를 돌면서 lst->content와 lst를 차례대로 free해주면 끝이다. 이 때 free하기 전에 다음 원소로 넘어가는 작업도 필요하므로 임시로 쓸 cur 리스트를 만들어 활용했다.    
+리스트를 돌면서 lst->content와 lst를 차례대로 `free`해주면 끝이다. 이 때 `free`하기 전에 다음 원소로 넘어가는 작업도 필요하므로 임시로 쓸 cur 리스트를 만들어 활용했다.    

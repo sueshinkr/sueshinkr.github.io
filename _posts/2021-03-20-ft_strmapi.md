@@ -23,7 +23,7 @@ date: 2022.03.20 13:30:48
 :  Applies the function ’f’ to each character of the string ’s’ , and passing its index as first argument to create a new string (with malloc(3)) resulting from successive applications of ’f’.    
 
 ## 해석 및 부연설명    
-:  문자열 s의 각 문자에 함수 f가 적용된(해당 문자의 인덱스를 함수 f의 첫번째 인자로 사용) 새로운 문자열을 생성하여 반환한다. 할당 실패시엔 NULL을 반환한다.    
+:  문자열 s의 각 문자에 함수 f가 적용된(해당 문자의 인덱스를 함수 f의 첫번째 인자로 사용) 새로운 문자열을 생성하여 반환한다. 할당 실패시엔 `NULL`을 반환한다.    
 
 ## ex)    
 ```c
@@ -45,7 +45,7 @@ int	main()
 ```c
 abcdef
 ```
-문자열 str의 각 문자에 함수 func가 적용된 문자열이 정상적으로 만들어졌다.    
+문자열 str의 각 문자에 함수 `func`가 적용된 문자열이 정상적으로 만들어졌다.    
 
 # 의문점 및 생각해볼점    
 1. [함수 포인터?](#함수-포인터)    

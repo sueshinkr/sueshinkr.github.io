@@ -26,9 +26,9 @@ It returns an integer less than, equal to, or greater than zero if s1 is found, 
 The strncmp() function is similar, except it compares only the first (at most) n bytes of s1 and s2.    
 
 ## 해석 및 부연설명    
-:  strcmp는 문자열 s1과 s2를 비교하는 함수다. 한글자씩 비교하면서 s1이 작으면 음수, 같으면 0, 크면 양수를 리턴한다.    
-strncmp는 strcmp에서 n글자만 비교하는 기능이 추가된 함수다.    
-참고로 첫째줄 괄호에 나와있는 locale은 사용자 인터페이스에서 사용되는 언어, 지역 설정, 출력 형식 등을 정의하는 문자열이라고 하는데, strcmp에서는 고려하지 않는다고 한다.    
+:  `strcmp`는 문자열 s1과 s2를 비교하는 함수다. 한글자씩 비교하면서 s1이 작으면 음수, 같으면 0, 크면 양수를 리턴한다.    
+`strncmp`는 `strcmp`에서 n글자만 비교하는 기능이 추가된 함수다.    
+참고로 첫째줄 괄호에 나와있는 locale은 사용자 인터페이스에서 사용되는 언어, 지역 설정, 출력 형식 등을 정의하는 문자열이라고 하는데, `strcmp`에서는 고려하지 않는다고 한다.    
 
 ## ex)    
 ```c
@@ -50,13 +50,13 @@ printf("%d\n", strncmp(s1, s2, 5));
 
 ## 비교하는 값의 형식
 BSD Library Functions Manual에 따르면 **The	comparison is done using unsigned characters,	so that	\200 is greater than \0** 이라고 적혀져있다.    
-따라서 입력받은 str1과 str2를 unsigned형으로 형변환하여 처리해야 한다.    
+따라서 입력받은 str1과 str2를 `unsigned`형으로 형변환하여 처리해야 한다.    
 
 ***
 
 ## strncmp의 리턴값
 직접 여러 케이스들을 넣고 실험해본 결과 ***s1 - *s2**의 값이 반환되는 것을 확인하였다.    
-예를들어 s1="abcdefgh"이고 s2="abcdefg"라면 끝까지 비교했을 때 h와 \0이 비교되어 h의 ascii값인 104가 반환된다. 반대라면 -104가 반환된다.     
+예를들어 `s1="abcdefgh"`이고 `s2="abcdefg"`라면 끝까지 비교했을 때 h와 \0이 비교되어 h의 ascii값인 104가 반환된다. 반대라면 -104가 반환된다.     
 
 ***
 

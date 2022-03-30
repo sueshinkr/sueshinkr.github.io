@@ -23,7 +23,7 @@ date: 2022.03.21 18:00:00
 :  Outputs the character ’c’ to the given file descriptor.    
 
 ## 해석 및 부연설명    
-:  주어진 file descriptor 문자 'c'를 출력한다.    
+:  주어진 file descriptor에 문자 'c'를 출력한다.    
 
 ## ex)    
 ```c
@@ -45,7 +45,7 @@ a
 ## file descriptor란
 [기본 개념 링크](https://code4human.tistory.com/123)    
 파일 오픈 또는 소켓(물리적으로 연결된 네트워크상에서의 데이터 송수신에 사용할 수 있는 소프트웨어적인 장치)을 생성하여 시스템에 할당 시 파일 디스크립터(FD) 번호가 부여되고, 이 번호를 대표로 사용하여 해당 파일/소켓에 접근할 수 있다.    
-FD 0, 1, 2는 고정되어있는데 이는 unistd.h 헤더파일에 명시되어있다. 따라서 FD는 3부터 차례로 부여된다.    
+FD 0, 1, 2는 고정되어있는데 이는 `unistd.h` 헤더파일에 명시되어있다. 따라서 FD는 3부터 차례로 부여된다.    
 * FD = 0 : Standard input, 표준 입력    
 * FD = 1 : Standard output, 표준 출력    
 * FD = 2 : Standard error, 표준 에러출력    
@@ -75,5 +75,5 @@ write함수 자체의 기본 구조가
 2. 두번째 매개변수로 들어오는 데이터를 
 3. 세번째 매개변수로 들어오는 바이트 수만큼 입력하는 형태로 이루어져있다.    
 
-따라서 그냥 write함수를 사용하면 간단하게 구현 가능하다.    
+따라서 그냥 `write` 함수를 사용하면 간단하게 구현 가능하다.    
 

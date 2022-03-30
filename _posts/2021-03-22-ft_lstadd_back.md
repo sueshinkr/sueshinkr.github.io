@@ -63,11 +63,11 @@ abcde
 ***
 
 ## segmentation fault
-위 ex에서 **start = NULL** 부분을 빠트렸을경우 바로 segmentation fault에 빠져버렸다.    
-처음 start가 ft_lstadd_back 함수로 전달되면 우선 if문에서 NULL인지 아닌지를 검사하는데, 이 때 start는 NULL이 아니므로 else문이 실행되어 ft_lstlast 함수로 전달된다.    
-바로 여기서 문제가 생긴다. ft_lstlast함수에서는 while문에서 lst->next != NULL 조건을 체크하지만, 매개변수로 가져온 start->next는 초기화되지 않은 값으로 단순히 아무 주소나 가리키고있을 뿐이다.    
-따라서 lst = lst->next가 한번 실행된 후의 lst->next는 존재할 수 없다. 여기서 segmentation fault가 발생한 것이었다.    
-그렇기에 start를 NULL로 지정하여 맨 처음에는 원소 new를 그대로 start에 넣어주는 것으로 해결할 수 있었다.     
+위 ex에서 **start = NULL** 부분을 빠트렸을경우 바로 `segmentation fault`에 빠져버렸다.    
+처음 start가 `ft_lstadd_back` 함수로 전달되면 우선 if문에서 `NULL`인지 아닌지를 검사하는데, 이 때 start는 `NULL`이 아니므로 else문이 실행되어 `ft_lstlast` 함수로 전달된다.    
+바로 여기서 문제가 생긴다. `ft_lstlast`함수에서는 while문에서 `lst->next != NULL` 조건을 체크하지만, 매개변수로 가져온 start->next는 초기화되지 않은 값으로 단순히 아무 주소나 가리키고있을 뿐이다.    
+따라서 lst = lst->next가 한번 실행된 후의 lst->next는 존재할 수 없다. 여기서 `segmentation fault`가 발생한 것이었다.    
+그렇기에 start를 `NULL`로 지정하여 맨 처음에는 원소 new를 그대로 start에 넣어주는 것으로 해결할 수 있었다.     
 
 ***
 
@@ -83,5 +83,5 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 }
 
 ```
-*lst의 값이 NULL이라면 애초에 리스트가 존재하지 않는다는 뜻이니 바로 새로운 원소를 넣어준다.    
-그렇지 않다면 lstlast 함수를 이용해 리스트 맨 뒤로 가서 그곳에 새로운 원소를 넣어준다.    
+*lst의 값이 `NULL`이라면 애초에 리스트가 존재하지 않는다는 뜻이니 바로 새로운 원소를 넣어준다.    
+그렇지 않다면 `ft_lstlast` 함수를 이용해 리스트 맨 뒤로 가서 그곳에 새로운 원소를 넣어준다.    

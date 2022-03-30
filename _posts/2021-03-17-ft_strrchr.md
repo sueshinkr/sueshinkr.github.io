@@ -24,7 +24,7 @@ date: 2022.03.17 02:23:48
 :  The strrchr() function returns a pointer to the last occurrence of the character c in the string s.    
 
 ## 해석 및 부연설명    
-:  문자열 s에서 문자 c를 탐색하여 가장 마지막으로 발견된 곳의 위치를 포인터로 반환하는 함수다. 찾지 못한 경우 NULL을 반환한다.    
+:  문자열 s에서 문자 c를 탐색하여 가장 마지막으로 발견된 곳의 위치를 포인터로 반환하는 함수다. 찾지 못한 경우 `NULL`을 반환한다.    
 
 ## ex)    
 ```c
@@ -36,7 +36,7 @@ printf("%s\n", strrchr(str, c));
 ```c
 ehijk
 ```
-그냥 strchr의 reverse버전 함수다.    
+그냥 `strchr`의 reverse버전 함수다.    
 
 # 의문점 및 생각해볼점    
 딱히 없다.    

@@ -28,7 +28,7 @@ typedef struct s_list
 :  Takes as a parameter an element and frees the memory of the element’s content using the function ’del’ given as a parameter and free the element. The memory of ’next’ must not be freed.    
 
 ## 해석 및 부연설명    
-:  두 번째 매개변수로 받은 del 함수를 이용해 첫번째 매개변수로 받은 원소 lst의 요소 content의 메모리를 free하고, 원소도 free한다. 요소 next의 메모리는 free되지 않아야 한다.    
+:  두 번째 매개변수로 받은 `del` 함수를 이용해 첫번째 매개변수로 받은 원소 lst의 요소 content의 메모리를 `free`하고, 원소도 `free`한다. 요소 next의 메모리는 `free`되지 않아야 한다.    
 
 ## ex)    
 ```c
@@ -54,16 +54,16 @@ int	main(void)
 ==18741== 
 ==18741== All heap blocks were freed -- no leaks are possible
 ```
-할당되었던 메모리들이 정상적으로 free되었다.    
+할당되었던 메모리들이 정상적으로 `free`되었다.    
 
 # 의문점 및 생각해볼점    
 1. [free(): invalid pointer](#잘못된-free)
 
 ***
 
-## 잘못된 free
-위 ex)에서 **list = ft_lstnew("abcde")** 라고 한 상태로 ft_lstdelone을 실행했을 때, free(): invalid pointer라는 오류 메세지가 떴다.    
-free하라고 지정된 메모리가 정상적이지 않거나 변경되었을 때 뜨는 에러라고 한다.    
+## 잘못된 `free`
+위 ex)에서 **list = ft_lstnew("abcde")** 라고 한 상태로 `ft_lstdelone`을 실행했을 때, `free(): invalid pointer`라는 오류 메세지가 떴다.    
+`free`하라고 지정된 메모리가 정상적이지 않거나 변경되었을 때 뜨는 에러라고 한다.    
 이렇게 이유를 찾아놓고도 대체 뭐가 문제인지 한참을 고민하다가, list의 content가 동적할당되지 않았다는 사실을 뒤늦게 깨달았다. 메모리 관련 함수들은 정말로 주의를 기울일 필요가 있을 것 같다...    
 
 ***
@@ -79,4 +79,4 @@ void	ft_lstdelone(t_list *lst, void (*del)(void *))
 
 ```
 
-lst->content와 lst를 차례대로 free해주면 끝이다.    
+lst->content와 lst를 차례대로 `free`해주면 끝이다.    

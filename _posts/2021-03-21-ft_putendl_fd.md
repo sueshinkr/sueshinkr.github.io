@@ -53,4 +53,4 @@ void	ft_putendl_fd(char *str, int fd)
 }  
 
 ```
-ft_putstr_fd 함수에서 개행부분만 추가하면 끝이다.    
+`ft_putstr_fd` 함수에서 개행부분만 추가하면 끝이다.    

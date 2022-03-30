@@ -25,7 +25,7 @@ date: 2022.03.16 10:00:48
 The strlcpy() and strlcat() functions return the total length of the string they tried to create. For strlcat() that means the initial length of dst plus the length of src.    
 
 ## 해석 및 부연설명    
-:  strlcat은 dst뒤에 src를 붙여 총 길이(NUL 포함)가 size가 되도록 만든다.    
+:  `strlcat`은 dst뒤에 src를 붙여 총 길이(`NUL` 포함)가 size가 되도록 만든다.    
 정확히는 size - dst의 길이 - 1만큼 src를 복사해 dst 뒤에 붙이고, 마지막에 \0을 넣어준다. 리턴값은 원래 dst의 길이 + src의 길이이다. 
 
 ## ex)    
@@ -43,7 +43,7 @@ printf("%s\n", dst);
 정상적으로 dst 뒤에 size - dst의 길이 - 1인 4개 문자가 src에서 복사되어 dst 뒤에 붙여넣어졌다.    
 
 # 의문점 및 생각해볼점    
-1. [size에 따른 strlcat의 작동방식](#size별로-나눈-case)
+1. [size에 따른 `strlcat`의 작동방식](#size별로-나눈-case)
 
 ***
 
@@ -80,6 +80,6 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	return (dst_len + src_len);
 }
 ```
-size변수가 size_t, unsigned형으로 들어오기때문에 언더플로우가 발생하지 않도록 dst_len + src_i < size -1 대신 위 코드처럼 조건을 설정했다.
+size변수가 `size_t`, `unsigned`형으로 들어오기때문에 언더플로우가 발생하지 않도록 dst_len + src_i < size -1 대신 위 코드처럼 조건을 설정했다.
 
 

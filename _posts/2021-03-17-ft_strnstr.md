@@ -25,9 +25,9 @@ date: 2022.03.17 13:30:48
 Characters that appear after a ‘\0’ character are not searched..    
 
 ## 해석 및 부연설명    
-:  strchr에서 한발 더 나아가 문자열을 검색하는 함수이다.    
-little에 해당하는 문자열이 big에 있다면 그 시작주소를 반환하고, 없다면 NULL을 반환한다. 만약 little이 빈 문자열이라면 그냥 big을 반환한다.    
-str계열 함수답게 NULL에서는 작동을 멈추게 된다.    
+:  `strchr`에서 한발 더 나아가 문자열을 검색하는 함수이다.    
+little에 해당하는 문자열이 big에 있다면 그 시작주소를 반환하고, 없다면 `NULL`을 반환한다. 만약 little이 빈 문자열이라면 그냥 big을 반환한다.    
+str계열 함수답게 `NULL`에서는 작동을 멈추게 된다.    
 
 ## ex)    
 ```c
@@ -46,9 +46,9 @@ efghijk
 
 ***
 
-## "" vs NULL
+## "" vs `NULL`
 둘은 엄연히 다른 개념. **!little**으로 조건문을 걸었을 때 **little = ""**이라면 아무런 반응을 하지 않는다.    
-그래서 찾아본 결과, NULL은 진짜로 아무것도 없는거고 ""은 빈 문자열이 존재하는 차이라고 한다. 아무튼 차이가 있다는 점을 잘 기억해아 할듯 하다.    
+그래서 찾아본 결과, `NULL`은 진짜로 아무것도 없는거고 ""은 빈 문자열이 존재하는 차이라고 한다. 아무튼 차이가 있다는 점을 잘 기억해아 할듯 하다.    
 
 ***
 
@@ -82,5 +82,5 @@ char	*ft_strnstr(const char *big, const char *little, size_t size)
 
 ```
 little = ""일 경우를 찾아내기 위해 !little_len 조건을 추가로 걸어주었다.    
-strnst 함수도 const char *로 받아서 char *로 반환하는 것에 주의해야한다.    
+`ft_strnstr` 함수도 `const char *`로 받아서 `char *`로 반환하는 것에 주의해야한다.    
 

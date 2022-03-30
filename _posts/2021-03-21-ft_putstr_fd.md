@@ -37,7 +37,7 @@ abcde
 지정한 file descriptor(1)에 정상적으로 문자열 "abcde"가 출력되었다.    
 
 # 의문점 및 생각해볼점    
-putchar_fd 함수에서 다 짚고 넘어간 것 같다.    
+`putchar_fd` 함수에서 다 짚고 넘어간 것 같다.    
 
 ***
 
@@ -50,5 +50,5 @@ void	ft_putstr_fd(char *str, int fd)
 }
 
 ```
-str에 저장되어있는 문자열을 전부 다 출력해야하므로, write 함수에서 str에 저장되어있는 데이터로부터 ft_strlen(str)만큼의 바이트를 입력받도록 했다.    
+str에 저장되어있는 문자열을 전부 다 출력해야하므로, `write` 함수에서 str에 저장되어있는 데이터로부터 `ft_strlen(str)`만큼의 바이트를 입력받도록 했다.    
 

@@ -23,7 +23,7 @@ date: 2022.03.18 15:00:48
 :  Allocates (with malloc(3)) and returns a new string, which is the result of the concatenation of ’s1’ and ’s2’.    
 
 ## 해석 및 부연설명    
-:  문자열 s1과 s2를 합한 문자열을 새롭게 할당하여 반환한다. 할당 실패시에서는 NULL을 반환한다.        
+:  문자열 s1과 s2를 합한 문자열을 새롭게 할당하여 반환한다. 할당 실패시에서는 `NULL`을 반환한다.        
 
 ## ex)    
 ```c
@@ -38,12 +38,12 @@ abcdefghijklmnop
 str1과 str2가 이어진 새로운 문자열이 정상적으로 만들어졌다.    
 
 # 의문점 및 생각해볼점    
-1. [strcat과의 차이점](#strcat과는-무엇이-다른가)    
+1. [`strcat`과의 차이점](#strcat과는-무엇이-다른가)    
 
 ***
 
-## strcat과는 무엇이 다른가
-strcat도 문자열 dst 뒤에 src를 붙이는 것이므로 비슷하다고 볼 수 있지만, 결정적으로 strcat은 원본 dst에 src를 더하는 과정이지만 strjoin은 아예 새로운 문자열을 만들어낸다는 차이점이 있다.    
+## `strcat`과는 무엇이 다른가
+`strcat`도 문자열 dst 뒤에 src를 붙이는 것이므로 비슷하다고 볼 수 있지만, 결정적으로 `strcat`은 원본 dst에 src를 더하는 과정이지만 `strjoin`은 아예 새로운 문자열을 만들어낸다는 차이점이 있다.    
 
 
 ***
@@ -75,5 +75,5 @@ char	*ft_strjoin(char const *str1, char const *str2)
 }
 
 ```
-str1과 str2의 길이 합 + 맨 뒤 NUL을 넣어줄 크기까지 할당을 한 후, 순서대로 str1과 str2의 문자들을 받아와 채운다.    
+str1과 str2의 길이 합 + 맨 뒤 `NUL`을 넣어줄 크기까지 할당을 한 후, 순서대로 str1과 str2의 문자들을 받아와 채운다.    
 
