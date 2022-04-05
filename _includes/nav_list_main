@@ -26,11 +26,12 @@
             </ul>
             <ul>
                 {% for category in site.categories %}
-                    {% if category[0] == "STL" %}
-                        <li><a href="/categories/stl" class="">C++ STL & 표준 ({{category[1].size}})</a></li>
-                    {% endif %}
+                    {% if category[0] == "gnl" %}
+                        <li><a href="/categories/gnl" class="">gnl ({{category[1].size}})</a></li>
+                    {% endif %} 
                 {% endfor %}
             </ul>
       </li>
+	  
   </ul>
 </nav>
