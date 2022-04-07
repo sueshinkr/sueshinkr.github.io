@@ -76,7 +76,7 @@ void	*ft_memmove(void *dst, const void *src, size_t size)
 	return (result);
 }
 ```
-`malloc` 함수를 사용할 수 없어 버퍼를 만들 수 없고, mac기준 매뉴얼에는 버퍼를 사용한다는 말 자체가 없이 'the copy is always done in a non-destructive manner'라고만 적혀있다. 그래서 경우를 나누어 처리하였는데    
+mac기준 매뉴얼에는 버퍼를 사용한다는 말 자체가 없이 'the copy is always done in a non-destructive manner'라고만 적혀있다. 그래서 경우를 나누어 처리하였는데    
 1. src값이 dst보다 클 때    
 앞에서부터 차례대로 복사하면 아무런 문제가 생기지 않는다.    
 2. dst값이 src보다 클 때    
