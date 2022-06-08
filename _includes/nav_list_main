@@ -31,10 +31,17 @@
                     {% endif %} 
                 {% endfor %}
             </ul>
-			 <ul>
+            <ul>
                 {% for category in site.categories %}
                     {% if category[0] == "algorithm" %}
                         <li><a href="/categories/algorithm" class="">algorithm ({{category[1].size}})</a></li>
+                    {% endif %} 
+                {% endfor %}
+            </ul>
+            <ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "ft_printf" %}
+                        <li><a href="/categories/ft_printf" class="">ft_printf ({{category[1].size}})</a></li>
                     {% endif %} 
                 {% endfor %}
             </ul>
