@@ -45,6 +45,13 @@
                     {% endif %} 
                 {% endfor %}
             </ul>
+			<ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "born2beroot" %}
+                        <li><a href="/categories/born2beroot" class="">born2beroot ({{category[1].size}})</a></li>
+                    {% endif %} 
+                {% endfor %}
+            </ul>
       </li>
 	  
   </ul>
