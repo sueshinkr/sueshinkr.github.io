@@ -24,10 +24,11 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 4. [APPArmor](#apparmor)
 5. [UFW](#uncomplicated-firewall)
 6. [LVM](#lvmlogical-volume-manager)
-7. [SSH]
-8. [SUDO]
+7. [SSH](#sshsecure-shell-protocol)
+8. [DHCP]
+8. [SUDO](#sudo)
 9. [cron]
-10. [tty]
+10. [tty](#ttyteletypewriter)
 
 ***
 
@@ -167,6 +168,11 @@ deb파일을 이용하는 기능이 없기 때문에 실질적으로는 `dpkg`�
 	많이 사용되는 것은 SSH 키 쌍을 사용하는 것. 키 쌍을 통한 인증은 앞서 서버의 확인 과정과 비슷함
 
 * 포트포워딩
+
+# DHCP(Dynamic Host COnfiguration Protocol)
+호스트의 IP 주소와 각종 TCP/IP 프로토콜의 기본 설정을 클라이언트에게 자동적으로 제공해주는 프로토콜. DHCP 서버를 사용하여 IP주소 및 관련된 기타 구성 세부정보(네임 서버 주소, 게이트웨이 주소 등)를 네트워크의 DHCP 사용 클라이언트에게 동적으로 할당하는 방법을 제공한다.    
+* 장점 : PC수가 많거나 자체 변동사항이 많은 경우 IP설정이 자동으로 되므로 효율적, IP충돌을 막을 수 있음
+* 단점 : DHCP 서버 다운시 IP 할당이 제대로 이루어지지 않음
 
 
 

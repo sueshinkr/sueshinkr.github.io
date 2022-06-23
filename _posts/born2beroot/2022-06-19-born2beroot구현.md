@@ -23,8 +23,8 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 3. [Host&Partition](#host--partition-설정)
 4. [Sudo](#sudo-설정)
 5. [UFW](#ufw-설정)
-6. [SSH]
-7. [Script monitoring]
+6. [SSH](#ssh-설정)
+7. [Script monitoring](#script-monitoring-설정)
 
 ***
 
@@ -33,8 +33,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * 그룹 추가 : `groupadd (groupname)`
 * 그룹 삭제 : `groupdell (groupname)`
 * 그룹 확인 : `getent group`
-* 유저 추가 : `useradd (username)`    
-또는 `useradd -g (groupname) (username)`으로 유저생성과 그룹설정 동시에 가능
+* 유저 추가 : `adduser (username)`, `useradd`의 경우 모든 설정들을 수동으로 명시해주어야한다.    
 * 유저 삭제 : `sudo userdel -r (user)`
 * 그룹에서 유저 삭제 : `sudo deluser (user) (group)`
 * `usermod` 명령어    
@@ -103,8 +102,8 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 		* `secure path` - 명령을 수행하기 위해 `sudo`가 실행할 소프트웨어를 찾는 경로. `/A:/B` = A에 없으면 B에서 
 	* 암호 입력 제한 : `Defaults	passwd_tries=N`
 	* 권한 획득 실패시 메세지 출력 : `Defaults	authfail_message=""`
-	* 암호 불일치시 메시지 출력 : `Defaults	badpasswd_message=""`
-	* log 저장 디렉토리 설정 : `Defaults	iolog_Dir="/var/log/sudo"`
+	* 암호 불일치시 메시지 출력 : `Defaults	badpass_message=""`
+	* log 저장 디렉토리 설정 : `Defaults	iolog_dir="/var/log/sudo"`
 	* 입력된 명령어 log로 저장 : `Defaults	log_input`
 	* 출력 결과 log로 저장 : `Defaults	log_output`
 	* `sudo` 명령어 외부실행 제한 : `Defaults	requiretty`
@@ -134,16 +133,102 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 
 # SSH 설정
 
+* 포트(Port) : 하나의 운영체제 안에서 소켓을 구분하는 목적으로 사용되는 번호
+
 * 확인 : `sudo ssh -V`
 * 설치 : `apt install openssh-server`
 * 실행 확인 : `systemctl status ssh`
-* 포트 설정 : `sudo vi /etc/ssh/sshd_config`에서 Port N (sshd : 서버, ssh : 클라이언트)
+* 포트 설정 : `/etc/ssh/sshd_config`에서 `Port N`으로 설정 (sshd : 서버, ssh : 클라이언트)
 * `root`계정 접속 제한 : `/etc/ssh/sshd_config`에서 `PermitRootLogin`을 no로 설정
 * SSH 재시작을 통한 설정 적용 : `sudo systemctl restart ssh`
 * SSH를 통한 로그인 : `ssh (user)@(IP) -p (host_port)`
 
-
 * inet 주소 확인 : `sudo apt-get net-tools` > `ifconfig`
 
+* DHCP 연결 제거 : `/etc/network/interfaces`에서 `iface enp0s3 inet dhcp`를 `ifcae enp0s3 inet static`으로 수정    
+	이후 `ip address`와 `netmask`, `gateway`를 설정    
+	`gateway`는 `ip route` 명령어를 통해 확인 가능하고, `ip address`와 `netmask`는 `ifconfig`명령어를 통해 확인 가능    
+	마지막으로 `ifdown enp0s3`, `ifup enp0s3`로 해당 네트워크 디바이스를 재시작하여 변경사항 적용, `reboot`으로 전체 네트워크 디바이스를 재시작
+	* enp0s3 : 네트워크 인터페이스 이름
+* 네트워크 상태 확인 : `ss`
+	* `-a` : 모든 포트 확인
+	* `-t` : TCP 포트 확인
+	* `-u` : UDP 포트 확인
+	* `-l` : `LISTEN` + `UNCONN` 상태의 포트 확인 (`ss`의 기본값은 `non-listening`)
+		* `LISTEN` : 포트가 열려있는 상태, 연결 대기중
+		* `SYS-SENT` : 연결을 요청한 상태
+		* `SYN_RECEIVED` : 연결 요청에 응답 후 확인 대기중
+		* `ESTABLISHED` : 연결되어있음
+		* `CLOSED` : 연결이 끊어짐
+		* `CLOSE_WAIT` : 연결이 종료되기를 대기중
+		* `TIME_WAIT` : 연결은 종료되었으나 원격의 수신 보장을 위해 기다리고있는 상태
+	* `-p` : 프로세스명 표시
+	* `-n` : 호스트 / 포트 / 사용자 이름을 숫자로 표시
 
 
+***
+
+# Script Monitoring 설정
+## Cron
+
+* `/etc/crontab` : system wide crontab 설정
+* `crontab -e` : 개별 유저의 crontab 설정. `root`도 개별 crontab을 가질 수 있음
+
+* cron 목록 조회 : `crontab -l`
+* cron 편집 : `crontab -e` 
+* cron 설정 : `*(분) *(시간) *(날짜) *(월) *(요알) (command)`
+	* `-` - 사이 모든 값, ex)2-4 = 2, 3, 4
+	* `,` - 지정 값
+	* `/` - 주기로 설정, ex)/10 = 10마다
+	* 30초마다 실행되도록 설정 : `*/1 * * * * sleep 30; (command)`
+* cron 실행(재실행) : `service cron start(restart)`
+* cron 중지 : `sercice cron stop`
+* cron 상태 확인 : `service cron status`
+* 서버 시작시 cron 실행(중지) : `systemctl enable(disable) cron`
+
+## Monitoring.sh
+
+* `#!/bin/bash` : 해당 파일을 bash 쉘로 실행시키겠다는 의미
+
+1. 운영 체제 및 해당 커널 버전의 아키텍쳐
+	* `uname` : 시스템 운영체제 정보 출력, `-a` 옵션 사용시 시스템 전체 정보 출력
+2. 물리적 프로세스의 수
+	* `nproc` : 사용 가능한 프로세스의 수 출력, `--all` 옵션 사용시 모든 프로세스 개수 출력
+3. 가상 프로세서의 수
+	* 가상 프로세서(virtual processor) : 가상머신에 할당된 cpu 코어. 실제 코어 수보다 많을 수 있음
+	* `/proc/cpuinfo` : cpu 코어의 세부사항이 담긴 파일. `grep processor | wc -l`으로 가상 프로세서의 수를 확인 
+4. 서버에서 현재 사용 가능한 RAM 및 사용률
+	* `free` : 시스템의 메모리 현황 출력, `-m` 옵션 사용시 MB 단위로 출력. `total`과 `free` 메모리를 적절하게 참조하여 사용률을 백분률로 표시할 수 있음
+5. 서버의 현재 사용 가능한 메모리 및 사용률
+	* `df` : 마운트된 파일 시스템의 크기와 용량 출력, `-P` 옵션 사용시 경로가 길어도 한줄로 출력
+	* `awk`에서 `END`패턴 사용시 모든 레코드를 처리한 후 `END`에 지정된 액션을 실행
+6. 프로세서의 현재 사용률
+	* `mpstat` : `sysstat`패키지에 포함된 명령어. 모든 cpu에 대한 정보 출력
+7. 마지막 재부팅 날짜 및 시간
+	* `who` : 현재 시스템에 접속한 사용자 출력, `-b` 옵션 사용시 마지막 부팅 정보 출력
+8. LVM의 활성 상태 여부
+	* `lsblk` : 트리 형식으로 모든 스토리지 디바이스 출력
+9. 활성 연결 수
+	* `ss` : socket 상태 출력, `-t` 옵션 사용시 `TCP` 연결만을 출력
+10. 서버를 사용하는 사용자 수
+	* `who` 명령어 사용
+11. 서버의 IPv4 주소 및 해당 MAC(Media Access Control) 주소
+	* `hostname` : 호스트네임을 출력, `-I` 옵션 사용시 호스트의 모든 네트워크 주소 출력
+	* `ip link` : 네트워크 인터페이스를 출력
+12. sudo 프로그램으로 실행된 명령 수
+	* `/var/log/auth.log` : 사용자 로그인이나 사용된 인증방법 등의 시스템 인증 정보가 기록됨. `grep -a(바이너리 파일을 텍스트 파일처럼 취급) sudo | grep COMMAND | wc -l`로 sudo 명령 수 확인
+	* `jounalctl` : `systemd`의 서비스 로그를 조회하는 명령어. `_COMM=sudo` 명령어로 sudo 로그만 확인.
+
+
+
+# bonus
+partition
+
+* `/boot` : static files of the boot loader
+* `/home` : user home directories
+* `/tmp` : temporary files
+* `/usr` : static data
+* `/var` : variable data
+* `/srv` : data for services provided by this system
+* `/opt` : add-on application software packages
+* `/usr/local` : local hierachy
