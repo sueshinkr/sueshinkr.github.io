@@ -97,7 +97,10 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 
 * 확인 : `dpkg -l sudo`
 * 설치 : `apt-get install sudo`, `-y`옵션 추가시 자동적으로 yes처리
-* sudo 설정 변경 : `sudo visudo` (`/etc/sudoers` 편집, 정합성 및 문법 자동 검사)
+
+
+* 편집기 변경 : `sudo update-alternatives --config editor`
+* sudo 설정 변경 : `sudo visudo` (`/etc/sudoers` 편집, `.tmp`파일을 통한정합성 및 문법 자동 검사)
 	* `secure path` 제한 : `Defaults	secure_path=""`
 		* `secure path` - 명령을 수행하기 위해 `sudo`가 실행할 소프트웨어를 찾는 경로. `/A:/B` = A에 없으면 B에서 
 	* 암호 입력 제한 : `Defaults	passwd_tries=N`
@@ -180,7 +183,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	* `-` - 사이 모든 값, ex)2-4 = 2, 3, 4
 	* `,` - 지정 값
 	* `/` - 주기로 설정, ex)/10 = 10마다
-	* 30초마다 실행되도록 설정 : `*/1 * * * * sleep 30; (command)`
+	* 30초마다 실행되도록 설정 : `*/1 * * * * sleep 30; (command)` 추가
 * cron 실행(재실행) : `service cron start(restart)`
 * cron 중지 : `sercice cron stop`
 * cron 상태 확인 : `service cron status`
@@ -218,17 +221,32 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 12. sudo 프로그램으로 실행된 명령 수
 	* `/var/log/auth.log` : 사용자 로그인이나 사용된 인증방법 등의 시스템 인증 정보가 기록됨. `grep -a(바이너리 파일을 텍스트 파일처럼 취급) sudo | grep COMMAND | wc -l`로 sudo 명령 수 확인
 	* `jounalctl` : `systemd`의 서비스 로그를 조회하는 명령어. `_COMM=sudo` 명령어로 sudo 로그만 확인.
+		* 저널링 파일 시스템(`journaling file system`) - 시스템의 일정 부분을 시스템 변경사항 기록용으로 할당해두어 백업이나 복구가 가능해진 시스템. `ex4(extended file system4)`가 이 시스템으로 되어있으며 리눅스 배포판들은 이를 기본 파일 시스템으로 채택하는 경향이 있음.
 
 
 
 # bonus
 partition
 
+* `/` : `root` 최상위 마운트 파티션. 비교적 크기가 작은 `/bin, /etc`를 포함
+* `/swap` : 스왑 파티션. 가상 메모리로 실제 물리적인 램이 부족할 때 대신 사용
+* `/home` : 사용자 계정 파티션. 사용자 계정이 위치하며, 웹 호스팅 서비스를 할 경우 해당 파티션의 용량을 가능한 한 크게 설정
+* `/var` : 로그 파일 파티션. 시스템의 로그 파일들이 저장되며 공간을 많이 차지하기 때문에 디스크 용량 부족 현상이 생기지 않도록 처리
+* `/srv` : 서버 파티션. 프로토콜을 이용한 외부 사용자와의 공유에 사용
+* `/tmp` : 임시 파티션. 임시 파일들을 저정하거나 임시로 작업을 진핼할 때 사용
+* `/var/log` : 프로그램의 로그파일들이 따로 저장되는 파티션. 이외에는 `/var`과 동일
 * `/boot` : static files of the boot loader
-* `/home` : user home directories
-* `/tmp` : temporary files
 * `/usr` : static data
-* `/var` : variable data
-* `/srv` : data for services provided by this system
 * `/opt` : add-on application software packages
 * `/usr/local` : local hierachy
+
+
+# Lighttpd
+
+* lighttpd 설치 : `apt-get install lighttpd`
+* lighttpd 서버 시작/중지/부팅시 활성화 : `systemctl start/stop/enable lighttpd.service`
+*
+
+
+# MariaDB
+* secure -> switch to unix_socket authentication
