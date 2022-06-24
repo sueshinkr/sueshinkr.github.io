@@ -262,9 +262,9 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 
 ## MariaDB
 * 설치 : `apt-get install mariadb-server mariadb-client`
-* db 서버 시작/중지/부팅시 활성화 : `systemctl start/stop/enable mysql.service`
+* db 서버 시작/중지/부팅시 활성화 : `systemctl start/stop/enable mariadb(또는 mysql.service)`
 * db 서버 보안설정 : `mysql_secure_installation`
-* db 서버 재시작 : `systemctl restart mysql.service`
+* db 서버 재시작 : `systemctl restart mariadb(또는 mysql.service)`
 
 * MariaDB 서비스 실행 : `mysql (db)`, `-u (user) -p`로 sql문을 실행할 유저 선택
 	* 유저 생성 : `create user &#96;(user)&#96;@&#96;localhost&#96; identified by &#96;(user passwd)&#96;;`
