@@ -115,7 +115,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	* `stderr` : 오류 발생시 출력되는 정보
 	* `stdin` : sudo로 실행한 명령어가 표준 입력을 받은 내용
 	* `stdout` : sudo로 실행한 명령어가 표준 출력으로 출력한 내용
-	* `timing` : session timing file
+	* `timing` : session이 실행된 시간
 	* `ttyin` : sudo로 실행한 명령어가 tty로 입력받은 내용
 	* `ttyout` : sudo로 실행한 명령어가 tty로 출력한 내용
 
@@ -226,10 +226,10 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 
 
 # bonus
-partition
+## partition 설정
 
 * `/` : `root` 최상위 마운트 파티션. 비교적 크기가 작은 `/bin, /etc`를 포함
-* `/swap` : 스왑 파티션. 가상 메모리로 실제 물리적인 램이 부족할 때 대신 사용
+* `/swap` : 스왑 파티션. 가상 메모리로 실제 물리적인 램이 부족할 때 대신 사용ㄴ
 * `/home` : 사용자 계정 파티션. 사용자 계정이 위치하며, 웹 호스팅 서비스를 할 경우 해당 파티션의 용량을 가능한 한 크게 설정
 * `/var` : 로그 파일 파티션. 시스템의 로그 파일들이 저장되며 공간을 많이 차지하기 때문에 디스크 용량 부족 현상이 생기지 않도록 처리
 * `/srv` : 서버 파티션. 프로토콜을 이용한 외부 사용자와의 공유에 사용
@@ -241,12 +241,42 @@ partition
 * `/usr/local` : local hierachy
 
 
-# Lighttpd
+## Lighttpd 설정
 
-* lighttpd 설치 : `apt-get install lighttpd`
-* lighttpd 서버 시작/중지/부팅시 활성화 : `systemctl start/stop/enable lighttpd.service`
-*
+* 설치 : `apt-get install lighttpd`
+* 서버 시작/중지/부팅시 활성화 : `systemctl start/stop/enable lighttpd.service`
+* 상태 확인 : `systemctl status lighttpd`
+* fastcgi 적용 : 
+	1. `/etc/lighttpd/conf-available/15-fastcgi-php.conf`파일 편집 - `"Bin-path", "socket"` 주석처리 후 `"socket" => "/var/run/php/php(ver)-fpm.sock"` 추가    
+	2. `lighttpd-enable-mod fastcgi/fatcgi-php`    
+* 재시작 : `serice lighttpd force-reload`, `initscripts` 패키지 필요
+* 연결 포트 확인 : `/etc/lighttpd/lighttpd.conf`
 
+## PHP 설정
 
-# MariaDB
-* secure -> switch to unix_socket authentication
+* 설치 : `apt-get install php-fpm`
+* `cgi.fix_pathinfo` 활성화 : `/etc/php/(ver)/fpm/php.ini`에서 `cgi.fix_pathinfo=1` 주석 해제    
+	해당 기능을 통해 스크립트와 파일 경로를 적절하게 구분할 수 있으나 보안상의 취약점이 생성됨    
+	[자세한 내용은 링크 참조](https://serverfault.com/questions/627903/is-the-php-option-cgi-fix-pathinfo-really-dangerous-with-nginx-php-fpm)    
+* db와 연동 : `apt install php(ver)-mysql`
+
+## MariaDB
+* 설치 : `apt-get install mariadb-server mariadb-client`
+* db 서버 시작/중지/부팅시 활성화 : `systemctl start/stop/enable mysql.service`
+* db 서버 보안설정 : `mysql_secure_installation`
+* db 서버 재시작 : `systemctl restart mysql.service`
+
+* MariaDB 서비스 실행 : `mysql (db)`, `-u (user) -p`로 sql문을 실행할 유저 선택
+	* 유저 생성 : `create user &#96;(user)&#96;@&#96;localhost&#96; identified by &#96;(user passwd)&#96;;`
+	* 유저의 db 권한 생성 : `grant all on (db).* to &#96;(user)&#96;@&#96;localhost&#96; identified by &#96;(user passwd)&#96 with grant option;`
+	* 변경사항 즉시 반영 : `flush previleges;`
+	* 종료 : `exit;`
+
+* `Wordpress` 설치 : `lighttpd`의 설정에서 `server.document-root`로 설정되어있던 디렉토리에 설치    
+	* `apt-get install wget`
+	* `wget -O /tmp/wordpress.tar.gz "http://wordpress.org/latest.tar.gz"`
+	* `tar -xvzf /tmp/wordpress.tar.gz -C /var/www/html`
+* `Wordpress`와 db 연동 : `/var/www/html/wordpress/wp-config-sample.php`파일 편집    
+	* `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` 설정
+	* 인증키 설정 - `https://api.wordpress.org/secret-key/1.1/salt/`의 키 복붙    
+	* sample파일 이름 변경 - `/var/www/html/wordpress/wp-config.php`
