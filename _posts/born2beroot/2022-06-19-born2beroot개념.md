@@ -27,8 +27,15 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 7. [SSH](#sshsecure-shell-protocol)
 8. [DHCP](#dhcpdynamic-host-configuration-protocol)
 8. [SUDO](#sudo)
-9. [cron]
+9. [cron](#cron)
 10. [tty](#ttyteletypewriter)
+
+# 보너스
+1. [Lighttpd](#lighttpd)
+2. [PHP](#php)
+3. [MariaDB](#mariadb)
+4. [WordPress](#wordpress)
+5. [FTP](#ftpfile-transfer-protocol)
 
 ***
 
@@ -197,7 +204,6 @@ deb파일을 이용하는 기능이 없기 때문에 실질적으로는 `dpkg`�
 	* Apache Web server - 거의 모든 운영체제에서 사용 가능한 오픈소스 무료 웹 서버, 구축이 쉽고 다양한 모듈을 제공하며 보안수준이 높음
 	* Nginx Web server - 대규모 웹 트래픽의 처리시 고효율을 발휘하는 오픈소스 무료 웹 서버, Apache에 비해 가벼움
 
-
 ***
 
 # PHP
@@ -213,3 +219,14 @@ HTML에 추가시 서버에서 웹 페이지를 렌더링해준다.
 오픈 소스의 관계형 데이터베이스 관리 시스템(RDBMS)로, `MySQL`과 동일한 소스 코드를 기반으로 한다. `SQL` 언어문을 통해 db를 관리한다.    
 * `MySQL` : 전세계적으로 가장 널리 사용되고있는 오픈 소스 데이터베이스    
 
+# WordPress
+오픈 소스를 기반으로 한 설치형 블로그 또는 CMS(Content Management System)이다.    
+전세계 웹사이트의 43%가 wordpress로 제작되어있다고 한다.    
+
+
+## FTP(File Transfer Protocol)
+[참고한 링크](https://coderb.tistory.com/16)    
+서버와 클라이언트 사이에서 TCP/IP를 통해 파일을 송수신하기 위해 고안된 프로토콜이다. 빠른 파일 송수신만을 목적으로 두고 고안되어 보안에는 취약하다고 한다.    
+제어 포트인 21번 포트에서 클라이언트와 서버 사이의 명령, 제어등을 송수신하고 데이터 포트인 20번 포트에서 클라이언트와 서버 사이의 직접적인 파일 송/수신을 담당한다.    
+처음 연결시에는 `Active mode`에서 21번 포트로 서로 신호를 주고받은 후 클라이언트가 서버에 20번 포트로 연결할것을 요구하는데, 방화벽ㅇ로 인해 연결이 제대로 이루어지지 않을 수 있다. 이 때는 `Passive mode`에서 서버가 클라이언트에게 연결할 포트를 알려주어야 한다.    
+* `Vsftpd(Very secure ftp daemon)` : linux에서 사용할 수 있는 ftp 서버 프로그램으로 보안/성능/안정성이 우수하다. 

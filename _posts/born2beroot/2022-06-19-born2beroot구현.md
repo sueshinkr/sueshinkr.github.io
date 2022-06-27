@@ -26,6 +26,13 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 6. [SSH](#ssh-설정)
 7. [Script monitoring](#script-monitoring-설정)
 
+# BONUS!
+1. [Lighttpd](#lighttpd-설정)
+2. [PHP](#php-설정)
+3. [MariaDB](#mariadb-설정)
+4. [WordPress](#wordpress-설정)
+5. [FTP](#ftp-설정)
+
 ***
 
 # User 설정
@@ -33,8 +40,8 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * 그룹 추가 : `groupadd (groupname)`
 * 그룹 삭제 : `groupdell (groupname)`
 * 그룹 확인 : `getent group`
-* 유저 추가 : `adduser (username)`, `useradd`의 경우 모든 설정들을 수동으로 명시해주어야한다.    
-* 유저 삭제 : `sudo userdel -r (user)`
+* 유저 추가 : `adduser (username)`, `useradd`의 경우 모든 설정들을 수동으로 명시해주어야 함    
+* 유저 삭제 : `sudo userdel (user)`, `-r`옵션 설정시 홈디렉토리까지 삭제
 * 그룹에서 유저 삭제 : `sudo deluser (user) (group)`
 * `usermod` 명령어    
 	`-l (user) (newname)` : user명 변경
@@ -185,7 +192,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	* `/` - 주기로 설정, ex)/10 = 10마다
 	* 30초마다 실행되도록 설정 : `*/1 * * * * sleep 30; (command)` 추가
 * cron 실행(재실행) : `service cron start(restart)`
-* cron 중지 : `sercice cron stop`
+* cron 중지 : `service cron stop`
 * cron 상태 확인 : `service cron status`
 * 서버 시작시 cron 실행(중지) : `systemctl enable(disable) cron`
 
@@ -223,9 +230,8 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	* `jounalctl` : `systemd`의 서비스 로그를 조회하는 명령어. `_COMM=sudo` 명령어로 sudo 로그만 확인.
 		* 저널링 파일 시스템(`journaling file system`) - 시스템의 일정 부분을 시스템 변경사항 기록용으로 할당해두어 백업이나 복구가 가능해진 시스템. `ex4(extended file system4)`가 이 시스템으로 되어있으며 리눅스 배포판들은 이를 기본 파일 시스템으로 채택하는 경향이 있음.
 
+***
 
-
-# bonus
 ## partition 설정
 
 * `/` : `root` 최상위 마운트 파티션. 비교적 크기가 작은 `/bin, /etc`를 포함
@@ -240,8 +246,9 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * `/opt` : add-on application software packages
 * `/usr/local` : local hierachy
 
+***
 
-## Lighttpd 설정
+# Lighttpd 설정
 
 * 설치 : `apt-get install lighttpd`
 * 서버 시작/중지/부팅시 활성화 : `systemctl start/stop/enable lighttpd.service`
@@ -252,7 +259,9 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * 재시작 : `serice lighttpd force-reload`, `initscripts` 패키지 필요
 * 연결 포트 확인 : `/etc/lighttpd/lighttpd.conf`
 
-## PHP 설정
+***
+
+# PHP 설정
 
 * 설치 : `apt-get install php-fpm`
 * `cgi.fix_pathinfo` 활성화 : `/etc/php/(ver)/fpm/php.ini`에서 `cgi.fix_pathinfo=1` 주석 해제    
@@ -260,7 +269,9 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	[자세한 내용은 링크 참조](https://serverfault.com/questions/627903/is-the-php-option-cgi-fix-pathinfo-really-dangerous-with-nginx-php-fpm)    
 * db와 연동 : `apt install php(ver)-mysql`
 
-## MariaDB
+***
+
+# MariaDB 설정
 * 설치 : `apt-get install mariadb-server mariadb-client`
 * db 서버 시작/중지/부팅시 활성화 : `systemctl start/stop/enable mariadb(또는 mysql.service)`
 * db 서버 보안설정 : `mysql_secure_installation`
@@ -268,10 +279,14 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 
 * MariaDB 서비스 실행 : `mysql (db)`, `-u (user) -p`로 sql문을 실행할 유저 선택
 	* 유저 생성 : `create user &#96;(user)&#96;@&#96;localhost&#96; identified by &#96;(user passwd)&#96;;`
+	* 유저 확인 : `show databases`
 	* 유저의 db 권한 생성 : `grant all on (db).* to &#96;(user)&#96;@&#96;localhost&#96; identified by &#96;(user passwd)&#96 with grant option;`
 	* 변경사항 즉시 반영 : `flush previleges;`
 	* 종료 : `exit;`
 
+***
+
+# WordPress 설정
 * `Wordpress` 설치 : `lighttpd`의 설정에서 `server.document-root`로 설정되어있던 디렉토리에 설치    
 	* `apt-get install wget`
 	* `wget -O /tmp/wordpress.tar.gz "http://wordpress.org/latest.tar.gz"`
@@ -280,3 +295,26 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	* `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` 설정
 	* 인증키 설정 - `https://api.wordpress.org/secret-key/1.1/salt/`의 키 복붙    
 	* sample파일 이름 변경 - `/var/www/html/wordpress/wp-config.php`
+
+***
+
+# FTP 설정
+* 서버 설치 : `apt install vsftpd`
+* 클라이언트 설치 : `apt install ftp`
+* `/etc/vsttpd.conf`    
+[참고한 링크](#https://onlyit.tistory.com/entry/VSFTP-%ED%99%98%EA%B2%BD%EC%84%A4%EC%A0%95vsftpdconf)    
+	* 업로드 활성화 - `write_enables=YES`
+	* 사용자의 상위 디렉토리 접근 차단(홈 디렉토리를 루트 디렉토리로 간주) : `chroot_local_user=YES`
+	* 가상유저들을 지칭할 가상의 변수 지정 : `user_sub_token=$USER`
+	* 가상유저들이 로그인 후 이동될 디렉토리 지정 : `local_root=/home/$USER/ftp`
+	* 해당 디렉토리의 권한 설정 : `chown nobody:nogroup /home/(username)/ftp`, `chmod a-w /home/(sueshin)/ftp`
+	* 명시된 사용자만 로그인을 허용 : `userlist_enable=YES`, `userlist_deny=YES`
+	* 명시된 사용자를 읽어올 파일 지정 : `userlist_file=/etc/vsftpd.userlist`
+* 연결할 기기의 환경 설정(mac의 경우)
+	* 클라이언트 설치 : `brew install inetutils`
+	* 연결 : `ftp (ip)`
+* `ftp` 명령어
+	* `bye` : 연결 종료
+	* `put` : 로컬의 파일을 `ftp` 서버로 전송
+	* `get` : `ftp` 서버의 파일을 로컬에 내려받음
+	* `cd`, `ls`, `dir`, `mkdir` ....
