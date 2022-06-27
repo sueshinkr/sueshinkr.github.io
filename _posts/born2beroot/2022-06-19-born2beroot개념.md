@@ -22,7 +22,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 2. [CentOS vs Devian](#centos--debian)
 3. [aptitude vs apt](#debian의-패키지-관리-툴package-managing-tool)
 4. [APPArmor](#apparmor)
-5. [UFW](#uncomplicated-firewall)
+5. [UFW](#ufwuncomplicated-firewall)
 6. [LVM](#lvmlogical-volume-manager)
 7. [SSH](#sshsecure-shell-protocol)
 8. [DHCP](#dhcpdynamic-host-configuration-protocol)

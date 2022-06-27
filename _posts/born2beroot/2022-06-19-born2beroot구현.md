@@ -27,11 +27,12 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 7. [Script monitoring](#script-monitoring-설정)
 
 # BONUS!
-1. [Lighttpd](#lighttpd-설정)
-2. [PHP](#php-설정)
-3. [MariaDB](#mariadb-설정)
-4. [WordPress](#wordpress-설정)
-5. [FTP](#ftp-설정)
+1. [Partition](#partition-설정)
+2. [Lighttpd](#lighttpd-설정)
+3. [PHP](#php-설정)
+4. [MariaDB](#mariadb-설정)
+5. [WordPress](#wordpress-설정)
+6. [FTP](#ftp-설정)
 
 ***
 
@@ -77,8 +78,8 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 
 ## Password 정책 설정
 * 현재 암호 정책 확인 : `/etc/pam.d/common-password`
-* 패스워드 정책 설정 모듈 추가 : `sudo apt install libpam-cracklib` -> `common-password`파일에 `pamcracklib.so` 추가
-* `libpam-cracklib`
+* 패스워드 정책 설정 모듈 추가 : `sudo apt install libpam-pwquality` -> `common-password`파일에 `pam_pwquality.so` 추가
+* `pam_pwquality.so`
 	`retry=N` : 암호 입력 가능횟수 설정
 	`minlen=N` : 암호 최소길이 설정, N + credit + 1이 설정 가능한 최소길이가 됨
 	`difok=N` : 기존 암호와 달라야하는 문자 수 설정
@@ -232,10 +233,10 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 
 ***
 
-## partition 설정
+# partition 설정
 
 * `/` : `root` 최상위 마운트 파티션. 비교적 크기가 작은 `/bin, /etc`를 포함
-* `/swap` : 스왑 파티션. 가상 메모리로 실제 물리적인 램이 부족할 때 대신 사용ㄴ
+* `/swap` : 스왑 파티션. 가상 메모리로 실제 물리적인 램이 부족할 때 대신 사용
 * `/home` : 사용자 계정 파티션. 사용자 계정이 위치하며, 웹 호스팅 서비스를 할 경우 해당 파티션의 용량을 가능한 한 크게 설정
 * `/var` : 로그 파일 파티션. 시스템의 로그 파일들이 저장되며 공간을 많이 차지하기 때문에 디스크 용량 부족 현상이 생기지 않도록 처리
 * `/srv` : 서버 파티션. 프로토콜을 이용한 외부 사용자와의 공유에 사용
@@ -246,7 +247,6 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * `/opt` : add-on application software packages
 * `/usr/local` : local hierachy
 
-***
 
 # Lighttpd 설정
 
