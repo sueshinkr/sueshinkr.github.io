@@ -256,8 +256,9 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * fastcgi 적용 : 
 	1. `/etc/lighttpd/conf-available/15-fastcgi-php.conf`파일 편집 - `"Bin-path", "socket"` 주석처리 후 `"socket" => "/var/run/php/php(ver)-fpm.sock"` 추가    
 	2. `lighttpd-enable-mod fastcgi/fatcgi-php`    
-* 재시작 : `serice lighttpd force-reload`, `initscripts` 패키지 필요
+* 재시작 : `service lighttpd force-reload`, `initscripts` 패키지 필요
 * 연결 포트 확인 : `/etc/lighttpd/lighttpd.conf`
+* 연결 확인 : `(ip):8080`으로 접속 (포트포워딩 필요)
 
 ***
 
@@ -268,6 +269,13 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	해당 기능을 통해 스크립트와 파일 경로를 적절하게 구분할 수 있으나 보안상의 취약점이 생성됨    
 	[자세한 내용은 링크 참조](https://serverfault.com/questions/627903/is-the-php-option-cgi-fix-pathinfo-really-dangerous-with-nginx-php-fpm)    
 * db와 연동 : `apt install php(ver)-mysql`
+* lighttpd와의 연결 확인 : `/var/www/html/info.php`를 아래와 같이 작성 후 `(ip):8080/info.php`로 접속
+	```
+	<?php
+		phpinfo();
+    	?>`
+	```
+
 
 ***
 
