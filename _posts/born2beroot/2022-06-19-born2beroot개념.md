@@ -18,6 +18,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 'VirtualBox(또는 UTM)'에서 새로운 가상머신을 생성하고, 그곳에 'CentOS' 또는 'Debian' 운영체제를 설치하여 이것저것 해보는 것이 주된 목표이다.    
 
 # ft_printf 과제에 필요한 개념들
+* Mandatory
 1. [가상화](#가상화virtualization)
 2. [CentOS vs Devian](#centos--debian)
 3. [aptitude vs apt](#debian의-패키지-관리-툴package-managing-tool)
@@ -30,7 +31,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 9. [cron](#cron)
 10. [tty](#ttyteletypewriter)
 
-# 보너스
+* Bonus
 1. [Lighttpd](#lighttpd)
 2. [PHP](#php)
 3. [MariaDB](#mariadb)
@@ -224,7 +225,7 @@ HTML에 추가시 서버에서 웹 페이지를 렌더링해준다.
 전세계 웹사이트의 43%가 wordpress로 제작되어있다고 한다.    
 
 
-## FTP(File Transfer Protocol)
+# FTP(File Transfer Protocol)
 [참고한 링크](https://coderb.tistory.com/16)    
 서버와 클라이언트 사이에서 TCP/IP를 통해 파일을 송수신하기 위해 고안된 프로토콜이다. 빠른 파일 송수신만을 목적으로 두고 고안되어 보안에는 취약하다고 한다.    
 제어 포트인 21번 포트에서 클라이언트와 서버 사이의 명령, 제어등을 송수신하고 데이터 포트인 20번 포트에서 클라이언트와 서버 사이의 직접적인 파일 송/수신을 담당한다.    
