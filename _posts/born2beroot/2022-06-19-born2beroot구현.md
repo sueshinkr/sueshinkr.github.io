@@ -286,10 +286,11 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * db 서버 재시작 : `systemctl restart mariadb(또는 mysql.service)`
 
 * MariaDB 서비스 실행 : `mysql (db)`, `-u (user) -p`로 sql문을 실행할 유저 선택
+	* db 생성 : `create database (db)`
+	* db 확인 : `show databases`
 	* 유저 생성 : `create user '(user)'@'localhost' identified by '(user passwd)';`
-	* 유저 확인 : `show databases`
 	* 유저의 db 권한 생성 : `grant all on (db).* to '(user)'@'localhost' identified by '(user passwd)&#96 with grant option;`
-	* 변경사항 즉시 반영 : `flush previleges;`
+	* 변경사항 즉시 반영 : `flush privileges;`
 	* 종료 : `exit;`
 
 ***
@@ -303,6 +304,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	* `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` 설정
 	* 인증키 설정 - `https://api.wordpress.org/secret-key/1.1/salt/`의 키 복붙    
 	* sample파일 이름 변경 - `/var/www/html/wordpress/wp-config.php`
+	* 확인 - `(ip):8080/wordpress` 접속
 
 ***
 
@@ -310,13 +312,13 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * 서버 설치 : `apt install vsftpd`
 * 클라이언트 설치 : `apt install ftp`
 * `/etc/vsttpd.conf`    
-[참고한 링크](#https://onlyit.tistory.com/entry/VSFTP-%ED%99%98%EA%B2%BD%EC%84%A4%EC%A0%95vsftpdconf)    
+[참고한 링크](https://onlyit.tistory.com/entry/VSFTP-%ED%99%98%EA%B2%BD%EC%84%A4%EC%A0%95vsftpdconf)    
 	* 업로드 활성화 - `write_enables=YES`
 	* 사용자의 상위 디렉토리 접근 차단(홈 디렉토리를 루트 디렉토리로 간주) : `chroot_local_user=YES`
 	* 가상유저들을 지칭할 가상의 변수 지정 : `user_sub_token=$USER`
 	* 가상유저들이 로그인 후 이동될 디렉토리 지정 : `local_root=/home/$USER/ftp`
-	* 해당 디렉토리의 권한 설정 : `chown nobody:nogroup /home/(username)/ftp`, `chmod a-w /home/(sueshin)/ftp`
-	* 명시된 사용자만 로그인을 허용 : `userlist_enable=YES`, `userlist_deny=YES`
+	* 해당 디렉토리의 권한 설정 : `chown nobody:nogroup /home/(username)/ftp`, `chmod a-w /home/(username)/ftp`
+	* 명시된 사용자만 로그인을 허용 : `userlist_enable=YES`, `userlist_deny=NO`
 	* 명시된 사용자를 읽어올 파일 지정 : `userlist_file=/etc/vsftpd.userlist`
 * 연결할 기기의 환경 설정(mac의 경우)
 	* 클라이언트 설치 : `brew install inetutils`
