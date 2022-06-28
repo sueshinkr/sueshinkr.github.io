@@ -63,33 +63,33 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 
 ## Password 기간 설정
 * `chage` 명령어 - 기존 유저의 암호 설정 변경시 사용    
-	`-l (user)` : 유저의 암호 설정 확인
-	`-d (number)` : 마지막으로 암호 변경한 날짜 수정
-	`-I (number)` : 암호 만료 후 변경 가능한 유예기간 설정
-	`-E (YYYY-MM-DD)` : 암호 만료일 설정
-	`-m (number)` : 암호 변경 후 의무 사용일 설정
-	`-M (number)` : 암호 사용가능 최대 일 수 설정
-	`-W (number)` : 암호 만료 전 경고메세지를 보낼 일 수 지정
+	* `-l (user)` : 유저의 암호 설정 확인    
+	* `-d (number)` : 마지막으로 암호 변경한 날짜 수정    
+	* `-I (number)` : 암호 만료 후 변경 가능한 유예기간 설정    
+	* `-E (YYYY-MM-DD)` : 암호 만료일 설정
+	* `-m (number)` : 암호 변경 후 의무 사용일 설정
+	* `-M (number)` : 암호 사용가능 최대 일 수 설정
+	* `-W (number)` : 암호 만료 전 경고메세지를 보낼 일 수 지정
 * `/etc/login.defs` - 신규 유저의 암호 설정 변경 가능    
-	`PASS_MAX_DAYS` : 암호 사용가능 최대 일 수
-	`PASS_MIN_DAYS` : 암호 의무 사용일
-	`PASS_WARN_AGE` : 암호 만료 전 경고메세지를 보낼 일 수
+	* `PASS_MAX_DAYS` : 암호 사용가능 최대 일 수
+	* `PASS_MIN_DAYS` : 암호 의무 사용일
+	* `PASS_WARN_AGE` : 암호 만료 전 경고메세지를 보낼 일 수
 * `/etc/shadow` : 유저들의 암호 설정 확인 가능
 
 ## Password 정책 설정
 * 현재 암호 정책 확인 : `/etc/pam.d/common-password`
 * 패스워드 정책 설정 모듈 추가 : `sudo apt install libpam-pwquality` -> `common-password`파일에 `pam_pwquality.so` 추가
 * `pam_pwquality.so`
-	`retry=N` : 암호 입력 가능횟수 설정
-	`minlen=N` : 암호 최소길이 설정, N + credit + 1이 설정 가능한 최소길이가 됨
-	`difok=N` : 기존 암호와 달라야하는 문자 수 설정
-	`ucredit=N` : N<0) 대문자 N개 이상으로 설정, N>0)대문자 N개 이하로 설정 + 이하일경우 그 수만큼 credit+
-	`lcredit=N` : ucredit과 동일한 기능의 소문자 설정
-	`decredit=N` : ucredit과 동일한 기능의 숫자 설정
-	`ocredit=N` : ucredit과 동일한 기능의 특수문자 설정
-	`reject_username` : user명이 암호에 들어있는지 검사(뒤집힌 경우 포함)
-	`maxrepeat=N` : 같은 문자가 반복 가능한 횟수 설정
-	`enforce_for_root` : root user가 암호 변경시에도 해당 모듈의 조건 추가. 단, root 암호 변경시 이전의 암호는 검사하지 않음
+	* `retry=N` : 암호 입력 가능횟수 설정
+	* `minlen=N` : 암호 최소길이 설정, N + credit + 1이 설정 가능한 최소길이가 됨
+	* `difok=N` : 기존 암호와 달라야하는 문자 수 설정
+	* `ucredit=N` : N<0) 대문자 N개 이상으로 설정, N>0)대문자 N개 이하로 설정 + 이하일경우 그 수만큼 credit+
+	* `lcredit=N` : ucredit과 동일한 기능의 소문자 설정
+	* `decredit=N` : ucredit과 동일한 기능의 숫자 설정
+	* `ocredit=N` : ucredit과 동일한 기능의 특수문자 설정
+	* `reject_username` : user명이 암호에 들어있는지 검사(뒤집힌 경우 포함)
+	* `maxrepeat=N` : 같은 문자가 반복 가능한 횟수 설정
+	* `enforce_for_root` : root user가 암호 변경시에도 해당 모듈의 조건 추가. 단, root 암호 변경시 이전의 암호는 검사하지 않음
 
 ***
 
