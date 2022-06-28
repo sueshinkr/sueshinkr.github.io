@@ -45,11 +45,11 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * 유저 삭제 : `sudo userdel (user)`, `-r`옵션 설정시 홈디렉토리까지 삭제
 * 그룹에서 유저 삭제 : `sudo deluser (user) (group)`
 * `usermod` 명령어    
-	`-l (user) (newname)` : user명 변경
-	`-L/-U (user)` : 잠금 및 잠금해제
-	`-p (password)` : 비밀번호 변경
-	`-aG (group1,group2, ...) (user)` : user를 group에 추가, a옵션이 없을 시 명시되어있지 않은 group에서는 제거
-	`-g (group) (user)` : 
+	* `-l (user) (newname)` : user명 변경
+	* `-L/-U (user)` : 잠금 및 잠금해제
+	* `-p (password)` : 비밀번호 변경
+	* `-aG (group1,group2, ...) (user)` : user를 group에 추가, a옵션이 없을 시 명시되어있지 않은 group에서는 제거
+	* `-g (group) (user)` : 
 * 현재 user 확인 : `whoami`
 * user 정보 확인 : `id (user)`
 * user 주소 확인 : `/etc/passwd`
@@ -278,9 +278,9 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 * db 서버 재시작 : `systemctl restart mariadb(또는 mysql.service)`
 
 * MariaDB 서비스 실행 : `mysql (db)`, `-u (user) -p`로 sql문을 실행할 유저 선택
-	* 유저 생성 : `create user &#96;(user)&#96;@&#96;localhost&#96; identified by &#96;(user passwd)&#96;;`
+	* 유저 생성 : `create user '(user)'@'localhost' identified by '(user passwd)';`
 	* 유저 확인 : `show databases`
-	* 유저의 db 권한 생성 : `grant all on (db).* to &#96;(user)&#96;@&#96;localhost&#96; identified by &#96;(user passwd)&#96 with grant option;`
+	* 유저의 db 권한 생성 : `grant all on (db).* to '(user)'@'localhost' identified by '(user passwd)&#96 with grant option;`
 	* 변경사항 즉시 반영 : `flush previleges;`
 	* 종료 : `exit;`
 
