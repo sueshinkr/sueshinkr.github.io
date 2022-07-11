@@ -87,7 +87,7 @@ born2beroot는 가상머신을 활용해보는 과제이다.
 	* `lcredit=N` : ucredit과 동일한 기능의 소문자 설정
 	* `decredit=N` : ucredit과 동일한 기능의 숫자 설정
 	* `ocredit=N` : ucredit과 동일한 기능의 특수문자 설정
-	* `reject_username` : user명이 암호에 들어있는지 검사(뒤집힌 경우 포함)
+	* `usercheck=N` : user명이 암호에 들어있는지 검사, 기본값은 1(검사 수행함)
 	* `maxrepeat=N` : 같은 문자가 반복 가능한 횟수 설정
 	* `enforce_for_root` : root user가 암호 변경시에도 해당 모듈의 조건 추가. 단, root 암호 변경시 이전의 암호는 검사하지 않음
 
