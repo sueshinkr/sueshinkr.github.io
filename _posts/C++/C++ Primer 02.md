@@ -1,0 +1,593 @@
+---
+title:  "C++ Primer 02"
+excerpt: "C++ 시작하기"
+
+categories:
+  - C++
+tags:
+  - [C++]
+toc: true
+toc_sticky: true
+toc_label: "목차"
+date: 2022.08.23 12:00:00
+---
+
+# 학습목표
+* C++ 프로그램 작성법
+* `#include` 전처리 지시자
+* `cout` 객체를 사용한 출력
+* `endl`의 사용하는 시점과 방법
+* `cin` 객체를 사용한 입력
+* C++ 프로그램의 일반적인 형식
+* `main()`함수
+* C++ 프로그램에 주석문 달기
+* 변수의 선언과 사용
+* 간단한 함수의 정의와 사용
+
+***
+# 2.1 C++의 시작
+
+```C++
+// myfirst.cpp
+
+#include <iostream>
+
+int main()
+{
+	using namespace std;
+	cout << "C++의 세계로 오십시오.";
+	cout << endl;
+	cout << "후회하지 않으실겁니다!" << endl;
+	return 0;
+}
+```
+
+## main() 함수
+```C++
+int main()			// 함수 머리
+{					// 함수 몸체 시작
+	...				// 구문들(statement)
+	return 0;
+}					// 함수 몸체 끝
+```
+함수 머리(function header) + 함수 몸체(function body) = 함수 정의(function definition)
+* 함수 머리 : 함수를 프로그램의 다른 부분과 연결하는 고리 역할    
+	`int main()`
+	* `int` : 함수 리턴형(function return type), 리턴값이 없는 경우에는 `void`로 지정    
+		`main()`함수의 경우 리턴구문이 명시되어있지 않으면 `return 0;`가 암시적으로 실행됨
+	* `main` : 함수명, 모든 C++ 프로그램에는 `main()`함수가 반드시 하나 있어야 하며 `main()`함수로부터 실행을 개시함    
+		단, DLL 모듈 등 독립된 프로그램이 아닌 경우에는 `main()`함수가 필요하지 않을 수 있음
+	* `()` : 인자 리스트(argument list) 혹은 매개변수 리스트(parameter list)    
+		* 매개변수 : 하나의 함수에서 다른 함수로 전달되는 정보    
+		매개변수를 받지 않는 경우를 `(void)`의 형식을 통해 명시적으로 밝힐 수도 있음
+* 함수 몸체 : 함수가 처리하는 동작들을 컴퓨터에 지시
+	* 구문(statement) : 컴퓨터에게 내리는 지시(instruction)를 구체화, 모든 구문은 `;(세미콜론)`으로 끝나야함
+
+
+***
+
+
+## 주석
+1. `//(더블슬래시)`부터 그 행의 끝까지    
+2. `/*`과 `*/`로 둘러싸인 C스타일의 주석문도 인식 가능    
+
+프로그램이 복잡해질수록 코드만 봐서는 이해하기 힘들 수 있기 때문에 주석문을 사용하여 프로그램을 최대한 문서화하는 것이 권장됨
+
+
+***
+
+
+## 전처리기 / 헤더 / 이름 공간
+
+### **전처리기(preprocessor)**
+컴파일 전 소스 파일에 대해 미리 어떤 처리를 수행하는 프로그램, 소스 파일 컴파일시 자동으로 실행됨    
+`#`로 시작되는 전처리 지시자(directive)를 사용    
+
+`#include <iostream>`    
+: 전처리기에 `iostream`의 파일 내용을 프로그램에 추가하라고 지시하는 전처리 지시자    
+결과적으로 해당 행이 `iostream` 파일의 내용으로 대체된 채로 소스 파일이 컴파일됨
+
+***
+
+### **헤더 파일(header file)**
+외부 소스 파일에 정의된 변수나 함수를 쓰기 위해 만들어진 파일, C와는 달리 `.h`확장자가 별도로 지정되지 않음    
+* `iostream` : C++의 입출력(input / output) 기능이 정의되어있는 파일, `cout`기능을 사용하기 위해 필요    
+
+`iostream`과 같은 순순한 C++ 헤더 파일은 `namespace std` 기능을 사용함    
+`cmath`같이 C로부터 유래된 헤더 파일은 `namespace std` 기능을 사용할 수도있고 못할 수도 있음
+
+***
+
+### **이름 공간(namespace)**
+프로그램 작성시 여러 소프트웨어 개발업체들이 제공하는 코드들을 사용할 수 있도록 도와줌    
+ex) AAA 회사와 BBB 회사 양쪽 모두에 test()라는 함수가 있을 경우 `AAA::test()` 와 `BBB::test()`로 구분하여 사용할 수 있음    
+
+C++컴파일러의 표준 구성 요소인 클래스, 함수, 변수는 모두 `std`라는 이름 공간 안에 담겨짐    
+* 따라서 `iostream` 헤더 파일에 정의된 `cout` 변수는 실제로 `std::cout`로 호출해야 하며    
+* `using` 지시자를 이용한 `using namespace std` 구문이 존재한다면 `std::` 접두어 없이도 `std` 이름 공간에 정의되어있는 모든 이름들을 사용할 수 있음    
+* 단, `using std::cout`같은 방식으로 필요한 이름만 선택해서 사용하는 것이 최신 방식임    
+
+
+***
+
+
+## cout를 이용한 출력
+
+`cout << "C++의 세계로 오십시오.";`    
+문자열을 출력 스트림에 삽입하는 구문
+* `cout` : 다양한 정보들을 출력하도록 하는 객체, 스트림을 나타냄
+* `<<` : 삽입 연산자, 오른쪽에 있는 정보를 스트림에 삽입    
+	* 연산자 오버로딩(operator overloading) : 삽입 연산자와 비트 연산자의 두가지 기능을 가지고 있는 `<<`와 같이 동일한 연산자 기호가 여러가지 의미를 가질 수 있음, 컴파일러가 전후 관계를 파악하여 연산자의 의미를 결정함    
+* `"..."` : 큰따옴표 안에 들어있는 연속된 문자들 = 문자열(string)    
+
+`cout << endl`
+* `endl` : 조정자(manipulator)의 일종, 새로운 행이 시작된다는 표기 - 출력 스트림에 삽입시 화면 커서가 다음 행의 시작 위치로 이동
+* `endl` 대신 C에서 사용하던 것처럼 이스케이프 시퀀스(escape sequence)의 일종인 `\n`을 사용할 수도 있음    
+
+
+***
+
+## C++ 소스 코드의 모양
+C++에서는 세미콜론이 구문의 끝을 표시하기 때문에 각 토큰들의 사이에 빈칸과 캐리지 리턴 등의 화이트스페이스를 자유롭게 사용할 수 있음    
+* 토큰(token) : 더 이상 분리할 수 없는 기본 요소, 일부 단일 문자들(괄호, 콤마 등)을 제외한 각 토큰들은 화이트스페이스로 다른 토큰들과 분리됨
+* 화이트스페이스(white space) : 빈칸, 탭, 캐리지 리턴이 포함된 집합
+* 캐리지 리턴(carriage return) : 문자의 새 줄을 시작하는 데 쓰이는 제어 문자나 그 구조    
+
+정형화된 C++ 스타일
+* 한 행에 하나의 구문만 사용
+* 함수를 여는 중괄호(`{`)와 닫는 중괄호(`}`)에 각각 하나의 행을 할애
+* 함수 안에 들어갈 구문들은 중괄호에서 약간 올른쪽으로 들어간 위치에서 시작
+* 함수 이름과 괄호 사이에는 어떠한 화이트스페이스도 넣지 않음
+
+
+***
+***
+
+
+# 2.2 C++ 구문
+
+```C++
+// carrots.cpp
+// 하나의 변수 사용 및 출력
+
+#include <iostream>
+
+int main()
+{
+	using namespace std;
+	
+	int carrots;
+
+	carrots = 25;
+	cout << "나는 당근을 ";
+	cout << carrots;
+	cout << "개 가지고있다.";
+	cout << endl;
+	carrots = carrots - 1;
+	cout << "아삭아삭, 이제 당근은 " << carrots << "개이다." << endl;
+	return 0;
+}
+```
+
+## 선언 구문 / 변수 / 대입 구문
+
+`int carrots;`    
+
+선언 구문 : 정보를 저장할 기억 공간의 형태를 지정, 해당 위치가 어디인지 말해주는 꼬리표(label)을 제공  
+* `int` : 저장될 데이터형    
+* `carrots;` : 변수 이름, 세미콜론으로 구문의 끝을 표기    
+
+변수(variable) : 선언 구문에서 지정한 기억 공간에 저장되어있는 값을 변수로 사용하겠다고 선언    
+* C++에서는 변수를 사용하기 전 반드시 미리 선언해주어야 함    
+* C와는 달리 C++에서는 일반적으로 변수를 처음 사용하는 곳 바로 앞에 선언하여 사용    
+
+변수를 선언한 구문을 정의(definition)이라고 부르기도 함    
+정의가 있는 경우 컴파일러는 해당 변수를 위해 메모리 공간을 대입
+
+`carrots = 25;`    
+대입 구문 : 변수가 나타내는 기억 공간에 값을 대입    
+대입 연산자를 연이어 사용하는 것도 가능함    
+
+
+***
+
+
+## cout의 편리함
+`cout << carrots;`    
+변수 `carrots` 에 담긴 정수 25가 문자 2와 5로 변환되어 출력됨    
+즉, `cout`는 출력할 내용이 문자열인지 정수인지 스스로 인식하여 출력할 수 있으며, 이는 C++이 객체 지향 기능을 가지고 있기 때문
+
+
+***
+***
+
+# 2.3 C++의 기타 구문
+```C++
+// getinfo.cpp
+
+#include <iostream>
+
+int main()
+{
+	using namespace std;
+	
+	int carrots;
+
+	cout << "당근을 몇 개나 가지고있니?" << endl;
+	cin >> carrots;
+	cout << "여기 두개가 더 있다. ";
+	carrots = carrots + 2;
+	cout << "이제 당근은 모두 " << carrots << "개이다." << endl;
+	return 0;
+}
+```
+
+## cin를 사용한 입력
+`cin >> carrots;`    
+`cin` : `iostream` 파일에 정의되어있는 입력 스트림을 나타내는 객체    
+	`cout`과 마찬가지로 문자열로 받아진 입력에 대해 해당 값을 저장할 변수의 데이터형에 따라 변환
+
+
+***
+
+
+## 출력 결합
+```C++
+//1
+
+`cout << "이제 당근은 모두 " << carrots << "개이다." << endl;`
+
+//2
+
+cout << "이제 당근은 모두 "
+cout << carrots;
+cout << "개이다.";
+cout << endl;
+
+//3
+
+cout << "이제 당근은 모두 "
+	 << carrots
+	 << "개이다."
+	 << endl;
+```
+위 세가지 케이스는 모두 같은 결과를 출력함    
+`iostream`에는 `<<`연산자를 통해 여러개의 출력을 하나로 결합할 수 있도록 정의되어있음    
+
+
+***
+
+
+## 클래스
+클래스 - 객체 = 데이터형 - 변수   
+* 클래스 정의 : 사용자가 정의한 데이터 형식 및 그것이 사용되는 방법을 서술,    
+* 객체 : 클래스에 서술된 데이터 형식에 따라 실제로 생성되는 구체물    
+
+타 객체 지향 언어에서는 클래스를 객체형(object type), 객체를 객체 인스턴스(object instance) 또는 인스턴스 변수(instance variable)이라고 부름
+
+`ostream` - 클래스, `cout` - 객체    
+`ostream` 클래스 정의에는 `ostream`객체가 표현할 수 있는 데이터 형식 및 동작(ex_문자열을 출력 스트림에 삽입)이 정의되어있음    
+* 즉, 해당 클래스의 객체를 대상으로 수행할 수 있는 모든 동작들이 서술되어있음
+* 특정 개체에게 동작의 수행을 명령할경우 해당 객체에 메세지를 전달해야함
+	* 클래스 메서드를 사용하는 함수 호출을 통해
+	* `cout`, `cin`의 경우처럼 연산자 오버로딩을 통해
+
+
+***
+***
+
+
+# 2.4 함수
+함수 : C++ 프로그램을 구성하는 모듈    
+
+## 리턴값이 있는 함수
+
+호출 함수(calling function)에서 함수 호출(function call)이 실행되면 피호출 함수(called function)로 넘어가게됨    
+이때 피호출 함수로는 매개변수가 전달될 수 있고, 피호출 함수의 리턴값이 있다면 함수 호출이 해당 리턴값으로 대체됨    
+`x = sqrt(6.25)`    
+* `x` : 피호출 함수의 리턴값을 저장할 변수
+* `sqrt(6.25)` : `sqrt` 함수를 매개변수 `6.25`를 전달하며 호출
+
+단, 함수를 호출하려면 컴파일러가 해당 함수가 어떤 종류의 매개변수를 사용하는지, 어떤 종류의 리턴값을 가지고있는지를 미리 알고 있어야함    
+따라서 C++에서는 함수 원형(function prototype) 구문을 사용하여 컴파일러에게 정보를 전달함    
+`double sqrt(double);`    
+* 앞의 `double` : `sqrt()`함수가 `double`형의 값을 리턴함
+* 뒤의 `double` : `sqrt()`함수가 매개변수로 `double`형의 매개변수를 전달받음
+* 세미콜론을 붙이지 않을 경우 컴파일러는 해당 구문을 함수 머리로 인식하기 때문에 반드시 세미콜론을 붙여줘야함
+
+함수 원형은 소스 코드 파일에 직접 입력하거나, 함수 원형이 들어있는 헤더 파일을 포함시켜 제공할 수 있음    
+함수 원형은 그 함수가 처음 사용되는 곳보다 앞에 두어야 하며, `main()`함수의 정의 앞에다 함수 원형을 두는게 일반적    
+
+```C++
+// sqrt.cpp
+
+#include <iostream>
+#include <cmath>
+
+int main()
+{
+	using namespace std;
+	
+	double area;
+	cout << "마루 면적을 평방피트 단위로 입력하시오: ";
+	cin >> area;
+	double side;
+	side = sqrt(area);
+	cout << "사각형 마루라면 한 변이 " << side
+		 << "피트에 상당합니다." << endl;
+	cout << "멋지네요!" << endl;
+	return 0;
+}
+```
+`side` 변수를 사용하기 직전에 선언한 것과 같이 C++에서 변수는 어디에서나 선언할 수 있음    
+`double side = sqrt(area);` 와 같이 변수의 선언과 대입을 동시에 진행하는 초기화(initialization)이 가능함    
+
+
+***
+
+
+## 변이 함수
+
+* 매개변수를 2개 이상 가지고있는 함수    
+	ex_ `double pow(double, double);`
+* 매개변수가 없는 함수    
+	ex_ `int rand(void);`    
+	`void`를 생략하여 `int rand()`로 표기할 수도 있음    
+* 리턴값이 없는 함수    
+	ex_ `void bucks(double);`    
+	이 경우 순수한 함수 호출 구문으로만 사용할 수 있음    
+
+
+***
+
+
+## 사용자 정의 함수
+
+```C++
+// outfunc.cpp
+
+#include <iostream>
+void simon(int);
+
+int main()
+{
+	using namespace std;
+	
+	simon(3);
+	cout << "정수를 하나 고르시오: ";
+	int count;
+	cin >> count;
+	simon(count);
+	cout << "끝!" << endl;
+	return 0;
+}
+
+void simon(int n)
+{
+	using namespace std;
+	cout << "Simon 왈, 발가락을 " << n << "번 두드려라." << endl;
+}
+```
+`void simon(int);`로 `main()`함수 앞에 함수의 원형을 선언    
+함수의 정의는 `main()`함수의 뒤에 두어 사용하며 아래와 같이 함수 정의의 모양을 일반화할 수 있음    
+```C++
+type functionname(argumentlist)
+{
+	statements
+}
+```
+`simon()`함수의 경우 리턴값이 없는 `void`형 함수이므로 `return`구문이 존재하지 않아도 됨    
+`main()`함수의 리턴값은 종료값(exit value)로 작동하여 프로그램의 정상 종료 여부를 확인하는데 쓰임    
+
+```C++
+// convert.cpp
+
+#include <iostream>
+int stonetolb(int);
+//using namespace std;
+
+int main()
+{
+	using namespace std;
+	
+	int stone;
+	cout << "체중을 스톤 단위로 입력하시오: ";
+	cin >> stone;
+	int pounds = stonetolb(stone);
+	cout << stone << " 스톤은 ";
+	cout << pounds << " 파운드입니다." << endl;
+	return 0;
+}
+
+int stonetolb(int sts)
+{
+	return 14 * sts;
+}
+
+/*
+int stonetolb(int sts)
+{
+	int pounds = 14 * sts;
+	return pounds;
+}
+*/
+```
+`return 14 * sts;`와 같이 `return` 뒤에 수식을 사용할 수도 있음    
+위 `stonetolb()`함수와 주석 처리한 `stonetolb()`함수는 동일한 결과를 만들어내지만 주석처리한 후자의 함수가 조금 더 시간을 소모함    
+
+함수 원형을 선언한 부분에 주석처리한 `using namespace std;`처럼 함수 외부에 `using` 지시자를 사용할 경우 파일에 있는 모든 함수가 `std`이름 공간의 모든 내용을 사용할 수 있게됨    
+단, 이 경우 `std` 이름 공간이 필요없는 함수까지 `std`에 접근할 수 있으므로 권장되지는 않음    
+
+결론적으로 함수는
+* 함수 머리와 함수 몸체가 존재
+* 매개변수를 받아들임
+* 값을 리턴함
+* 함수 원형을 요구
+
+위 특징들을 모두 만족해야 정상적인 함수로 동작할 수 있음    
+
+
+***
+***
+
+
+# 연습문제
+
+1. 함수
+2. <iostream> 헤더파일을 소스 코드에 삽입
+3. std 이름 공간에 정의되어있는 이름들을 사용할 수 있도록 허용
+4. cout << "Hello, world" << endl;
+5. int cheeses;
+6. cheeses = 32;
+7. cin >> cheeses
+8. cout << "We have " << cheeses << " varieties of cheese" << endl;
+9. 함수의 리턴값 및 매개변수의 데이터형
+10. void형 함수일 경우
+11. cout를 컴파일러가 식별할 수 없음 - `#include <iostream>`을 선언하고 함수 내의 `cout`를 호출하기 전 `using namespace std;`도 선언
+
+
+
+* 01
+```C++
+#include <iostream>
+
+int main()
+{
+	using namespace std;
+	
+	cout << "이름 : 홍길동\n";
+	cout << "주소 : 대충 주소\n";
+	return 0;
+}
+```
+
+* 02
+```C++
+#include <iostream>
+
+int main()
+{
+	using namespace std;
+
+	double mile;
+	cout << "마일 입력 : ";
+	cin >> mile;
+	cout << mile << "마일은 " << mile * 1.60934 << "킬로미터입니다.\n"; 
+	return 0;
+}
+```
+
+
+* 03
+```C++
+#include <iostream>
+void mice();
+void run();
+
+int main()
+{
+	using namespace std;
+
+	mice();
+	mice();
+	run();
+	run();
+	return 0;
+}
+
+void mice()
+{
+	using namespace std;
+
+	cout << "Three blind mice\n";
+}
+
+void run()
+{
+	using namespace std;
+	
+	cout << "See how they run\n";
+}
+```
+
+* 04
+```C++
+#include <iostream>
+
+int main()
+{
+	using namespace std;
+
+	int age;
+	cout << "Enter your age : ";
+	cin >> age;
+	cout << "당신의 나이를 월수로 나타내면 " << age * 12 << "입니다\n";
+	return 0;
+}
+```
+
+* 05
+```C++
+#include <iostream>
+double change_temperature(double);
+
+int main()
+{
+	using namespace std;
+
+	int temperature;
+	cout << "섭씨 온도를 입력하고 Enter 키를 누르십시오 : ";
+	cin >> temperature;
+	cout << "섭씨 " << temperature << "도는 화씨로 "
+		 << change_temperature(temperature) << "도입니다.\n";
+	return 0;
+}
+
+double change_temperature(double temparature)
+{
+	return 1.8 * temparature + 32.0;
+}
+```
+
+* 06
+```C++
+#include <iostream>
+double change_lightyear(double);
+
+int main()
+{
+	using namespace std;
+
+	double lightyear;
+	cout << "광년 수를 입력하고 Enter 키를 누르십시오 : ";
+	cin >> lightyear;
+	cout << lightyear << " 광년은 "
+		 << change_lightyear(lightyear) << " 천문 단위입니다.\n";
+	return 0;
+}
+
+double change_lightyear(double lightyear)
+{
+	return lightyear * 63240;
+}
+```
+
+* 07
+```C++
+#include <iostream>
+
+int main()
+{
+	using namespace std;
+	
+	int hour;
+	cout << "시간 값을 입력하시오 : ";
+	cin >> hour;
+	cout << "분 값을 입력하시오 : ";
+	int minute;
+	cin >> minute;
+	cout << "시각 : " << hour << ":" << minute << endl;
+	return 0;
+}
+```
+
