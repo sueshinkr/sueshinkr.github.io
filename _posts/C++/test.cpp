@@ -1,15 +1,18 @@
-// bondini.cpp
+// modulus.cpp
 
 #include <iostream>
 
 int main()
 {
 	using namespace std;
-	cout << "\a암호명 \"화려한 외출\" 작전이 방금 개시되었습니다!\n";
-	cout << "8자리 비밀번호를 입력하십시오 : ________\b\b\b\b\b\b\b\b";
-	long code;
-	cin >> code;
-	cout << "\a입력하신 비밀번호는 " << code << "입니다.\n";
-	cout << "\a비밀번호가 맞습니다! Z3 계획을 진행하십시오!\n";
+	const int Lbs_per_stn = 14;
+	int lbs;
+
+	cout << "당신의 체중을 파운드 단위로 입력하십시오 : ";
+	cin >> lbs;
+	int stone = lbs / Lbs_per_stn;
+	int pounds = lbs % Lbs_per_stn;
+	cout << lbs << " 파운드는 " << stone
+		 << " 스톤, " << pounds << " 파운드입니다.\n";
 	return 0;
 }
