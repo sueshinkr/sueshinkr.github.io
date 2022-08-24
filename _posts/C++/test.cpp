@@ -1,19 +1,15 @@
-// hexoct2.cpp
+// bondini.cpp
 
 #include <iostream>
 
 int main()
 {
 	using namespace std;
-	int chest = 42;
-	int waist = 42;
-	int inseam = 42;
-
-	cout << "손님 몸매는 한마디로 끝내줍니다!\n";
-	cout << "가슴둘레 " << chest << " (10진수)\n";
-	cout << hex;
-	cout << "허리둘레 " << waist << " (16진수)\n";
-	cout << oct;
-	cout << "인심길이 " << inseam << " (8진수)\n";
+	cout << "\a암호명 \"화려한 외출\" 작전이 방금 개시되었습니다!\n";
+	cout << "8자리 비밀번호를 입력하십시오 : ________\b\b\b\b\b\b\b\b";
+	long code;
+	cin >> code;
+	cout << "\a입력하신 비밀번호는 " << code << "입니다.\n";
+	cout << "\a비밀번호가 맞습니다! Z3 계획을 진행하십시오!\n";
 	return 0;
 }

@@ -52,6 +52,20 @@
                     {% endif %} 
                 {% endfor %}
             </ul>
+			<ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "C++" %}
+                        <li><a href="/categories/C++" class="">C++ ({{category[1].size}})</a></li>
+                    {% endif %} 
+                {% endfor %}
+            </ul>
+			<ul>
+                {% for category in site.categories %}
+                    {% if category[0] == "SQL" %}
+                        <li><a href="/categories/SQL" class="">SQL ({{category[1].size}})</a></li>
+                    {% endif %} 
+                {% endfor %}
+            </ul>
       </li>
 	  
   </ul>
