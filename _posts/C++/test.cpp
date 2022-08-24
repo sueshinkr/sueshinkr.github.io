@@ -1,16 +1,23 @@
-// init.cpp
+// typecast.cpp
 
 #include <iostream>
 
 int main()
 {
 	using namespace std;
-	cout.setf(ios_base::fixed, ios_base::floatfield);
-	float tree = 3;
-	int guess = 3.9832;
-	int debt = 7.2E12;
-	cout << "tree = " << tree << endl;
-	cout << "guess = " << guess << endl;
-	cout << "debt = " << debt << endl;
+	int auks, bats, coots;
+
+	auks = 19.99 + 11.99;
+
+	bats = (int) 19.00 + (int) 11.99;
+	coots = int (19.99) + int (11.99);
+	cout << "auks = " << auks << ", bats = " << bats;
+	cout << ", coots = " << coots << endl;
+
+	char ch = 'Z';
+	cout << "코드 " << ch << " 의 값은 ";
+	cout << int(ch) << endl;
+	cout << "네, 코드 Z의 값은 ";
+	cout << static_cast<int>(ch) << endl;
 	return 0;
 }
