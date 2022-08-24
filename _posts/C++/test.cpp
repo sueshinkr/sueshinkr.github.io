@@ -1,23 +1,19 @@
 // typecast.cpp
 
 #include <iostream>
+const double LITERS_PER_KM_TO_MPG = 19 / 12.4;
 
 int main()
 {
 	using namespace std;
-	int auks, bats, coots;
-
-	auks = 19.99 + 11.99;
-
-	bats = (int) 19.00 + (int) 11.99;
-	coots = int (19.99) + int (11.99);
-	cout << "auks = " << auks << ", bats = " << bats;
-	cout << ", coots = " << coots << endl;
-
-	char ch = 'Z';
-	cout << "코드 " << ch << " 의 값은 ";
-	cout << int(ch) << endl;
-	cout << "네, 코드 Z의 값은 ";
-	cout << static_cast<int>(ch) << endl;
+	
+	cout << "주행거리를 킬로미터 단위로 입력하시오 : ";
+	double km;
+	cin >> km;
+	cout << "소비한 휘발유를 리터 단위로 입력하시오 : ";
+	double liter;
+	cin >> liter;
+	cout << "휘발유 1갤런당 "
+		 << (liter * 100 / km) * LITERS_PER_KM_TO_MPG << "마일의 거리를 주행했습니다.\n";
 	return 0;
 }
