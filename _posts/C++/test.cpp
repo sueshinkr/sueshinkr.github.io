@@ -1,18 +1,16 @@
-// modulus.cpp
+// init.cpp
 
 #include <iostream>
 
 int main()
 {
 	using namespace std;
-	const int Lbs_per_stn = 14;
-	int lbs;
-
-	cout << "당신의 체중을 파운드 단위로 입력하십시오 : ";
-	cin >> lbs;
-	int stone = lbs / Lbs_per_stn;
-	int pounds = lbs % Lbs_per_stn;
-	cout << lbs << " 파운드는 " << stone
-		 << " 스톤, " << pounds << " 파운드입니다.\n";
+	cout.setf(ios_base::fixed, ios_base::floatfield);
+	float tree = 3;
+	int guess = 3.9832;
+	int debt = 7.2E12;
+	cout << "tree = " << tree << endl;
+	cout << "guess = " << guess << endl;
+	cout << "debt = " << debt << endl;
 	return 0;
 }
