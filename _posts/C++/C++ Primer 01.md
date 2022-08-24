@@ -3,7 +3,7 @@ title:  "C++ Primer 01"
 excerpt: "C++ 첫걸음"
 
 categories:
-  - C++
+  - CPP
 tags:
   - [C++]
 toc: true
