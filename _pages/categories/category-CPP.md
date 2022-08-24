@@ -1,6 +1,6 @@
 ---
 title: "CPP"
-layout: archive
+layout: category
 permalink: categories/CPP
 author_profile: true
 sidebar_main: true

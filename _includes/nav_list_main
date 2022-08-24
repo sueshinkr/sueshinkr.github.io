@@ -10,14 +10,9 @@
       <li>
             📂 <span style="Noto Sans KR;">전체 글 수</style> <span style="Noto Sans KR;">{{sum}}</style>개</style> 
       </li>
-	  <!--font-family:'Cafe24Oneprettynight'-->
       <li>
-        <!--span 태그로 카테고리들을 크게 분류 ex) C/C++/C-->
         <span class="nav__sub-title">42seoul</span>
-            <!--ul 태그로 같은 카테고리들 모아둔 페이지들 나열-->
             <ul>
-                <!--Cpp 카테고리 글들을 모아둔 페이지인 /categories/cpp 주소의 글로 링크 연결-->
-                <!--category[1].size 로 해당 카테고리를 가진 글의 개수 표시--> 
                 {% for category in site.categories %}
                     {% if category[0] == "libft" %}
                         <li><a href="/categories/libft" class="">libft ({{category[1].size}})</a></li>
@@ -52,18 +47,14 @@
                     {% endif %} 
                 {% endfor %}
             </ul>
-      </li>
-	<li>
-		<span class="nav__sub-title">개인공부</span>
 			<ul>
-				<!--Cpp 카테고리 글들을 모아둔 페이지인 /categories/cpp 주소의 글로 링크 연결-->
-				<!--category[1].size 로 해당 카테고리를 가진 글의 개수 표시--> 
 				{% for category in site.categories %}
 					{% if category[0] == "CPP" %}
 						<li><a href="/categories/CPP" class="">CPP ({{category[1].size}})</a></li>
 					{% endif %}
 				{% endfor %}
 			</ul>
+		<span class="nav__sub-title">개인공부</span>
 			<ul>
 				{% for category in site.categories %}
 					{% if category[0] == "SQL" %}
