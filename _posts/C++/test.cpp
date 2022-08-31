@@ -1,23 +1,47 @@
-// nested.cpp
+// sumafile.cpp
 
 #include <iostream>
+#include <string>
+#include <fstream>
+struct donation
+{
+	std::string name;
+	double money;
+};
 
 int main()
 {
 	using namespace std;
+	char filename[100];
+	ifstream inFile;
 
-	cout << "출력할 행 수를 입력하십시오 : ";
-	int num;
-	cin >> num;
-	for (int i = 1; i <= num; i++)
+
+	cout << "기부 정보를 파일로부터 가져옵니다. 파일 이름을 입력해주세요 : ";
+	cin >> filename;
+	inFile.open(filename);
+	int person;
+	inFile >> person;
+	donation * dn = new donation [person];
+
+	for (int i = 0; i < person; i++)
 	{
-		for (int j = i; j < num; j++)
-			cout << ".";
-		for (int j = 0; j < i; j++)
-			cout << "*";
-		cout << endl;
+		getline(inFile, dn[i].name);
+		getline(inFile, dn[i].name);
+		cout << dn[i].name << endl;
+		inFile >> dn[i].money;
 	}
+
+	for (int i = 0; i < person; i++)
+	{
+		if (dn[i].money >= 10000)
+			cout << "고액 기부자 " << dn[i].name << " : " << dn[i].money << "$ 기부\n";
+	}
+	for (int i = 0; i < person; i++)
+	{
+		if (dn[i].money < 10000)
+			cout << "소액 기부자 " << dn[i].name << " : " << dn[i].money << "$ 기부\n";
+	}
+	if (person == 0)
+		cout << "기부자가 없습니다.\n";
 	return 0;
 }
-
-//cout << "문자들을 입력하시오; 끝내려면 #을 입력하시오 : \n";
