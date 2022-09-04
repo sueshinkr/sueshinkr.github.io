@@ -1,32 +1,27 @@
-// strgback.cpp
+// arfupt.cpp
 
 #include <iostream>
-char * buildstr(char c, int n);
+long double factorial(long double x);
 
 int main()
 {
 	using namespace std;
-	int times;
-	char ch;
 
-	cout << "문자 하나를 입력하십시오 : ";
-	cin >> ch;
-	cout << "정수 하나를 입력하십시오 : ";
-	cin >> times;
-	char *ps = buildstr(ch, times);
-	cout << ps << endl;
-	delete [] ps;
-	ps = buildstr('+', 20);
-	cout << ps << "-DONE-" << ps << endl;
-	delete [] ps;
+	cout << "수를 입력하세요 (음수 입력시 종료) : ";
+	long double num;
+	while (cin >> num && num > 0)
+	{
+		cout << num << "! = " << factorial(num) << endl;
+		cout << "수를 입력하세요 (음수 입력시 종료) : ";
+	}
+	cout << "프로그램을 종료합니다.\n";
 	return 0;
 }
 
-char * buildstr(char c, int n)
+long double factorial(long double x)
 {
-	char * pstr = new char[n + 1];
-	pstr[n] = '\0';
-	while (n-- > 0)
-		pstr[n] = c;
-	return pstr;
+	if (x == 0)
+		return 1;
+	return x * (factorial(x - 1));
 }
+
