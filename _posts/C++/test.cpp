@@ -1,52 +1,56 @@
-// arfupt.cpp
+// strquote.cpp
 
 #include <iostream>
+#include <string>
 using namespace std;
-
-double calculate(double x, double y, double (*pt)(double, double));
-double add(double x, double y);
-double sub(double x, double y);
-double mul(double x, double y);
-double div(double x, double y);
+string version1(const string & s1, const string & s2);
+const string & version2(string & s1, const string & s2);
+const string & version3(string & s1, const string & s2);
 
 int main()
 {
-	double (*pf[4])(double, double) = {add, sub, mul, div};
-	double x, y;
-	cout << "두 수를 입력하세요 : \n";
-	while (cin >> x >> y)
-	{
-		cout << "add : " << calculate(x, y, pf[0]) << endl;
-		cout << "sub : " << calculate(x, y, pf[1]) << endl;
-		cout << "mul : " << calculate(x, y, pf[2]) << endl;
-		cout << "div : " << calculate(x, y, pf[3]) << endl;
-		cout << "두 수를 입력하세요 : \n";
-	}
-	
+	string input;
+	string copy;
+	string result;
+
+	cout << "문자열을 입력하시오 : ";
+	getline(cin, input);
+	copy = input;
+	cout << "입력한 문자열 : " << input << endl;
+	result = version1(input, "***");
+	cout << "바뀐 문자열 : " << result << endl;
+	cout << "원래 문자열 : " << input << endl;
+
+	result = version2(input, "###");
+	cout << "바뀐 문자열 : " << result << endl;
+	cout << "원래 문자열 : " << input << endl;
+
+	cout << "원래 문자열 재설정\n";
+	input = copy;
+	result = version3(input, "@@@");
+	cout << "바뀐 문자열 : " << result << endl;
+	cout << "원래 문자열 : " << input << endl;
 	return 0;
 }
 
-double calculate(double x, double y, double (*pt)(double, double))
+string version1(const string & s1, const string & s2)
 {
-	return pt(x, y);
+	string temp;
+	
+	temp = s2 + s1 + s2;
+	return temp;
 }
 
-double add(double x, double y)
+const string & version2(string & s1, const string & s2)
 {
-	return x + y;
+	s1 = s2 + s1 + s2;
+	return s1;
 }
 
-double sub(double x, double y)
+const string & version3(string & s1, const string & s2)
 {
-	return x - y;
-}
-
-double mul(double x, double y)
-{
-	return x * y;
-}
-
-double div(double x, double y)
-{
-	return x / y;
+	string temp;
+	
+	temp = s2 + s1 + s2;
+	return temp;
 }
