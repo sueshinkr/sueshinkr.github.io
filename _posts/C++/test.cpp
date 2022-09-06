@@ -1,56 +1,66 @@
-// strquote.cpp
+// twoswap.cpp
 
 #include <iostream>
-#include <string>
-using namespace std;
-string version1(const string & s1, const string & s2);
-const string & version2(string & s1, const string & s2);
-const string & version3(string & s1, const string & s2);
+template <typename T>
+void Swap(T &a, T &b);
+
+struct job
+{
+	char name[40];
+	double salary;
+	int floor;
+};
+
+template <> void Swap<job>(job &j1, job &j2);
+void Show(job &j);
 
 int main()
 {
-	string input;
-	string copy;
-	string result;
+	using namespace std;
+	cout.precision(2);
+	cout.setf(ios::fixed, ios::floatfield);
+	int i = 10, j = 20;
+	cout << "i, j = " << i << ", " << j << ".\n";
+	cout << "컴파일러가 생성한 int형 교환기를 사용하면\n";
+	Swap(i,j);
+	cout << "이제 i, j = " << i << ", " << j << ".\n";
 
-	cout << "문자열을 입력하시오 : ";
-	getline(cin, input);
-	copy = input;
-	cout << "입력한 문자열 : " << input << endl;
-	result = version1(input, "***");
-	cout << "바뀐 문자열 : " << result << endl;
-	cout << "원래 문자열 : " << input << endl;
-
-	result = version2(input, "###");
-	cout << "바뀐 문자열 : " << result << endl;
-	cout << "원래 문자열 : " << input << endl;
-
-	cout << "원래 문자열 재설정\n";
-	input = copy;
-	result = version3(input, "@@@");
-	cout << "바뀐 문자열 : " << result << endl;
-	cout << "원래 문자열 : " << input << endl;
+	job sue = {"Susan Yaffee", 73000.60, 7};
+	job sidney = {"Sidney Taffee", 78060.72, 9};
+	cout << "job 교환 전 : \n";
+	Show(sue);
+	Show(sidney);
+	Swap(sue, sidney);
+	cout << "job 교환 후 : \n";
+	Show(sue);
+	Show(sidney);
 	return 0;
 }
 
-string version1(const string & s1, const string & s2)
+template <typename T>
+void Swap(T &a, T &b)
 {
-	string temp;
-	
-	temp = s2 + s1 + s2;
-	return temp;
+	T temp;
+	temp = a;
+	a = b;
+	b = temp;
 }
 
-const string & version2(string & s1, const string & s2)
+template <> void Swap<job>(job &j1, job &j2)
 {
-	s1 = s2 + s1 + s2;
-	return s1;
+	double t1;
+	int t2;
+	t1 = j1.salary;
+	j1.salary = j2.salary;
+	j2.salary = t1;
+	t2 = j1.floor;
+	j1.floor = j2.floor;
+	j2.floor = t2;
 }
 
-const string & version3(string & s1, const string & s2)
+void Show(job &j)
 {
-	string temp;
-	
-	temp = s2 + s1 + s2;
-	return temp;
+	using namespace std;
+	cout << j.name << " : (" << j.floor << "층에 거주) "
+		 << "$" << j.salary << endl;
 }
