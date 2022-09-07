@@ -1,31 +1,32 @@
 // choices.cpp
 
 #include <iostream>
-template <typename T>
-T lesser(T a, T b)
-{
-	return a < b ? a : b;
-}
+#include <string>
+using namespace std;
 
-int lesser (int a, int b)
-{
-	a = a < 0 ? -a : a;
-	b = b < 0 ? -b : b;
-	return a < b ? a : b;
-}
+string change_upper(string & str);
 
 int main()
 {
-	using namespace std;
-	int m = 20;
-	int n = -30;
-	double x = 15.5;
-	double y = 25.9;
-
-	cout << lesser(m, n) << endl;
-	cout << lesser(x, y) << endl;
-	cout << lesser<>(m, n) << endl;
-	cout << lesser<int>(x, y) << endl;
-
+	
+	
+	string str;
+	cout << "문자열을 입력하시오 (끝내려면 q) : ";
+	getline(cin, str);
+	while (str != "q")
+	{
+		str = change_upper(str);
+		cout << str << endl;
+		cout << "다음 문자열을 입력하시오 (끝내려면 q) : ";
+		getline(cin, str);
+	}
+	cout << "끝.\n";
 	return 0;
+}
+
+string change_upper(string &str)
+{
+	for (int i = 0; str[i]; i++)
+		str[i] = toupper(str[i]);
+	return str;
 }
