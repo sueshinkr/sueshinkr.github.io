@@ -1,66 +1,31 @@
-// twoswap.cpp
+// choices.cpp
 
 #include <iostream>
 template <typename T>
-void Swap(T &a, T &b);
-
-struct job
+T lesser(T a, T b)
 {
-	char name[40];
-	double salary;
-	int floor;
-};
+	return a < b ? a : b;
+}
 
-template <> void Swap<job>(job &j1, job &j2);
-void Show(job &j);
+int lesser (int a, int b)
+{
+	a = a < 0 ? -a : a;
+	b = b < 0 ? -b : b;
+	return a < b ? a : b;
+}
 
 int main()
 {
 	using namespace std;
-	cout.precision(2);
-	cout.setf(ios::fixed, ios::floatfield);
-	int i = 10, j = 20;
-	cout << "i, j = " << i << ", " << j << ".\n";
-	cout << "컴파일러가 생성한 int형 교환기를 사용하면\n";
-	Swap(i,j);
-	cout << "이제 i, j = " << i << ", " << j << ".\n";
+	int m = 20;
+	int n = -30;
+	double x = 15.5;
+	double y = 25.9;
 
-	job sue = {"Susan Yaffee", 73000.60, 7};
-	job sidney = {"Sidney Taffee", 78060.72, 9};
-	cout << "job 교환 전 : \n";
-	Show(sue);
-	Show(sidney);
-	Swap(sue, sidney);
-	cout << "job 교환 후 : \n";
-	Show(sue);
-	Show(sidney);
+	cout << lesser(m, n) << endl;
+	cout << lesser(x, y) << endl;
+	cout << lesser<>(m, n) << endl;
+	cout << lesser<int>(x, y) << endl;
+
 	return 0;
-}
-
-template <typename T>
-void Swap(T &a, T &b)
-{
-	T temp;
-	temp = a;
-	a = b;
-	b = temp;
-}
-
-template <> void Swap<job>(job &j1, job &j2)
-{
-	double t1;
-	int t2;
-	t1 = j1.salary;
-	j1.salary = j2.salary;
-	j2.salary = t1;
-	t2 = j1.floor;
-	j1.floor = j2.floor;
-	j2.floor = t2;
-}
-
-void Show(job &j)
-{
-	using namespace std;
-	cout << j.name << " : (" << j.floor << "층에 거주) "
-		 << "$" << j.salary << endl;
 }
