@@ -1,32 +1,50 @@
 // choices.cpp
 
 #include <iostream>
-#include <string>
+#include <cstring>
 using namespace std;
+struct stringy
+{
+	char * str;
+	int ct;
+};
 
-string change_upper(string & str);
+void set(stringy & beany, const char testing[]);
+void show(const stringy & beany, int count = 1);
+void show(const char testing[], int count = 1);
+
+void show(const stringy & beany, int count)
+{
+	for (int i = count; i > 0; i--)
+		cout << beany.str << endl;
+}
+
+void show(const char testing[], int count)
+{
+	for (int i = count; i > 0; i--)
+		cout << testing << endl;
+}
 
 int main()
 {
-	
-	
-	string str;
-	cout << "문자열을 입력하시오 (끝내려면 q) : ";
-	getline(cin, str);
-	while (str != "q")
-	{
-		str = change_upper(str);
-		cout << str << endl;
-		cout << "다음 문자열을 입력하시오 (끝내려면 q) : ";
-		getline(cin, str);
-	}
-	cout << "끝.\n";
+	stringy beany;
+	char testing[] = "Reality isn't what it used to be.";
+
+	set(beany, testing);
+	show(beany);
+	show(beany, 2);
+	testing[0] = 'D';
+	testing[1] = 'u';
+	show(testing);
+	show(testing, 3);
+	show("Done!");
 	return 0;
 }
 
-string change_upper(string &str)
+void set(stringy & beany, const char testing[])
 {
-	for (int i = 0; str[i]; i++)
-		str[i] = toupper(str[i]);
-	return str;
+	char * new_str = new char;
+	beany.str = new_str;
+	strcpy(new_str, testing);
+	beany.ct = strlen(new_str);
 }
