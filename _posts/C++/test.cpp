@@ -1,50 +1,56 @@
 // choices.cpp
-
 #include <iostream>
-#include <cstring>
-using namespace std;
-struct stringy
+
+template <typename T>
+T SumArray(T arr[], int n);
+
+template <typename T>
+T SumArray(T * arr[], int n);
+
+struct debts
 {
-	char * str;
-	int ct;
+	char name[50];
+	double amount;
 };
-
-void set(stringy & beany, const char testing[]);
-void show(const stringy & beany, int count = 1);
-void show(const char testing[], int count = 1);
-
-void show(const stringy & beany, int count)
-{
-	for (int i = count; i > 0; i--)
-		cout << beany.str << endl;
-}
-
-void show(const char testing[], int count)
-{
-	for (int i = count; i > 0; i--)
-		cout << testing << endl;
-}
 
 int main()
 {
-	stringy beany;
-	char testing[] = "Reality isn't what it used to be.";
+	using namespace std;
+	int things[6] = {13, 31, 103, 301, 310, 130};
+	struct debts mr_E[3] =
+	{
+		{"Ima Wolfe", 2400.0},
+		{"Ura Foxe", 1300.0},
+		{"Iby Stout", 1800.0}
+	};
+	double * pd[3];
 
-	set(beany, testing);
-	show(beany);
-	show(beany, 2);
-	testing[0] = 'D';
-	testing[1] = 'u';
-	show(testing);
-	show(testing, 3);
-	show("Done!");
+	for (int i = 0; i < 3; i++)
+		pd[i] = &mr_E[i].amount;
+
+	cout << "Mr.E의 재산의 합 : ";
+	cout << SumArray(things, 6) << endl;
+	cout << "Mr.E의 채무의 합 : ";
+	cout << SumArray(pd, 3) << endl;
 	return 0;
 }
 
-void set(stringy & beany, const char testing[])
+template <typename T>
+T SumArray(T arr[], int n)
 {
-	char * new_str = new char;
-	beany.str = new_str;
-	strcpy(new_str, testing);
-	beany.ct = strlen(new_str);
+	using namespace std;
+	T sum = 0;
+	for (int i = 0; i < n; i++)
+		sum += arr[i];
+	return sum;
+}
+
+template <typename T>
+T SumArray(T * arr[], int n)
+{
+	using namespace std;
+	T sum = 0;
+	for (int i = 0; i < n; i++)
+		sum += *arr[i];
+	return sum;
 }
