@@ -29,6 +29,7 @@ logo                     : "./assets/images/로고.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
 breadcrumbs              : true
 words_per_minute         : 200
+future                   : true
 comments:
   provider               : # false (default), "disqus", "discourse", "facebook", "staticman", "staticman_v2", "utterances", "giscus", "custom"
   disqus:
