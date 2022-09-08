@@ -1,56 +1,42 @@
-// choices.cpp
+// autoscp.cpp
+
 #include <iostream>
-
-template <typename T>
-T SumArray(T arr[], int n);
-
-template <typename T>
-T SumArray(T * arr[], int n);
-
-struct debts
-{
-	char name[50];
-	double amount;
-};
+void oil(int x);
 
 int main()
 {
 	using namespace std;
-	int things[6] = {13, 31, 103, 301, 310, 130};
-	struct debts mr_E[3] =
-	{
-		{"Ima Wolfe", 2400.0},
-		{"Ura Foxe", 1300.0},
-		{"Iby Stout", 1800.0}
-	};
-	double * pd[3];
 
-	for (int i = 0; i < 3; i++)
-		pd[i] = &mr_E[i].amount;
-
-	cout << "Mr.E의 재산의 합 : ";
-	cout << SumArray(things, 6) << endl;
-	cout << "Mr.E의 채무의 합 : ";
-	cout << SumArray(pd, 3) << endl;
+	int texas = 31;
+	int year = 2011;
+	cout << "main()에서, texas = " << texas << ", &texas = ";
+	cout << &texas << endl;
+	cout << "main()에서, year = " << year << ", &year = ";
+	cout << &year << endl;
+	oil(texas);
+	cout << "main()에서, texas = " << texas << ", &texas = ";
+	cout << &texas << endl;
+	cout << "main()에서, year = " << year << ", &year = ";
+	cout << &year << endl;
 	return 0;
 }
 
-template <typename T>
-T SumArray(T arr[], int n)
+void oil(int x)
 {
 	using namespace std;
-	T sum = 0;
-	for (int i = 0; i < n; i++)
-		sum += arr[i];
-	return sum;
-}
+	int texas = 5;
 
-template <typename T>
-T SumArray(T * arr[], int n)
-{
-	using namespace std;
-	T sum = 0;
-	for (int i = 0; i < n; i++)
-		sum += *arr[i];
-	return sum;
+	cout << "oil()에서, texas = " << texas << ", &texas = ";
+	cout << &texas << endl;
+	cout << "oil()에서, x = " << x << ", &x = ";
+	cout << &x << endl;
+	{
+		int texas = 113;
+		cout << "블록에서, texas = " << texas << ", &texas = ";
+		cout << &texas << endl;
+		cout << "블록에서, x = " << x << ", &x = ";
+		cout << &x << endl;
+	}
+	cout << "블록을 통과한 후, texas = " << texas;
+	cout << ", &texas = " << &texas << endl;
 }
