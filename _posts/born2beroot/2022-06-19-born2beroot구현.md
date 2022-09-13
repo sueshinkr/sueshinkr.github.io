@@ -11,7 +11,7 @@ toc_sticky: true
 toc_label: "목차"
 date: 2022.06.19 12:40:00
 ---
-asdfasdfasdfasd
+
 # born2beroot
 
 born2beroot는 가상머신을 활용해보는 과제이다.    
