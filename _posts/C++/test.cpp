@@ -3,6 +3,47 @@
 #include <iostream>
 #include "stock00.h"
 
+class Acount
+{
+	private :
+		std::string name;
+		std::string acount_num;
+		double balance;
+
+	public :
+		Acount(const std::string & client, const std::string & num, double bal = 0.0);
+		void show(void) const;
+		void deposit(double cash);
+		void withdraw(double cash);
+};
+
+Acount::Acount(const std::string & client, const std::string & num, double bal = 0.0)
+{
+	name = client;
+	acount_num = num;
+	balance = bal;
+}
+
+void Acount::show() const
+{
+	cout << "계좌 정보를 출력합니다.\n";
+	cout << "name : " << name << endl;
+	cout << "acount : " << acount_num << endl;
+	cout << "balance : " << balance << endl;
+}
+
+void Acount::deposit(double cash)
+{
+	balance += cash;
+}
+
+void Acount::withdraw(double cash)
+{
+	balance -= cash;
+}
+
+
+
 void Stock::acquire(const std::string & co, long n, double pr)
 {
 	company = co;
@@ -33,7 +74,7 @@ void Stock::buy(long num, double price)
 	}
 }
 
-void Stock::sell(long num, double price
+void Stock::sell(long num, double price)
 {
 	using std::cout;
 	if (num < 0)
