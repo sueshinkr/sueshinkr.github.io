@@ -1,68 +1,48 @@
 // xxx.cpp
 
 #include <iostream>
+using std::cout;
 #include "xxx.h"
 
-Time::Time()
+Stonewt::Stonewt(double lbs)
 {
-	hours = minutes = 0;
+	stone = int(lbs) / Lbs_per_stn;
+	pds_left = int(lbs) % Lbs_per_stn + lbs - int(lbs);
+	pounds = lbs;
 }
 
-Time::Time(int h, int m)
+Stonewt::Stonewt(int stn, double lbs)
 {
-	hours = h;
-	minutes = m;
+	stone = stn;
+	pds_left = lbs;
+	pounds = stn * Lbs_per_stn + lbs;
 }
 
-void Time::AddMin(int m)
+Stonewt::Stonewt()
 {
-	minutes += m;
-	hours += minutes / 60;
-	minutes %= 60;
+	stone = pounds = pds_left = 0;
 }
 
-void Time::AddHr(int h)
+Stonewt::~Stonewt()
 {
-	hours += h;
 }
 
-void Time::Reset(int h, int m)
+void Stonewt::show_stn() const
 {
-	hours = h;
-	minutes = m;
+	cout << stone << "스톤, " << pds_left << "파운드\n";
 }
 
-Time Time::operator+(const Time & t) const
+void Stonewt::show_lbs() const
 {
-	Time sum;
-	sum.minutes = minutes + t.minutes;
-	sum.hours = hours + t.hours + sum.minutes / 60;
-	sum.minutes %= 60;
-	return sum;
+	cout << pounds << "파운드\n";
 }
 
-Time Time::operator-(const Time & t) const
+Stonewt::operator int() const
 {
-	Time diff;
-	int tot1, tot2;
-	tot1 = t.minutes + 60 * t.hours;
-	tot2 = minutes + 60 * hours;
-	diff.minutes = (tot2 - tot1) % 60;
-	diff.hours = (tot2 - tot1) / 60;
-	return diff;
+	return int (pounds + 0.5);
 }
 
-Time Time::operator*(double mult) const
+Stonewt::operator double() const
 {
-	Time result;
-	long totalminutes = hours * mult * 60 + minutes * mult;
-	result.hours = totalminutes / 60;
-	result.minutes = totalminutes % 60;
-	return result;
-}
-
-std::ostream & operator<<(std::ostream & os, const Time & t)
-{
-	os << t.hours << "시간, " << t.minutes << "분";
-	return os;
+	return pounds;
 }
