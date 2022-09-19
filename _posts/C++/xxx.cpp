@@ -1,48 +1,63 @@
-// xxx.cpp
+// stonewt.cpp
 
 #include <iostream>
 using std::cout;
 #include "xxx.h"
 
-Stonewt::Stonewt(double lbs)
+Complex::Complex(double r, double i)
 {
-	stone = int(lbs) / Lbs_per_stn;
-	pds_left = int(lbs) % Lbs_per_stn + lbs - int(lbs);
-	pounds = lbs;
+	real = r;
+	imagine = i;
 }
 
-Stonewt::Stonewt(int stn, double lbs)
+Complex::Complex()
 {
-	stone = stn;
-	pds_left = lbs;
-	pounds = stn * Lbs_per_stn + lbs;
+	real = 0.0;
+	imagine = 0.0;
 }
 
-Stonewt::Stonewt()
-{
-	stone = pounds = pds_left = 0;
-}
-
-Stonewt::~Stonewt()
+Complex::~Complex()
 {
 }
 
-void Stonewt::show_stn() const
+Complex operator+(const Complex & a, const Complex & b)
 {
-	cout << stone << "스톤, " << pds_left << "파운드\n";
+	return Complex(a.real + b.real, a.imagine + b.imagine);
 }
 
-void Stonewt::show_lbs() const
+Complex operator-(const Complex & a, const Complex & b)
 {
-	cout << pounds << "파운드\n";
+	return Complex(a.real - b.real, a.imagine - b.imagine);
 }
 
-Stonewt::operator int() const
+Complex operator*(const Complex & a, const Complex & b)
 {
-	return int (pounds + 0.5);
+	return Complex(a.real * b.real - a.imagine * b.imagine, 
+		a.real * b.imagine + a.imagine * b.real);
 }
 
-Stonewt::operator double() const
+Complex operator*(double mul, const Complex & a)
 {
-	return pounds;
+	return Complex(mul * a.real, mul * a.imagine);
+}
+
+Complex Complex::operator~()
+{
+	return Complex(real, -imagine);
+}
+
+std::ostream & operator<<(std::ostream & os, const Complex & c)
+{
+	os << "(" << c.real << ", " << c.imagine << "i)";
+	return os;
+}
+
+std::istream & operator>>(std::istream & is, Complex & c)
+{
+	std::cout << "실수부를 입력해주세요 : ";
+	if (!(is >> c.real))
+		return is;
+	std::cout << "허수부를 입력해주세요 : ";
+	is >> c.imagine;
+	return is;
 }
