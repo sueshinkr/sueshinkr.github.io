@@ -1,24 +1,20 @@
-// stonewt.h
+// strngbad.h
 
+#include <iostream>
 #ifndef XXX_H_
 #define XXX_H_
 
-class Complex
+class StringBad
 {
 	private:
-		double real;
-		double imagine;
+		char * str;
+		int len;
+		static int num_strings;
 	public:
-		Complex(double r, double i);
-		Complex();
-		~Complex();
-		friend Complex operator+(const Complex & a, const Complex & b);
-		friend Complex operator-(const Complex & a, const Complex & b);
-		friend Complex operator*(const Complex & a, const Complex & b);
-		friend Complex operator*(double mul, const Complex & a);
-		Complex operator~();
-		friend std::ostream & operator<<(std::ostream & os, const Complex & c);
-		friend std::istream & operator>>(std::istream & is, Complex & c);
+		StringBad(const char * s);
+		StringBad();
+		~StringBad();
+		friend std::ostream & operator<<(std::ostream & os, const StringBad & st);
 };
 
 #endif
