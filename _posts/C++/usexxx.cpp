@@ -17,54 +17,65 @@ int main()
 	std::srand(std::time(0));
 
 	cout << "사례 연구 : 히서 은행의 ATM\n";
-	cout << "큐의 최대 길이를 입력하십시오 : ";
-	int qs;
-	cin >> qs;
-	Queue line(qs);
+	
 
 	cout << "시뮬레이션 시간 수를 입력하십시오 : ";
 	int hours;
 	cin >> hours;
-	long cyclelimit = MIN_PER_HR * hours;
-
-	cout << "시간당 평균 고객 수를 입력하십시오 : ";
-	double perhour;
-	cin >> perhour;
-	double min_per_cust;
-	min_per_cust = MIN_PER_HR / perhour;
-
+	double perhour = 60;
+	
 	Item temp;
-	long turnaways = 0;
-	long customers = 0;
-	long served = 0;
-	long sum_line = 0;
-	int wait_time = 0;
-	long line_wait = 0;
+	double min_per_cust;
+	long turnaways;
+	long customers;
+	long served;
+	long sum_line;
+	int wait_time;
+	long line_wait;
 
-	for (int cycle = 0; cycle < cyclelimit; cycle++)
+	do
 	{
-		if (newcustomer(min_per_cust))
+		Queue line(hours * perhour / 2);
+
+		perhour--;
+		min_per_cust = MIN_PER_HR / perhour;
+
+		turnaways = 0;
+		customers = 0;
+		served = 0;
+		sum_line = 0;
+		wait_time = 0;
+		line_wait = 0;
+		
+		for (int cycle = 0; cycle < perhour; cycle++)
 		{
-			if (line.isfull())
-				turnaways++;
-			else
+			if (newcustomer(min_per_cust))
 			{
-				customers++;
-				temp.set(cycle);
-				line.enqueue(temp);
+
+				if (line.isfull())
+					turnaways++;
+				else
+				{
+					customers++;
+					temp.set(cycle);
+					line.enqueue(temp);
+				}
 			}
+			if (wait_time <= 0 && !line.isempty())
+			{
+				line.dequeue(temp);
+				wait_time = temp.ptime();
+				line_wait += cycle - temp.when();
+				served++;
+			}
+			if (wait_time > 0)
+				wait_time--;
+			sum_line += line.queuecount();
 		}
-		if (wait_time <= 0 && !line.isempty())
-		{
-			line.dequeue(temp);
-			wait_time = temp.ptime();
-			line_wait += cycle - temp.when();
-			served++;
-		}
-		if (wait_time > 0)
-			wait_time--;
-		sum_line += line.queuecount();
-	}
+		cout << "평균 대기 시간 : " << double(line_wait) / (served) << endl;
+	} while (double(line_wait) / (served) > 1.0);
+	
+	
 
 	if (customers > 0)
 	{
@@ -75,12 +86,14 @@ int main()
 		cout.precision(2);
 		cout.setf(ios_base::fixed, ios_base::floatfield);
 		cout.setf(ios_base::showpoint);
-		cout << (double) sum_line / cyclelimit << endl;
-		cout << "	평균 대기 시간 : "
-			 << (double) line_wait / served << "분\n";
+		cout << (double) (sum_line) / perhour << endl;
+		cout << "시간당 평균 고객수가 "<< perhour << "명 일때의 평균 대기 시간 : "
+			 << (double) (line_wait) / (served) << "분\n";
 	}
 	else
 		cout << "고객이 한 명도 없습니다!\n";
+	
+	
 	cout << "완료!\n";
 	return 0;
 }

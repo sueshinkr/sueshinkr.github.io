@@ -1,4 +1,4 @@
-// string1.cpp
+// queue.cpp
 
 #include "xxx.h"
 #include <cstdlib>
