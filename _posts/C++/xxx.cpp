@@ -1,41 +1,72 @@
-// strngbad.cpp
+// string1.cpp
 
-#include <cstring>
 #include "xxx.h"
-using std::cout;
+#include <cstdlib>
 
-int StringBad::num_strings = 0;
-
-StringBad::StringBad(const char * s)
+Queue::Queue(int qs) : qsize(qs)
 {
-	len = std::strlen(s);
-	str = new char[len + 1];
-	std::strcpy(str, s);
-	num_strings++;
-	cout << num_strings << " : \"" << str
-		 << "\" 객체 생성\n";
+	front = rear = NULL;
+	items = 0;
 }
 
-StringBad::StringBad()
+Queue::~Queue()
 {
-	len = 4;
-	str = new char[4];
-	std::strcpy(str, "C++");
-	num_strings++;
-	cout << num_strings << " : \"" << str
-		 << "\" 디폴트 객체 생성\n";
+	Node * temp;
+	while (front != NULL)
+	{
+		temp = front;
+		front = front->next;
+		delete temp;
+	}
 }
 
-StringBad::~StringBad()
+bool Queue::isempty() const
 {
-	cout << "\"" << str << "\" 객체 파괴, ";
-	--num_strings;
-	cout << "남은 객체 수 : " << num_strings << "\n";
-	delete [] str;
+	return items == 0;
 }
 
-std::ostream & operator<<(std::ostream & os, const StringBad & st)
+bool Queue::isfull() const
 {
-	os << st.str;
-	return os;
+	return items == qsize;
+}
+
+int Queue::queuecount() const
+{
+	return items;
+}
+
+bool Queue::enqueue(const Item & item)
+{
+	if (isfull())
+		return false;
+	Node * add = new Node;
+	add->item = item;
+	add->next = NULL;
+	items++;
+	if (front == NULL)
+		front = add;
+	else
+		rear->next = add;
+	rear = add;
+	return true;
+}
+
+bool Queue::dequeue(Item & item)
+{
+	if (front == NULL)
+		return false;
+	item = front->item;
+	items--;
+	Node * temp = front;
+	front = front->next;
+	delete temp;
+	if (items == 0)
+		rear = NULL;
+	return true;
+}
+
+void Customer::set(long when)
+{
+	processtime = std::rand() % 3 + 1;
+	arrive = when;
 }
