@@ -1,42 +1,15 @@
-// stock00.cpp - version 00
+// exercise4
 
 #include <iostream>
+using namespace std;
 
-class Acount
+int main()
 {
-	private :
-		std::string name;
-		std::string acount_num;
-		double balance;
 
-	public :
-		Acount(const std::string & client, const std::string & num, double bal = 0.0);
-		void show(void) const;
-		void deposit(double cash);
-		void withdraw(double cash);
-};
-
-Acount::Acount(const std::string & client, const std::string & num, double bal = 0.0)
-{
-	name = client;
-	acount_num = num;
-	balance = bal;
-}
-
-void Acount::show() const
-{
-	cout << "계좌 정보를 출력합니다.\n";
-	cout << "name : " << name << endl;
-	cout << "acount : " << acount_num << endl;
-	cout << "balance : " << balance << endl;
-}
-
-void Acount::deposit(double cash)
-{
-	balance += cash;
-}
-
-void Acount::withdraw(double cash)
-{
-	balance -= cash;
+	for (int i = 2; i < 10; i++)
+	{
+		for (int j = 1; j < 10; j++)
+			cout << i << " * " << j << " = " << i * j << endl; 
+		cout << "***" << endl;
+	}
 }
