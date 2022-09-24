@@ -1,5 +1,5 @@
 ---
-title:  "C++ lecture section3 [1/2]"
+title:  "C++ lecture section3 [1/1]"
 excerpt: "코드의 흐름 제어"
 
 categories:
@@ -9,7 +9,7 @@ tags:
 toc: true
 toc_sticky: true
 toc_label: "목차"
-date: 2022.09.18 13:00:00
+date: 2022.09.20 13:00:00
 ---
 
 # 분기문
@@ -222,6 +222,113 @@ int main()
 
 # 가위바위보
 
+```cpp
+// rokc-scissors-paper
+
+#include <iostream>
+using namespace std;
+
+void pr(int n);
+void win_p(int win, int total);
+
+int main()
+{
+	int you, com;
+	int win = 0, total = 0;
+
+	while(1)
+	{
+		srand(time(0));
+
+		cout << "가위(1) 바위(2) 보(3) 골라주세요!\n";
+		cout << "현재 승률 : ";
+		win_p(win, total);
+
+		cin >> you;
+		if (!(you >= 1 && you <= 3))
+		{
+			cout << "잘못된 값을 입력하였습니다. 프로그램을 종료합니다.\n";
+			break;
+		}
+
+		com = 1 + rand() % 3;
+		if (you == com)
+		{
+			pr(you);
+			cout << "(님) vs ";
+			pr(com);
+			cout << "(컴퓨터)" << " 비겼습니다.\n";
+		}
+		else if (you == com % 3 + 1)
+		{
+			pr(you);
+			cout << "(님) vs ";
+			pr(com);
+			cout << "(컴퓨터)" << " 이겼습니다.\n";
+			win++;
+		}
+		else
+		{
+			pr(you);
+			cout << "(님) vs ";
+			pr(com);
+			cout << "(컴퓨터)" << " 졌습니다.\n";
+		}
+		total++;
+	}
+}
+
+void pr(int n)
+{
+	const int SCISSORS = 1;
+	const int ROCK = 2;
+	const int PAPER = 3;
+	switch(n)
+	{
+		case SCISSORS:
+			cout << "가위";
+			break;
+		case ROCK:
+			cout << "바위";
+			break;
+		case PAPER:
+			cout << "보";
+			break;
+	}
+}
+
+void win_p(int win, int total)
+{
+	if (total == 0)
+		cout << "없음\n";
+	else
+		cout << win * 100 / total << endl;
+}
+```
+
 ***
 
 # 열거형
+
+```cpp
+enum
+{
+	ENUM_SCISSORS,
+	ENUM_ROCK,
+	ENUM_PAPER
+};
+```
+열거형으로 여러 상수들을 한번에 정의할 수 있음    
+`const`와는 달리 초기값 설정이 필요하지 않으며, 초기값이 지정되지 않았을 시 첫 값을 0으로 둠    
+두번째 값부터는 이전 값 + 1으로 정의됨    
+
+`const`로 상수를 정의할 경우, 경우에 따라 해당 상수들이 메모리에 저장되어 메모리 공간이 낭비될 수 있음    
+열거형으로 상수를 정의한 경우 메모리 공간을 차지하지 않음    
+
+```cpp
+#define DEFINE_SCISSORS 1
+#define DEFINE_TEST cout << "Hello World" << endl;
+```
+`#`은 전처리 지시문을 나타냄    
+`#define`은 매크로를 만드는 키워드로, 선언한 매크로를 전처리 과정에서 통째로 대체함    
+사용 우선순위는 가장 낮으며 권장되지 않음    
