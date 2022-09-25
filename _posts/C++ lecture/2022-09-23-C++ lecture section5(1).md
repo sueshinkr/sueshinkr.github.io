@@ -91,6 +91,7 @@ int main()
 	playerPtr->hp = 200;
 	playerPtr->damage = 20;
 }
+```
 
 ***
 
