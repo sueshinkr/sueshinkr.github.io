@@ -1,104 +1,60 @@
-// bank.cpp
+// usebrass2.cpp
 
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
+#include <string>
 #include "xxx.h"
-const int MIN_PER_HR = 60;
-
-bool newcustomer(double x);
+const int CLIENTS = 4;
 
 int main()
 {
 	using std::cin;
 	using std::cout;
 	using std::endl;
-	using std::ios_base;
-	std::srand(std::time(0));
 
-	cout << "사례 연구 : 히서 은행의 ATM\n";
-	
+	Brass * p_clients[CLIENTS];
+	std::string temp;
+	long tempnum;
+	double tempbal;
+	char kind;
 
-	cout << "시뮬레이션 시간 수를 입력하십시오 : ";
-	int hours;
-	cin >> hours;
-	double perhour = 60;
-	
-	Item temp;
-	double min_per_cust;
-	long turnaways;
-	long customers;
-	long served;
-	long sum_line;
-	int wait_time;
-	long line_wait;
-
-	do
+	for (int i = 0; i < CLIENTS; i++)
 	{
-		Queue line(hours * perhour / 2);
-
-		perhour--;
-		min_per_cust = MIN_PER_HR / perhour;
-
-		turnaways = 0;
-		customers = 0;
-		served = 0;
-		sum_line = 0;
-		wait_time = 0;
-		line_wait = 0;
-		
-		for (int cycle = 0; cycle < perhour; cycle++)
+		cout << "고객의 이름을 입력하십시오 : ";
+		getline(cin, temp);
+		cout << "고객의 계좌 번호를 입력하십시오 : ";
+		cin >> tempnum;
+		cout << "계좌 개설 잔액을 입력하십시오 : $";
+		cin >> tempbal;
+		cout << "Brass 계좌는 1, "
+			 << "BrassPlus 계좌는 2를 입력하십시오 : ";
+		while (cin >> kind && (kind != '1' && kind != '2'))
+			cout << "1 아니면 2, 둘 중 하나를 입력하십시오 : ";
+		if (kind == '1')
+			p_clients[i] = new Brass(temp, tempnum, tempbal);
+		else
 		{
-			if (newcustomer(min_per_cust))
-			{
-
-				if (line.isfull())
-					turnaways++;
-				else
-				{
-					customers++;
-					temp.set(cycle);
-					line.enqueue(temp);
-				}
-			}
-			if (wait_time <= 0 && !line.isempty())
-			{
-				line.dequeue(temp);
-				wait_time = temp.ptime();
-				line_wait += cycle - temp.when();
-				served++;
-			}
-			if (wait_time > 0)
-				wait_time--;
-			sum_line += line.queuecount();
+			double tmax, trate;
+			cout << "당좌 대월 한도를 입력하십시오 : $";
+			cin >> tmax;
+			cout << "당좌 대월 이자율을 소수점 형식으로 "
+				 << "입력하십시오 : ";
+			cin >> trate;
+			p_clients[i] = new BrassPlus(temp, tempnum, tempbal, tmax, trate);
 		}
-		cout << "평균 대기 시간 : " << double(line_wait) / (served) << endl;
-	} while (double(line_wait) / (served) > 1.0);
-	
-	
-
-	if (customers > 0)
-	{
-		cout << " 큐에 줄을 선 고객 수 : " << customers << endl;
-		cout << "거래를 처리한 고객 수 : " << served << endl;
-		cout << " 발길을 돌린 고객 수 : " << turnaways << endl;
-		cout << "	평균 큐의 길이 : ";
-		cout.precision(2);
-		cout.setf(ios_base::fixed, ios_base::floatfield);
-		cout.setf(ios_base::showpoint);
-		cout << (double) (sum_line) / perhour << endl;
-		cout << "시간당 평균 고객수가 "<< perhour << "명 일때의 평균 대기 시간 : "
-			 << (double) (line_wait) / (served) << "분\n";
+		while (cin.get() != '\n')
+			continue;
 	}
-	else
-		cout << "고객이 한 명도 없습니다!\n";
-	
-	
-	cout << "완료!\n";
-	return 0;
-}
+	cout << endl;
+	for (int i = 0; i < CLIENTS; i++)
+	{
+		p_clients[i]->ViewAcct();
+		cout << endl;
+	}
 
-bool newcustomer(double x)
-{
-	return (std::rand() * x / RAND_MAX < 1);
+	for (int i = 0; i < CLIENTS; i++)
+	{
+		delete p_clients[i];
+	}
+	cout << "프로그램을 종료합니다.\n";
+	return 0;
 }

@@ -1,41 +1,40 @@
-// queue.h
+// brass.h
 
 #ifndef XXX_H_
 #define XXX_H_
 
-class Customer
+#include <string>
+
+class Brass
 {
 	private:
-		long arrive;
-		int processtime;
+		std::string fullName;
+		long acctNum;
+		double balance;
 	public:
-		Customer() { arrive = processtime = 0; };
-		void set(long when);
-		long when() const { return arrive; };
-		int ptime() const { return processtime; };
+		Brass(const std::string & s = "Nullbody", long an = -1, double bal = 0.0);
+		void Deposit(double amt);
+		virtual void Withdraw(double amt);
+		double Balance() const;
+		virtual void ViewAcct() const;
+		virtual ~Brass() {};
 };
 
-typedef Customer Item;
-
-class Queue
+class BrassPlus : public Brass
 {
 	private:
-		struct Node { Item item; struct Node * next; };
-		enum { Q_SIZE = 10 };
-		Node * front;
-		Node * rear;
-		int items;
-		const int qsize;
-		Queue(const Queue & q) : qsize(0) {};
-		Queue & operator=(const Queue & q) { return *this; };
+		double maxLoan;
+		double rate;
+		double owesBank;
 	public:
-		Queue(int qs = Q_SIZE);
-		~Queue();
-		bool isempty() const;
-		bool isfull() const;
-		int queuecount() const;
-		bool enqueue(const Item & item);
-		bool dequeue(Item & item);
+		BrassPlus(const std::string & s = "Nullbody", long an = -1, double bal = 0.0,
+				  double ml = 500, double r = 0.11125);
+		BrassPlus(const Brass & ba, double ml = 500, double r = 0.11125);
+		virtual void ViewAcct() const;
+		virtual void Withdraw(double amt);
+		void ResetMax(double m) { maxLoan = m; };
+		void ResetRate(double r) { rate = r; };
+		void ResetOwes() { owesBank = 0; };
 };
 
 #endif
