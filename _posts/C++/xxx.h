@@ -1,40 +1,44 @@
-// brass.h
+// dma.h
 
 #ifndef XXX_H_
 #define XXX_H_
+#include <iostream>
 
-#include <string>
-
-class Brass
+class baseDMA
 {
 	private:
-		std::string fullName;
-		long acctNum;
-		double balance;
+		char * label;
+		int rating;
 	public:
-		Brass(const std::string & s = "Nullbody", long an = -1, double bal = 0.0);
-		void Deposit(double amt);
-		virtual void Withdraw(double amt);
-		double Balance() const;
-		virtual void ViewAcct() const;
-		virtual ~Brass() {};
+		baseDMA(const char * l = "null", int r = 0);
+		baseDMA(const baseDMA & rs);
+		virtual ~baseDMA();
+		baseDMA & operator=(const baseDMA & rs);
+		friend std::ostream & operator<<(std::ostream & os, const baseDMA & rs);
 };
 
-class BrassPlus : public Brass
+class lacksDMA : public baseDMA
 {
 	private:
-		double maxLoan;
-		double rate;
-		double owesBank;
+		enum { COL_LEN = 40 };
+		char color[COL_LEN];
 	public:
-		BrassPlus(const std::string & s = "Nullbody", long an = -1, double bal = 0.0,
-				  double ml = 500, double r = 0.11125);
-		BrassPlus(const Brass & ba, double ml = 500, double r = 0.11125);
-		virtual void ViewAcct() const;
-		virtual void Withdraw(double amt);
-		void ResetMax(double m) { maxLoan = m; };
-		void ResetRate(double r) { rate = r; };
-		void ResetOwes() { owesBank = 0; };
+		lacksDMA(const char * c = "blank", const char * l = "null", int r = 0);
+		lacksDMA(const char * c, const baseDMA & rs);
+		friend std::ostream & operator<<(std::ostream & os, const lacksDMA & rs);
+};
+
+class hasDMA : public baseDMA
+{
+	private:
+		char * style;
+	public:
+		hasDMA(const char * s = "none", const char * l = "null", int r = 0);
+		hasDMA(const char * s, const baseDMA & rs);
+		hasDMA(const hasDMA & hs);
+		~hasDMA();
+		hasDMA & operator=(const hasDMA & rs);
+		friend std::ostream & operator<<(std::ostream & os, const hasDMA & rs);
 };
 
 #endif

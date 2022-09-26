@@ -1,123 +1,101 @@
-// brass.cpp
+// dma.cpp
 
 #include "xxx.h"
-#include <iostream>
-using std::cout;
-using std::endl;
-using std::string;
+#include <cstring>
 
-typedef std::ios_base::fmtflags format;
-typedef std::streamsize precis;
-format setFormat();
-void restore(format f, precis p);
-
-Brass::Brass(const string & s, long an, double bal)
+baseDMA::baseDMA(const char * l, int r)
 {
-	fullName = s;
-	acctNum = an;
-	balance = bal;
+	label = new char[std::strlen(l) + 1];
+	std::strcpy(label, l);
+	rating = r;
 }
 
-void Brass::Deposit(double amt)
+baseDMA::baseDMA(const baseDMA & rs)
 {
-	if (amt < 0)
-		cout << "마이너스 입금은 허용되지 않습니다.\n"
-			 << "그래서 입금이 취소되었습니다.\n";
-	else
-		balance += amt;
+	label = new char[std::strlen(rs.label) + 1];
+	std::strcpy(label, rs.label);
+	rating = rs.rating;
 }
 
-void Brass::Withdraw(double amt)
+baseDMA::~baseDMA()
 {
-	format initialState = setFormat();
-	precis prec = cout.precision(2);
-
-	if (amt < 0)
-		cout << "마이너스 인출은 허용되지 않습니다.\n"
-			 << "그래서 인출이 취소되었습니다.\n";
-	else if (amt <= balance)
-		balance -= amt;
-	else
-		cout << "인출을 요구한 금액 $" << amt
-			 << "가 현재 잔액을 초과합니다.\n"
-			 << "그래서 인출이 취소되었습니다.\n";
-	restore(initialState, prec);
+	delete [] label;
 }
 
-double Brass::Balance() const
+baseDMA & baseDMA::operator=(const baseDMA & rs)
 {
-	return balance;
+	if (this == &rs)
+		return *this;
+	delete [] label;
+	label = new char[std::strlen(rs.label) + 1];
+	std::strcpy(label, rs.label);
+	rating = rs.rating;
+	return *this;
 }
 
-void Brass::ViewAcct() const
+std::ostream & operator<<(std::ostream & os, const baseDMA & rs)
 {
-	format initialState = setFormat();
-	precis prec = cout.precision(2);
-	cout << "고객 이름 : " << fullName << endl;
-	cout << "계좌 번호 : " << acctNum << endl;
-	cout << "현재 잔액 : $" << balance << endl;
-	restore(initialState, prec);
+	os << "상표 : " << rs.label << std::endl;
+	os << "등급 : " << rs.rating << std::endl;
+	return os;
 }
 
-BrassPlus::BrassPlus(const string & s, long an, double bal,
-					 double ml, double r) : Brass(s, an, bal)
+lacksDMA::lacksDMA(const char * c, const char * l, int r) : baseDMA(l, r)
 {
-	maxLoan = ml;
-	owesBank = 0.0;
-	rate = r;
+	std::strncpy(color, c, 39);
+	color[39] = '\0';
 }
 
-BrassPlus::BrassPlus(const Brass & ba, double ml, double r)
-	: Brass(ba)
+lacksDMA::lacksDMA(const char * c, const baseDMA & rs) : baseDMA(rs)
 {
-	maxLoan = ml;
-	owesBank = 0.0;
-	rate = r;
+	std::strncpy(color, c, COL_LEN - 1);
+	color[COL_LEN - 1] = '\0';
 }
 
-void BrassPlus::ViewAcct() const
+std::ostream & operator<<(std::ostream & os, const lacksDMA & ls)
 {
-	format initialState = setFormat();
-	precis prec = cout.precision(2);
-
-	Brass::ViewAcct();
-	cout << "당좌 대월 한도액 : $" << maxLoan << endl;
-	cout << "상환할 원리금 : $" << owesBank << endl;
-	cout.precision(3);
-	cout << "당좌 대월 이자율 : " << 100 * rate << "%\n";
-	restore(initialState, prec);
+	os << (const baseDMA &) ls;
+	os << "색상 : " << ls.color << std::endl;
+	return os;
 }
 
-void BrassPlus::Withdraw(double amt)
+hasDMA::hasDMA(const char * s, const char * l, int r) : baseDMA(l, r)
 {
-	format initialState = setFormat();
-	precis prec = cout.precision(2);
-
-	double bal = Balance();
-	if (amt <= bal)
-		Brass::Withdraw(amt);
-	else if (amt <= bal + maxLoan - owesBank)
-	{
-		double advance = amt - bal;
-		owesBank += advance * (1.0 + rate);
-		cout << "당좌 대월 금액 : $" << advance << endl;
-		cout << "당좌 대월 이자 : $" << advance * rate << endl;
-		Deposit(advance);
-		Brass::Withdraw(amt);
-	}
-	else
-		cout << "당좌 대월 한도가 초과되어 거래가 취소되었습니다.\n";
-	restore(initialState, prec);
+	style = new char[std::strlen(s) + 1];
+	std::strcpy(style, s);
 }
 
-format setFormat()
+hasDMA::hasDMA(const char * s, const baseDMA & rs) : baseDMA(rs)
 {
-	return cout.setf(std::ios_base::fixed,
-					 std::ios_base::floatfield);
+	style = new char[std::strlen(s) + 1];
+	std::strcpy(style, s);
 }
 
-void restore(format f, precis p)
+hasDMA::hasDMA(const hasDMA & hs) : baseDMA(hs)
 {
-	cout.setf(f, std::ios_base::floatfield);
-	cout.precision(p);
+	style = new char[std::strlen(hs.style) + 1];
+	std::strcpy(style, hs.style);
+}
+
+hasDMA::~hasDMA()
+{
+	delete [] style;
+}
+
+hasDMA & hasDMA::operator=(const hasDMA & hs)
+{
+	if (this == &hs)
+		return *this;
+	baseDMA::operator=(hs);
+	delete [] style;
+	style = new char[std::strlen(hs.style) + 1];
+	std::strcpy(style, hs.style);
+	return *this;
+}
+
+std::ostream & operator<<(std::ostream & os, const hasDMA & hs)
+{
+	os << (const baseDMA &) hs;
+	os << "스타일 : " << hs.style << std::endl;
+	return os;
 }

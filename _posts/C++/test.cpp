@@ -1,89 +1,88 @@
-// ptr_exercise
+// snail.cpp
+#pragma once
 
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
-struct StatInfo
-{
-	int hp;
-	int att;
-	int def;
-};
+const int MAX = 100;
+int arr[MAX][MAX] = {0, };
 
-void EnterLobby();
-StatInfo CreatePlayer();
-void CreateMonster(StatInfo* info);
-bool StartBattle(StatInfo* player, StatInfo* monster);
+void print_snail(int num)
+{
+	cout << "****************\n";
+	for (int i = 0; i < num; i++)
+	{
+		for (int j = 0; j < num; j++)
+		{
+			//if (arr[i][j] < 10)
+			//	cout << "0";
+			//cout << arr[i][j] << " ";
+			cout << setfill('0') << setw(2) << arr[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << "****************\n";
+}
+
+void make_snail(int num)
+{
+	int i = 1, row = 0, col = 0;
+	enum {RIGHT, DOWN, LEFT, UP};
+	int dir = RIGHT;
+
+	while (i <= num * num)
+	{
+		arr[row][col] = i;
+		if (dir == RIGHT)
+		{
+			if (col == num - 1 || arr[row][col + 1] != 0)
+			{
+				dir = DOWN;
+				row++;
+			}
+			else
+				col++;
+		}
+		else if (dir == DOWN)
+		{
+			if (row == num - 1 || arr[row + 1][col] != 0)
+			{
+				dir = LEFT;
+				col--;
+			}
+			else
+				row++;
+		}
+		else if (dir == LEFT)
+		{
+			if (col == 0 || arr[row][col - 1] != 0)
+			{
+				dir = UP;
+				row--;
+			}
+			else
+				col--;
+		}
+		else if (dir == UP)
+		{
+			if (row == 0 || arr[row - 1][col] != 0)
+			{
+				dir = RIGHT;
+				col++;
+			}
+			else
+				row--;
+		}
+		i++;
+	}
+}
 
 int main()
 {
-	EnterLobby();
-	return 0;
-}
+	int num;
+	cin >> num;
 
-void EnterLobby()
-{
-	cout << "로비에 입장했습니다." << endl;
-	
-	StatInfo player;
-	player = CreatePlayer();
-
-	StatInfo monster;
-	CreateMonster(&monster);
-
-	bool victory = StartBattle(&player, &monster);
-	if (victory)
-		cout << "승리!" << endl;
-	else
-		cout << "패배!" << endl;
-}
-
-StatInfo CreatePlayer()
-{
-	StatInfo pl;
-
-	cout << "플레이어 생성" << endl;
-	pl.hp = 100;
-	pl.att = 10;
-	pl.def = 2;
-
-	return pl;
-}
-
-void CreateMonster(StatInfo* info)
-{
-	cout << "몬스터 생성" << endl;
-	info->hp = 40;
-	info->att = 8;
-	info->def = 1;
-}
-
-bool StartBattle(StatInfo* player, StatInfo* monster)
-{
-	while (true)
-	{
-		int damage = player->att - monster->def;
-		if (damage < 0)
-			damage = 0;
-		
-		monster->hp -= damage;
-		if (monster->hp < 0)
-			monster->hp = 0;
-		
-		cout << "몬스터 HP : " << monster->hp << endl;
-		if (monster->hp == 0)
-			return true;
-
-		damage = monster->att - player->def;
-		if (damage < 0)
-			damage = 0;
-		
-		player->hp -= damage;
-		if (player->hp < 0)
-			player->hp = 0;
-
-		cout << "플레이어 HP : " << player->hp << endl;
-		if (player->hp == 0)
-			return false;
-	}
+	make_snail(num);
+	print_snail(num);
 }
