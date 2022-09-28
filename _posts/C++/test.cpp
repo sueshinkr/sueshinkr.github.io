@@ -1,50 +1,21 @@
-// vintageport.cpp
-
-#include "xxx.h"
-#include <cstring>
-
-VintagePort::VintagePort()
+class Marine
 {
-}
+	public:
+		int _hp;
+		static int s_att;
+};
 
-VintagePort::VintagePort(const char * br, int b, const char * nn, int y)
-	: Port(br, "Vintage", b)
+int Marine::s_att = 0;
+
+int main()
 {
-	nickname = new char[strlen(nn) + 1];
-	strcpy(nickname, nn);
-	year = y;
-}
+	Marine::s_att = 6;
 
-VintagePort::VintagePort(const VintagePort & vp)
-	: Port(vp)
-{
-	nickname = new char[strlen(vp.nickname) + 1];
-	strcpy(nickname, vp.nickname);
-	year = vp.year;
-}
+	Marine m1;
+	m1._hp = 35;
+	
+	Marine m2;
+	m2._hp = 14;
 
-VintagePort & VintagePort::operator=(const VintagePort & vp)
-{
-	if (this == &vp)
-		return *this;
-
-	Port::operator=(vp);
-	delete [] nickname;
-	nickname = new char[strlen(vp.nickname) + 1];
-	strcpy(nickname, vp.nickname);
-	year = vp.year;
-	return *this;
-}
-
-void VintagePort::Show() const
-{
-	Port::Show();
-	cout << "별명 : " << nickname << endl;
-	cout << "년도 : " << year << endl;
-}
-
-ostream & operator<<(ostream & os, const VintagePort & vp)
-{
-	os << (const Port &)vp;
-	os << ", " << vp.nickname << ", " << vp.year << endl;
+	Marine::s_att = 7;
 }

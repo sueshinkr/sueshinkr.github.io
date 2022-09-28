@@ -1,4 +1,4 @@
-// dma.h
+// port.h
 
 #ifndef XXX_H_
 #define XXX_H_
