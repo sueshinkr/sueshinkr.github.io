@@ -1,101 +1,51 @@
-// dma.cpp
+// port.cpp
 
 #include "xxx.h"
 #include <cstring>
 
-baseDMA::baseDMA(const char * l, int r)
+Port::Port(const char * br, const char * st, int b)
 {
-	label = new char[std::strlen(l) + 1];
-	std::strcpy(label, l);
-	rating = r;
+	brand = new char[strlen(br) + 1];
+	strcpy(brand, br);
+	strcpy(style, st);
+	bottles = b;
 }
 
-baseDMA::baseDMA(const baseDMA & rs)
+Port::Port(const Port & p)
 {
-	label = new char[std::strlen(rs.label) + 1];
-	std::strcpy(label, rs.label);
-	rating = rs.rating;
+	brand = new char[strlen(p.brand) + 1];
+	strcpy(brand, p.brand);
+	strcpy(style, p.style);
+	bottles = p.bottles;
 }
 
-baseDMA::~baseDMA()
+Port & Port::operator=(const Port & p)
 {
-	delete [] label;
+	delete [] brand;
+	brand = new char[strlen(p.brand) + 1];
+	strcpy(brand, p.brand);
+	strcpy(style, p.style);
+	bottles = p.bottles;
 }
 
-baseDMA & baseDMA::operator=(const baseDMA & rs)
+Port & Port::operator+=(int b)
 {
-	if (this == &rs)
-		return *this;
-	delete [] label;
-	label = new char[std::strlen(rs.label) + 1];
-	std::strcpy(label, rs.label);
-	rating = rs.rating;
-	return *this;
+	bottles += b;
 }
 
-std::ostream & operator<<(std::ostream & os, const baseDMA & rs)
+Port & Port::operator-=(int b)
 {
-	os << "상표 : " << rs.label << std::endl;
-	os << "등급 : " << rs.rating << std::endl;
-	return os;
+	bottles -= b;
 }
 
-lacksDMA::lacksDMA(const char * c, const char * l, int r) : baseDMA(l, r)
+void Port::Show() const
 {
-	std::strncpy(color, c, 39);
-	color[39] = '\0';
+	cout << "브랜드 : " << brand << endl;
+	cout << "스타일 : " << style << endl;
+	cout << "수량 : " << bottles << endl;
 }
 
-lacksDMA::lacksDMA(const char * c, const baseDMA & rs) : baseDMA(rs)
+ostream & operator<<(ostream & os, const Port & p)
 {
-	std::strncpy(color, c, COL_LEN - 1);
-	color[COL_LEN - 1] = '\0';
-}
-
-std::ostream & operator<<(std::ostream & os, const lacksDMA & ls)
-{
-	os << (const baseDMA &) ls;
-	os << "색상 : " << ls.color << std::endl;
-	return os;
-}
-
-hasDMA::hasDMA(const char * s, const char * l, int r) : baseDMA(l, r)
-{
-	style = new char[std::strlen(s) + 1];
-	std::strcpy(style, s);
-}
-
-hasDMA::hasDMA(const char * s, const baseDMA & rs) : baseDMA(rs)
-{
-	style = new char[std::strlen(s) + 1];
-	std::strcpy(style, s);
-}
-
-hasDMA::hasDMA(const hasDMA & hs) : baseDMA(hs)
-{
-	style = new char[std::strlen(hs.style) + 1];
-	std::strcpy(style, hs.style);
-}
-
-hasDMA::~hasDMA()
-{
-	delete [] style;
-}
-
-hasDMA & hasDMA::operator=(const hasDMA & hs)
-{
-	if (this == &hs)
-		return *this;
-	baseDMA::operator=(hs);
-	delete [] style;
-	style = new char[std::strlen(hs.style) + 1];
-	std::strcpy(style, hs.style);
-	return *this;
-}
-
-std::ostream & operator<<(std::ostream & os, const hasDMA & hs)
-{
-	os << (const baseDMA &) hs;
-	os << "스타일 : " << hs.style << std::endl;
-	return os;
+	os << p.brand << ", " << p.style << ", " << p.bottles;
 }

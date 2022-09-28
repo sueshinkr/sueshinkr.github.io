@@ -3,42 +3,39 @@
 #ifndef XXX_H_
 #define XXX_H_
 #include <iostream>
+using namespace std;
 
-class baseDMA
+class Port
 {
 	private:
-		char * label;
-		int rating;
+		char * brand;
+		char style[20];
+		int bottles;
 	public:
-		baseDMA(const char * l = "null", int r = 0);
-		baseDMA(const baseDMA & rs);
-		virtual ~baseDMA();
-		baseDMA & operator=(const baseDMA & rs);
-		friend std::ostream & operator<<(std::ostream & os, const baseDMA & rs);
+		Port(const char * br = "none", const char * st = "none", int b = 0);
+		Port(const Port & p);
+		virtual ~Port() { delete [] brand; }
+		Port & operator=(const Port & p);
+		Port & operator+=(int b);
+		Port & operator-=(int b);
+		int BottleCount() const { return bottles; }
+		virtual void Show() const;
+		friend ostream & operator<<(ostream & os, const Port & p);
 };
 
-class lacksDMA : public baseDMA
+class VintagePort : public Port
 {
 	private:
-		enum { COL_LEN = 40 };
-		char color[COL_LEN];
+		char * nickname;
+		int year;
 	public:
-		lacksDMA(const char * c = "blank", const char * l = "null", int r = 0);
-		lacksDMA(const char * c, const baseDMA & rs);
-		friend std::ostream & operator<<(std::ostream & os, const lacksDMA & rs);
-};
-
-class hasDMA : public baseDMA
-{
-	private:
-		char * style;
-	public:
-		hasDMA(const char * s = "none", const char * l = "null", int r = 0);
-		hasDMA(const char * s, const baseDMA & rs);
-		hasDMA(const hasDMA & hs);
-		~hasDMA();
-		hasDMA & operator=(const hasDMA & rs);
-		friend std::ostream & operator<<(std::ostream & os, const hasDMA & rs);
+		VintagePort();
+		VintagePort(const char * br, int b, const char * nn, int y);
+		VintagePort(const VintagePort & vp);
+		~VintagePort() { delete [] nickname; }
+		VintagePort & operator=(const VintagePort & vp);
+		void Show() const;
+		friend ostream & operator<<(ostream & os, const VintagePort & vp);
 };
 
 #endif

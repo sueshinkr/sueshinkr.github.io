@@ -1,88 +1,50 @@
-// snail.cpp
-#pragma once
+// vintageport.cpp
 
-#include <iostream>
-#include <iomanip>
-using namespace std;
+#include "xxx.h"
+#include <cstring>
 
-const int MAX = 100;
-int arr[MAX][MAX] = {0, };
-
-void print_snail(int num)
+VintagePort::VintagePort()
 {
-	cout << "****************\n";
-	for (int i = 0; i < num; i++)
-	{
-		for (int j = 0; j < num; j++)
-		{
-			//if (arr[i][j] < 10)
-			//	cout << "0";
-			//cout << arr[i][j] << " ";
-			cout << setfill('0') << setw(2) << arr[i][j] << " ";
-		}
-		cout << endl;
-	}
-	cout << "****************\n";
 }
 
-void make_snail(int num)
+VintagePort::VintagePort(const char * br, int b, const char * nn, int y)
+	: Port(br, "Vintage", b)
 {
-	int i = 1, row = 0, col = 0;
-	enum {RIGHT, DOWN, LEFT, UP};
-	int dir = RIGHT;
-
-	while (i <= num * num)
-	{
-		arr[row][col] = i;
-		if (dir == RIGHT)
-		{
-			if (col == num - 1 || arr[row][col + 1] != 0)
-			{
-				dir = DOWN;
-				row++;
-			}
-			else
-				col++;
-		}
-		else if (dir == DOWN)
-		{
-			if (row == num - 1 || arr[row + 1][col] != 0)
-			{
-				dir = LEFT;
-				col--;
-			}
-			else
-				row++;
-		}
-		else if (dir == LEFT)
-		{
-			if (col == 0 || arr[row][col - 1] != 0)
-			{
-				dir = UP;
-				row--;
-			}
-			else
-				col--;
-		}
-		else if (dir == UP)
-		{
-			if (row == 0 || arr[row - 1][col] != 0)
-			{
-				dir = RIGHT;
-				col++;
-			}
-			else
-				row--;
-		}
-		i++;
-	}
+	nickname = new char[strlen(nn) + 1];
+	strcpy(nickname, nn);
+	year = y;
 }
 
-int main()
+VintagePort::VintagePort(const VintagePort & vp)
+	: Port(vp)
 {
-	int num;
-	cin >> num;
+	nickname = new char[strlen(vp.nickname) + 1];
+	strcpy(nickname, vp.nickname);
+	year = vp.year;
+}
 
-	make_snail(num);
-	print_snail(num);
+VintagePort & VintagePort::operator=(const VintagePort & vp)
+{
+	if (this == &vp)
+		return *this;
+
+	Port::operator=(vp);
+	delete [] nickname;
+	nickname = new char[strlen(vp.nickname) + 1];
+	strcpy(nickname, vp.nickname);
+	year = vp.year;
+	return *this;
+}
+
+void VintagePort::Show() const
+{
+	Port::Show();
+	cout << "별명 : " << nickname << endl;
+	cout << "년도 : " << year << endl;
+}
+
+ostream & operator<<(ostream & os, const VintagePort & vp)
+{
+	os << (const Port &)vp;
+	os << ", " << vp.nickname << ", " << vp.year << endl;
 }
