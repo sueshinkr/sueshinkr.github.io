@@ -1,53 +1,27 @@
-// usedma.cpp
+// worktest.cpp
 
 #include <iostream>
 #include "xxx.h"
 
+const int LIM = 4;
+
 int main()
 {
-	using std::cout;
-	using std::cin;
-	using std::endl;
+	Waiter bob("홍길동", 314L, 5);
+	Singer bev("조수미", 522L, 3);
 
-	int num;
-	AbcDMA *dma;
-	AbcDMA *temp[3];
+	Waiter w_temp;
+	Singer s_temp;
 
-	temp[0] = new baseDMA("bbbb", 1);
-	temp[1] = new lacksDMA("black", "llll", 2);
-	temp[2] = new hasDMA("warm", "hhhh", 3);
+	Worker * pw[LIM] = {&bob, &bev, &w_temp, &s_temp};
 
-	cout << "base=1, lacks=2, has=3\n";
-	cout << "번호를 선택해주십시오 : ";
-	if (cin >> num)
+	int i;
+	for (i = 2; i < LIM; i++)
+		pw[i]->Set();
+	for (i = 0; i < LIM; i++)
 	{
-		switch(num)
-		{
-			case 1:
-				dma = new baseDMA("base", 1111);
-				dma->View();
-				cout << endl;
-				dma = temp[0];
-				cout << *dma;
-				break;
-			case 2:
-				dma = new lacksDMA("white", "lacks", 2222);
-				dma->View();
-				cout << endl;
-				dma = temp[1];
-				cout << (const lacksDMA &)*dma;
-				break;
-			case 3:
-				dma = new hasDMA("cool", "has", 3333);
-				dma->View();
-				cout << endl;
-				dma = temp[2];
-				cout << (const hasDMA &)*dma;
-				break;
-		}
+		pw[i]->Show();
+		std::cout << std::endl;
 	}
-	else
-		cout << "잘못 입력하였습니다. 프로그램을 종료합니다.\n";
-	
 	return 0;
 }

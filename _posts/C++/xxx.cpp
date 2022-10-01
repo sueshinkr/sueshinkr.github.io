@@ -1,51 +1,70 @@
-// port.cpp
+// worker0.cpp
 
 #include "xxx.h"
-#include <cstring>
+#include <iostream>
+using std::cout;
+using std::cin;
+using std::endl;
 
-Port::Port(const char * br, const char * st, int b)
+Worker::~Worker() {}
+
+void Worker::Set()
 {
-	brand = new char[strlen(br) + 1];
-	strcpy(brand, br);
-	strcpy(style, st);
-	bottles = b;
+	cout << "사원 이름을 입력하십시오 : ";
+	getline(cin, fullname);
+	cout << "사원 번호를 입력하십시오 : ";
+	cin >> id;
+	while (cin.get() != '\n')
+		continue;
 }
 
-Port::Port(const Port & p)
+void Worker::Show() const
 {
-	brand = new char[strlen(p.brand) + 1];
-	strcpy(brand, p.brand);
-	strcpy(style, p.style);
-	bottles = p.bottles;
+	cout << "사원 이름 : " << fullname << "\n";
+	cout << "사원 번호 : " << id << "\n";
 }
 
-Port & Port::operator=(const Port & p)
+void Waiter::Set()
 {
-	delete [] brand;
-	brand = new char[strlen(p.brand) + 1];
-	strcpy(brand, p.brand);
-	strcpy(style, p.style);
-	bottles = p.bottles;
+	Worker::Set();
+	cout << "웨이터 등급을 입력하십시오 : ";
+	cin >> panache;
+	while (cin.get() != '\n')
+		continue;
 }
 
-Port & Port::operator+=(int b)
+void Waiter::Show() const
 {
-	bottles += b;
+	cout << "직종 : 웨이터\n";
+	Worker::Show();
+	cout << "웨이터 등급 : " << panache << "\n";
 }
 
-Port & Port::operator-=(int b)
+char * Singer::pv[] = {"other", "alto", "contralto",
+					"soprano", "bass", "baritone", "tenor"};
+
+void Singer::Set()
 {
-	bottles -= b;
+	Worker::Set();
+	cout << "가수의 목소리 유형 번호를 입력하십시오::\n";
+	int i;
+	for (i = 0; i < Vtypes; i++)
+	{
+		cout << i << " : " << pv[i] << " ";
+		if (i % 4 == 3)
+			cout << endl;
+	}
+	if (i % 4 != 0)
+		cout << endl;
+	while (cin >> voice && (voice < 0 || voice >= Vtypes))
+		cout << "0보다 크거나 같고 " << Vtypes << "보다 작은 값을 입력하세요." << endl;
+	while (cin.get() != '\n')
+		continue;
 }
 
-void Port::Show() const
+void Singer::Show() const
 {
-	cout << "브랜드 : " << brand << endl;
-	cout << "스타일 : " << style << endl;
-	cout << "수량 : " << bottles << endl;
-}
-
-ostream & operator<<(ostream & os, const Port & p)
-{
-	os << p.brand << ", " << p.style << ", " << p.bottles;
+	cout << "직종 : 가수\n";
+	Worker::Show();
+	cout << "목소리 유형 : " << pv[voice] << endl;
 }

@@ -1,41 +1,52 @@
-// port.h
+// worker0.h
 
 #ifndef XXX_H_
 #define XXX_H_
-#include <iostream>
-using namespace std;
+#include <string>
 
-class Port
+class Worker
 {
 	private:
-		char * brand;
-		char style[20];
-		int bottles;
+		std::string fullname;
+		long id;
 	public:
-		Port(const char * br = "none", const char * st = "none", int b = 0);
-		Port(const Port & p);
-		virtual ~Port() { delete [] brand; }
-		Port & operator=(const Port & p);
-		Port & operator+=(int b);
-		Port & operator-=(int b);
-		int BottleCount() const { return bottles; }
+		Worker() : fullname("no name"), id(0L) {}
+		Worker(const std::string & s, long n) : fullname(s), id(n) {}
+		virtual ~Worker() = 0;
+		virtual void Set();
 		virtual void Show() const;
-		friend ostream & operator<<(ostream & os, const Port & p);
 };
 
-class VintagePort : public Port
+class Waiter : public Worker
 {
 	private:
-		char * nickname;
-		int year;
-	public:
-		VintagePort();
-		VintagePort(const char * br, int b, const char * nn, int y);
-		VintagePort(const VintagePort & vp);
-		~VintagePort() { delete [] nickname; }
-		VintagePort & operator=(const VintagePort & vp);
+		int panache;
+	public :
+		Waiter() : Worker(), panache(0) {}
+		Waiter(const std::string & s, long n, int p = 0)
+			: Worker(s, n), panache(p) {}
+		Waiter(const Worker & wk, int p = 0)
+			: Worker(wk), panache(p) {}
+		void Set();
 		void Show() const;
-		friend ostream & operator<<(ostream & os, const VintagePort & vp);
 };
 
-#endif
+class Singer : public Worker
+{
+	protected:
+		enum {other, alto, contralto, soprano, bass, baritone, tenor};
+		enum {Vtypes = 7};
+	private:
+		static char *pv[Vtypes];
+		int voice;
+	public:
+		Singer() : Worker(), voice(other) {}
+		Singer(const std::string & s, long n, int v = other)
+			: Worker(s, n), voice(v) {}
+		Singer(const Worker & wk, int v = other)
+			: Worker(wk), voice(v) {}
+		void Set();
+		void Show() const;
+};
+
+# endif
