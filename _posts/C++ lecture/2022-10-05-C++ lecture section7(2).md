@@ -1,5 +1,5 @@
 ---
-title:  "C++ lecture section7 [1/3]"
+title:  "C++ lecture section7 [2/2]"
 excerpt: "동적 할당"
 
 categories:
@@ -9,180 +9,371 @@ tags:
 toc: true
 toc_sticky: true
 toc_label: "목차"
-date: 2022.10.04 16:00:00
+date: 2022.10.05 16:00:00
 ---
 
-# 동적 할당 #1
+# 타입 변환 #3
 
-* 코드 영역 : 실행할 코드가 저장되는 영역
-* 데이터 영역 : 전역(global) / 정적(static) 변수가 저장되는 영역
-* 스택 영역 : 지역 변수 / 매개 변수가 저장되는 영역
-* 힙 영역 : 동적 할당이 이루어지는 영역
-
-스택 영역은 함수가 끝나면 정리되는 불안정한 메모리    
-따라서 잠시 함수에 매개변수를 넘긴다던가 하는 용도로 적합함    
-데이터 영역은 프로그램이 실행되는 도중 무조건 사용됨    
-
-따라서 필요할 때 사용하고, 필요없으면 반납할 수 있는 힙 영역이 유용하게 쓰임
-* 힙 영역에서 동적 할당이 이루어짐
-* `malloc`, `free`, `new`, `delete`, `new[]`, `delete[]`
-
-프로그램의 구동 영역에는 유저 영역과 커널 영역이 있음
-* 커널 영역 : Windows 등의 핵심 코드
-* 유저 영역 : 메모장, 웹브라우저 등의 프로그램    
-	유저 영역에서 프로그램이 운영체제에서 제공하는 API를 호출하면 커널 영역에서 메모리를 할당하여 건내줌
-
-C++에서는 기본적으로 CRT(C RunTime library)의 힙 관리자를 통해 힙 영역을 사용함    
-단, 사용자가 직접 API를 통해 힙을 생성하고 관리하는 것도 가능함(MMORPG 서버 메모리 풀링 등)    
-
-`size_t`는 `typedef`로 설정되어있으며 그 크기는 운영체제마다 다름    
-
-***
-
-# 동적 할당 #2
-
-`malloc` : 할당할 메모리 크기만큼 메모리를 할당 후 시작 주소를 가리키는 포인터를 반환함
-* `void* pointer = malloc(1000)`의 형태로 사용
-	* `void*`형이란 타입이 지정되어있지 않아 어떤 타입으로든 변환될 수 있는 타입
-	* 메모리 낭비를 막기 위해 `malloc(1000)` 대신 `malloc(sizeof(Monster))`의 형태로 사용할 수 있음
-* 메모리 부족시 `NULL`을 반환
-
-`free` : `malloc`(또는 `calloc`, `realloc` 등)을 통해 할당된 메모리 영역을 해제
-* `free(pointer)`의 형태로 사용
-* 메모리 할당시 반드시 해제를 해주어야함
-
-할당한 메모리의 범위를 벗어난 경우 `Heap Overflow` 에러가 발생    
-메모리를 해제하지 않을시 메모리 누수 현상이 발생    
-메모리를 중복해서 해제했을시 `Double Free` 에러가 발생    
-메모리 해제 후에도 해당 주소에 접근하여 조작할 경우 `Use-After-Free` 문제가 발생    
-
-***
-
-# 동적 할당 #3
-
-`malloc` / `free`는 함수    
-`new` / `delete`는 연산자, C++에 추가됨    
-* `Monster* m2 = new Monster;`, `delete m2`의 형태로 사용
-* 전반적인 역할과 제약은 `malloc`, `free`와 같음
-
-배열 할당시에는 `new []` / `delete []`를 사용    
-* `Monster* m3 = new Monster[5];`, `delete [] m3`의 형태로 사용
-
-사용 편의성은 `new / delete`가 뛰어남    
-단, 타입에 상관없이 특정한 크기의 메모리 영역을 할당받고 싶다면 `malloc / free`를 사용해야할 수도 있음    
-`new / delete`는 생성타입이 클래스일 경우 생성자와 소멸자를 호출함!    
-
-***
-
-# 타입 변환 #1
-
-값 타입 변환 : 의미를 유지하기 위해 원본 객체와 다른 비트열을 재구성함    
 ```cpp
-int a = 123456789;
-float b = (float)a;
+class Item
+{
+	public:
+		Item() { cout << "item()" << endl; }
+		Item(const Item& item) { cout << "item(const item&)" << endl; }
+		~Item() { cout << "~item()" << endl; }
+	public:
+		int _itemType = 0;
+		int _itemDbid = 0;
+		char _dummy[4096] = {};
+}
+
+void Testitem(Item item)
+{
+}
+
+void TestItemPtr(Item* item)
+{
+}
+
+int main()
+{
+	{
+		Item item1;
+		Item* item2 = new Item();
+
+		TestItem(item1);
+		TestItem(*item2);
+		TestItemPtr(&item1);
+		TestItemPtr(item2);
+
+		delete item2;
+	}
+
+	{
+		Item item3[100] = {};
+		Item* item4[100] = {};
+
+		for (int i = 0; i < 100; i++)
+			item4[i] = new Item();
+		for (int i = 0; i < 100; i++)
+			delete item4[i];
+	}
+}
 ```
-`int`형으로 저장된 `a`는 2의 보수로 메모리에 123456789의 16진수형이 저장됨    
-`a`를 `float`형으로 변환한 `b`는 부동소수점을 표현하기 위해 완전히 다른 비트로 이루어진 비트열로 재구성됨    
+`item1`은 선언시 생성자가 호출되고 블록을 벗어남과 동시에 파괴자가 호출됨    
+`item2`는 할당시 생성자가 호출되고, `delete`를 해주어야만 파괴자가 호출됨    
+`delete`로 할당을 해제해주지 않으면 메모리 누수가 발생하여 점차 가용 메모리가 줄어드는 문제가 발생함    
 
-참조 타입 변환 : 비트열을 재구성하지 않고 관점만 바꿈    
-	거의 쓸일이 없으나 포인터 타입 변환은 참조 타입 변환과 동일한 룰을 따름    
-```cpp
-int a = 123456789;
-float b = (float&)a;
-```
-`a`를 `float`형으로 변환한 `b`는 `a`와 동일한 비트열로 메모리에 저장됨    
-따라서 출력시의 값은 `a`와 달라질 수 있음    
+값에 의한 전달로 함수 호출시 객체가 복사되며 복사 생성자를 호출함    
+포인터 매개변수로 함수 호출시에는 복사하는 것이 아니므로 별다른 일이 생기지 않음    
 
-안전한 변환 : 의미가 항상 100% 완전하게 일치하는 경우    
-* 즉, 같은 타입이면서 크기만 더 큰 타입으로 변환(업캐스팅)하는 것은 문제가 발생하지 않음    
-불안전한 변환 : 의미가 항상 100% 일치한다고 보장하지 못하는 경우     
-* 타입이 다른 변환 또는 같은 타입이지만 크기가 더 작은 타입으로 변환(다운캐스팅)하는 것은 데이터 손실 등의 문제가 발생함    
-
-암시적 변환 : 이미알려진 타입 변환 규칙에 따라 컴파일러가 자동으로 타입을 변환    
-* `int a = 123; float b = a;`와 같은 경우 `a`는 암시적으로 `float`형으로 바뀜    
-명시적 변환 : 사용자가 명시적으로 형 변환을 지시    
+`item3` 배열에는 실제 `Item` 객체가 100개 존재    
+`item4` 배열에는 `Item` 객체의 주소를 나타내는 포인터가 100개 존재    
 
 ***
 
-# 타입 변환 #2   
+# 타입 변환 #4
 
 ```cpp
 class Knight
 {
 	public:
-		int _hp = 10;
+		int _hp = 0;
+}
+
+class Item
+{
+	public:
+		Item() { cout << "item()" << endl; }
+		Item(int itemType) : _itemType(itemType) {}
+		Item(const Item& item) { cout << "item(const item&)" << endl; }
+		~Item() { cout << "~item()" << endl; }
+	public:
+		int _itemType = 0;
+		int _itemDbid = 0;
+		char _dummy[4096] = {};
+}
+
+enum ItemType
+{
+	IT_WEAPON = 1,
+	IT_ARMOR = 2
+};
+
+class Weapon : public Item
+{
+	public:
+		Weapon() : Item(IT_WEAPON) { cout << "Weapon()" << endl;}
+		~Weapon() { cout << "~Weapon()" << endl; }
+	public:
+		int _damage = 0;
+};
+
+class Armor : public Item
+{
+	public:
+		Armor() : Item(IT_ARMOR) { cout << "Armor()" << endl; }
+		~Armor() { cout << "~Armor()" << endl; }
+};
+
+int main()
+{
+	{
+		Knight* knight = new Knight();
+		Item* item = (Item*)knight;
+		item->_itemType = 2;
+		item->_itemDbid = 1; 
+		delete knight; // 에러 발생
+	}
+
+	{
+		Item* item = new Item;
+		Weapon* weapon = (Weapon*)item;
+		weapon->_damage = 10; // 에러 발생
+		delete item;
+	}
+
+	{
+		Weapon* weapon = new Weapon();
+		Item* item = weapon;
+		delete weapon;
+	}
+}
+```
+
+`Knight`형을 `Item`형으로 변환하는 것과 같이 잘못된 포인터형 변환시 메모리 오염에 주의해야함    
+
+부모 클래스를 자식 클래스 형으로 변환하려면 명시적 변환이 필요    
+단, 변환시 문제가 발생할 소지가 매우 높음    
+
+자식 클래스를 부모 클래스 형으로 변환시에는 암시적 변환이 가능    
+
+***
+
+# 타입 변환 #5
+
+```cpp
+int main
+{
+	Item* inventory[20] = {};
+	srand((unsigned int)time(nullptr));
+
+	for (int i = 0; i < 20; i++)
+	{
+		int randValue = rand() % 2;
+		switch (randValue)
+		{
+			case 0:
+				inventory[i] = new Weapon();
+				break;
+			case 1:
+				inventory[i] = new Armor();
+				break;
+		}
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		Item* item = inventory[i];
+		if (item == nullptr)
+			continue;
+		if (item->_itemType == IT_WEAPON)
+		{
+			Weapon* weapon = (Weapon*)item;
+			cout << "Weapon Damage : " << weapon->_damage << endl;
+		}
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		Item* item = inventory[i];
+		if (item == nullptr)
+			continue;
+
+		delete item; // 소멸자를 가상 함수로 선언시 가능한 해제
+
+		// 소멸자가 가상 함수로 선언되지 않았을 시 올바른 해제
+		if (item->_itemType == IT_WEAPON)
+		{
+			Weapon* weapon = (Weapon*)item;
+			delete weapon;
+		}
+		else
+		{
+			Armor* armor = (Armor*)item;
+			delete armor;
+		}
+	}
+	return 0;
+}
+```
+
+`Item` 클래스의 소멸자가 가상 함수로 선언되지 않았을 시 `item` 객체를 곧바로 `delete`할 경우 원본 객체가 `Weapon`형이어도 `Item`형의 소멸자만 호출됨    
+반면 `Item` 클래스의 소멸자를 가상 함수로 선언한 경우에는 `delete`가 대상 객체의 타입에 따른 소멸자를 호출함    
+따라서 부모-자식 관계에서 부모 클래스의 소멸자는 `virtual` 키워드를 붙여 가상 함수로 선언해야함    
+
+***
+
+# 얕은 복사 vs 깊은 복사 #1
+
+```cpp
+class Pet
+{
+	public:
+		Pet() { cout << "Pet()" << endl; }
+		~Pet() { cout << "~Pet()" << endl; }
+		Pet(const Pet& pet) { cout << "Pet(const)" << endl; }
+}
+
+class Knight
+{
+	public:
+	public:
+		int _hp = 100;
+		Pet* pet;
+};
+
+int main()
+{
+	Pet* pet = new Pet();
+
+	Knight knight; // 기본 생성자 사용
+	knight._hp = 200;
+	knight._pet = pet;
+
+	Knight knight2 = knight; // 복사 생성자 사용
+	//Knight knight2(knight);
+
+	Knight knight3; // 기본 생성자 사용
+	knight3 = knight; // 복사 대입 연산자 사용
+
+	return 0;
+}
+```
+
+복사 생성자와 복사 대입 연산자는 따로 선언하지 않았을시 컴파일러가 암시적으로 디폴트 버전을 생성하여 사용함    
+단, 이 때는 얕은 복사(Shallow Copy)가 수행되므로 멤버 데이터가 비트열 단위로 똑같이 복사됨    
+즉 포인터 멤버를 가지고 있는 경우에는 얕은 복사 수행시 해당 주소값이 그대로 복사되어 복사된 개체와 원본 개체가 동일한 대상을 가리키는 문제가 발생함    
+
+```cpp
+class Knight
+{
+	public:
+		Knight() { _pet = new Pet(); }
+		Knight(const Knight& knight)
+		{
+			_hp = knight._hp;
+			_pet = new Pet(*knight._pet); 
+		}
+		Knight& operator=(const Knight& knight)
+		{
+			_hp = knight._hp;
+			_pet = new Pet(*knight._pet); 
+			return *this;
+		}
+		~Knight() { delete _pet; }
+}
+```
+
+
+따라서 멤버 데이터가 참조(주소) 값이라면 원본 객체가 참조하는 대상까지 새로 만들어서 복사하는 깊은 복사(Deep Copy)를 수행해야함    
+이를 위해 복사 생성자와 복사 대입 연산자를 명시적으로 정의해주어야함    
+
+***
+
+# 얕은 복사 vs 깊은 복사 #2
+
+암시적 복사 생성자
+* 부모 클래스의 복사 생성자 호출
+* 멤버 클래스의 복사 생성자 호출
+* 멤버가 기본 타입일 경우 얇은 복사가 수행되며 메모리를 복사
+
+명시적 복사 생성자
+* 부모 클래스의 기본 생성자 호출
+* 멤버 클래스의 기본 생성자 호출
+* 다른 생성자를 호출하고싶다면 멤버 초기자 리스트를 사용해야함
+
+암시적 복사 대입 연산자
+* 부모 클래스의 복사 대입 연산자 호출
+* 멤버 클래스의 복사 대입 연산자 호출
+* 멤버가 기본 타입일 경우 얇은 복사가 수행되며 메모리를 복사
+
+명시적 복사 대입 연산자
+* 컴파일러가 자동적으로 해주는 것이 없음
+* 따라서 사용자가 직접 부모 클래스 및 멤버 클래스에 대한 복사 대입 연산을 처리해주어야함
+
+***
+
+# 캐스팅 4총사
+
+```cpp
+class Player
+{
+	public:
+		virtual ~Player() {}
+};
+
+class Knight : public Player
+{
 };
 
 class Dog
 {
-	public:
-		Dog(const Knight& knight) // 타입 변환 생성자
-		{
-			_age = knight._hp;
-		}
-		operator Knight() // 타입 변환 연산자
-		{
-			return (Kngiht)(*this);
-		}
 };
 
 int main()
 {
-	Knight = knight;
-	Dog dog = (Dog)knight;
-	Knight knight2 = dog;
+	int hp = 100;
+	int maxHp = 200;
+	float ratio = static_cast<float>(hp) / maxHp;
+
+	Player* p = new Knight();
+	Knight* k1 = static_cast<Knight*>(p);
+	Knight* k2 = dynamic_cast<Knight*>(p);
+	return 0;
 }
 ```
 
-연관없는 클래스 사이의 값 타입 변환 : 일반적으로 불가능    
-* 단, 타입 변환 생성자 또는 연산자 를 사용시 가능함 
+`static_cast` : 타입 원칙에 비춰볼 때 상식적인 캐스팅만 허용    
+* `int` <-> `float`와 같은 경우
+* 부모 클래스에서 자식 클래스로의 다운캐스팅, 단 안전성은 보장 못함
+
+`dynamic_cast` : 상속 관계에서의 안전한 형변환    
+* `RTTI`(RunTime Type Information)으로 다형성을 활용
+* 반드시 가상 함수가 포함되어 있어야하며, 객체의 메모리에 기입되어있는 가상 함수 테이블을 체크하여 캐스팅
+* 잘못된 타입으로 캐스팅했을시 `nullptr`을 반환
+* 따라서 올바른 타입으로 캐스팅했는지 여부를 확인하는데 유용함
+
+```cpp
+void PrintName(char* str)
+{
+	cout << str << endl;
+}
+
+int main()
+{
+	PrintName("ABCDE"); // 에러
+	PrintName(const_cast<char*>("ABCDE"));
+	return 0;
+}
+```
+
+`const_cast` : `const`를 붙이거나 제거하는데 사용    
 
 ```cpp
 int main()
 {
-	Knight knight;
-	Dog& dog = (Dog&)kngiht;
+	Player* p = new Knight();
+	Knight* k = dynamic_cast<Knight*>(p);
+
+	__int64 address = reinterpret_cast<__int64>(k);
+	Dog* dog = reinterpret_cast<Dog*>(k);
+
+	void* r = malloc(1000);
+	Dog* dog2 = reinterpret_cast<Dog*>(r);
 }
 ```
 
-연괍없는 클래스 사이의 참조 타입 변환 : 명시적으로는 가능함    
-* 참조형은 사실상(어셈블리어 수준에서) 포인터와 작동이 같으므로 주소를 가리키는 변환은 오류를 발생시키지 않음    
-
-```cpp
-
-class BullDog : public Dog
-{
-	public:
-		bool _french;
-};
-
-int main()
-{
-	BullDog = bulldog;
-	Dog dog = bulldog;
-}
-```
-
-상속 관계 클래스의 값 타입 변환
-* 자식 클래스를 부모 클래스로 변환하는 것은 가능    
-* 부모 클래스를 자식 클래스로 변환하는 것은 불가능    
-
-```cpp
-int main()
-{
-	Dog dog;
-	BullDog& bulldog = (BullDog&)dog;
-
-	BullDog bulldog2;
-	Dog& dog2 = bulldog2;
-}
-```
-
-상속 관계 클래스의 참조 타입 변환
-* 자식 클래스를 부모 클래스로 변환하는 것은 가능    
-* 부모 클래스를 자식 클래스로 변환하는 것은 명시적 변환으로만 가능    
-
-
-값 타입 변환은 실제로 비트열을 바꾸며, 논리적으로 수용 가능한 변환임    
-참조 타입 변환은 비트열을 그대로 유지하며, 해당 비트열을 해석하는 관점만 바꿈    
-이 때 논리적으로 안전한 변환의 경우 암시적으로 가능하며, 논리적으로 위험한 변환의 경우 명시적 변환만 가능함    
+`reinterpret_cast` : 가장 위험하고 강력한 형태의 캐스팅    
+* 포인터랑 전혀 관계없는 다른 타입으로의 변환 등에 사용
+* `void*` 형으로 반환되는 `malloc`을 활용할 때도 사용됨
