@@ -1,5 +1,5 @@
 ---
-title:  "C++ lecture section7 [1/3]"
+title:  "C++ lecture section7 [1/2]"
 excerpt: "동적 할당"
 
 categories:
