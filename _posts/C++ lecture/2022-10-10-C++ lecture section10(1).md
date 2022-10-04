@@ -1,6 +1,6 @@
 ---
 title:  "C++ lecture section10 [1/2]"
-excerpt: "디버깅"
+excerpt: "함수 포인터"
 
 categories:
   - Cpp_lecture
