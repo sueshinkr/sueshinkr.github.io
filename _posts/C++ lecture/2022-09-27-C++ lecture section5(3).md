@@ -133,7 +133,7 @@ int main()
 ```cpp
 int main()
 {
-	int arr2[2][2] = {{1, 2}, {3, 4}};
+	
 	int** pp = (int**)arr2 // 불가능
 	int(*p2)[2] = arr2; // 가능
 }
