@@ -1,77 +1,52 @@
-// workermi.h
+// arraytp.h
 
 #ifndef XXX_H_
 #define XXX_H_
-#include <string>
 
-class Worker
+#include <iostream>
+#include <cstdlib>
+
+template <class T, int n>
+class ArrayTP
 {
 	private:
-		std::string fullname;
-		long id;
-	protected:
-		virtual void Data() const;
-		virtual void Get();
+		T ar[n];
 	public:
-		Worker() : fullname("no name"), id(0L) {}
-		Worker(const std::string & s, long n) : fullname(s), id(n) {}
-		virtual ~Worker() = 0;
-		virtual void Set() = 0;
-		virtual void Show() const = 0;
+		ArrayTP() {}
+		explicit ArrayTP(const T & v);
+		virtual T & operator[](int i);
+		virtual T operator[](int i) const;
 };
 
-class Waiter : virtual public Worker
+template <class T, int n>
+ArrayTP<T,n>::ArrayTP(const T & v)
 {
-	private:
-		int panache;
-	protected:
-		void Data() const;
-		void Get();
-	public :
-		Waiter() : Worker(), panache(0) {}
-		Waiter(const std::string & s, long n, int p = 0)
-			: Worker(s, n), panache(p) {}
-		Waiter(const Worker & wk, int p = 0)
-			: Worker(wk), panache(p) {}
-		void Set();
-		void Show() const;
-};
+	for (int i = 0; i < n; i++)
+		ar[i] =  v;
+}
 
-class Singer : virtual public Worker
+template <class T, int n>
+T & ArrayTP<T,n>::operator[](int i)
 {
-	protected:
-		enum {other, alto, contralto, soprano, bass, baritone, tenor};
-		enum {Vtypes = 7};
-		void Data() const;
-		void Get();
-	private:
-		static char *pv[Vtypes];
-		int voice;
-	public:
-		Singer() : Worker(), voice(other) {}
-		Singer(const std::string & s, long n, int v = other)
-			: Worker(s, n), voice(v) {}
-		Singer(const Worker & wk, int v = other)
-			: Worker(wk), voice(v) {}
-		void Set();
-		void Show() const;
-};
+	if (i < 0 || i >= n)
+	{
+		std::cerr << "배열의 경계를 벗어나는 에러 : "
+				  << i << "--> 잘못된 인덱스입니다.\n";
+		std::exit(EXIT_FAILURE);
+	}
+	return ar[i];
+}
 
-class SingingWaiter : public Singer, public Waiter
+template <class T, int n>
+T ArrayTP<T,n>::operator[](int i) const
 {
-	protected:
-		void Data() const;
-		void Get();
-	public:
-		SingingWaiter() {}
-		SingingWaiter(const std::string & s, long n, int p = 0, int v = other)
-			: Worker(s, n), Waiter(s, n, p), Singer(s, n, v) {}
-		SingingWaiter(const Worker & wk, int p = 0, int v = other)
-			: Worker(wk), Waiter(wk, p), Singer(wk, v) {}
-		SingingWaiter(const Singer & wt, int p = 0)
-			: Worker(wt), Waiter(wt, p), Singer(wt) {}
-		void Set();
-		void Show() const;
-};
+	if (i < 0 || i >= n)
+	{
+		std::cerr << "배열의 경계를 벗어나는 에러 : "
+				  << i << "--> 잘못된 인덱스입니다.\n";
+		std::exit(EXIT_FAILURE);	
+	}
+	return ar[i];
+}
 
 #endif

@@ -1,57 +1,58 @@
-// workmi.cpp
+// pairs.cpp
 
-#include <iostream>
-#include <cstring>
 #include "xxx.h"
+#include <iostream>
+#include <string>
 
-const int SIZE = 5;
+template <class T1, class T2>
+class Pair
+{
+	private:
+		T1 a;
+		T2 b;
+	public:
+		T1 & first();
+		T2 & second();
+		T1 first() const { return a; }
+		T2 second() const { return b; }
+		Pair(const T1 & aval, const T2 & bval) : a(aval), b(bval) {}
+		Pair() {}
+};
+
+template<class T1, class T2>
+T1 & Pair<T1, T2>::first()
+{
+	return a;
+}
+
+template<class T1, class T2>
+T2 & Pair<T1, T2>::second()
+{
+	return b;
+}
 
 int main()
 {
-	using std::cin;
 	using std::cout;
 	using std::endl;
-	using std::strchr;
-
-	Worker * lolas[SIZE];
-
-	int ct;
-	for (ct = 0; ct < SIZE; ct++)
+	using std::string;
+	Pair<string, int> ratings[4] = 
 	{
-		char choice;
-		cout << "직종을 입력하십시오 : \n"
-			 << "w : 웨이터		s : 가수		"
-			 << "t : 가수 겸 웨이터		q : 종료\n";
-		cin >> choice;
-		while (strchr("wstq", choice) == NULL)
-		{
-			cout << "w, s, t, q 중에서 하나를 선택하십시오 : ";
-			cin >> choice;
-		}
-		if (choice == 'q')
-			break;
-		switch(choice)
-		{
-			case 'w': lolas[ct] = new Waiter;
-				break;
-			case 's': lolas[ct] = new Singer;
-				break;
-			case 't': lolas[ct] = new SingingWaiter;
-				break;
-		}
-		cin.get();
-		lolas[ct]->Set();
-	}
-	
-	cout << "\n사원 현황은 다음과 같습니다 : \n";
-	int i;
-	for (i = 0; i < ct; i++)
-	{
-		cout << endl;
-		lolas[i]->Show();
-	}
-	for (i = 0; i < ct; i++)
-		delete lolas[i];
-	cout << "프로그램을 종료합니다.\n";
+		Pair<string, int>("이동갈비", 5),
+		Pair<string, int>("태릉갈비", 4),
+		Pair<string, int>("수원갈비", 5),
+		Pair<string, int>("LA갈비", 3)
+	};
+
+	int joints = sizeof(ratings) / sizeof(Pair<string, int>);
+	cout << "등급 : \t 갈비 종류\n";
+	for (int i = 0; i < joints; i++)
+		cout << ratings[i].second() << " :\t "
+			 << ratings[i].first() << endl;
+	cout << "조정된 등급 : \n";
+	ratings[3].first() = "LA떡갈비";
+	ratings[3].second() = 6;
+	cout << ratings[3].second() << " :\t "
+		 << ratings[3].first() << endl;
 	return 0;
 }

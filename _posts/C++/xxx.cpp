@@ -1,10 +1,11 @@
-// workermi.cpp
+// stacktem.cpp
 
 #include "xxx.h"
 #include <iostream>
+#include <string>
+#include <cctype>
 using std::cout;
 using std::cin;
-using std::endl;
 
 Worker::~Worker() {}
 
