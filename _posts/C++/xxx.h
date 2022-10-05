@@ -1,52 +1,63 @@
-// arraytp.h
+// stacktp.h
 
-#ifndef XXX_H_
-#define XXX_H_
+#ifndef STACKTP_H_
+#define STACKTP_H_
 
-#include <iostream>
-#include <cstdlib>
-
-template <class T, int n>
-class ArrayTP
+template <class Type>
+class Stack
 {
 	private:
-		T ar[n];
+		enum {MAX = 10};
+		Type items[MAX];
+		int top;
 	public:
-		ArrayTP() {}
-		explicit ArrayTP(const T & v);
-		virtual T & operator[](int i);
-		virtual T operator[](int i) const;
+		Stack();
+		bool isempty();
+		bool isfull();
+		bool push(const Type & item);
+		bool pop(Type & item);
 };
 
-template <class T, int n>
-ArrayTP<T,n>::ArrayTP(const T & v)
+template <class Type>
+Stack<Type>::Stack()
 {
-	for (int i = 0; i < n; i++)
-		ar[i] =  v;
+	top = 0;
 }
 
-template <class T, int n>
-T & ArrayTP<T,n>::operator[](int i)
+template <class Type>
+bool Stack<Type>::isempty()
 {
-	if (i < 0 || i >= n)
-	{
-		std::cerr << "배열의 경계를 벗어나는 에러 : "
-				  << i << "--> 잘못된 인덱스입니다.\n";
-		std::exit(EXIT_FAILURE);
-	}
-	return ar[i];
+	return top == 0;
 }
 
-template <class T, int n>
-T ArrayTP<T,n>::operator[](int i) const
+template <class Type>
+bool Stack<Type>::isfull()
 {
-	if (i < 0 || i >= n)
+	return top == MAX;
+}
+
+template <class Type>
+bool Stack<Type>::push(const Type & item)
+{
+	if (top < MAX)
 	{
-		std::cerr << "배열의 경계를 벗어나는 에러 : "
-				  << i << "--> 잘못된 인덱스입니다.\n";
-		std::exit(EXIT_FAILURE);	
+		items[top++] = item;
+		return true;
 	}
-	return ar[i];
+	else
+		return false;
+}
+
+template <class Type>
+bool Stack<Type>::pop(Type & item)
+{
+	if (top > 0)
+	{
+		item = items[--top];
+		return true;
+	}
+	else
+		return false;
 }
 
 #endif

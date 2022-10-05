@@ -1,58 +1,33 @@
-// pairs.cpp
+// manyfrnd.cpp
 
-#include "xxx.h"
 #include <iostream>
-#include <string>
+using std::cout;
+using std::endl;
 
-template <class T1, class T2>
-class Pair
+template <typename T>
+class ManyFriend
 {
 	private:
-		T1 a;
-		T2 b;
+		T item;
 	public:
-		T1 & first();
-		T2 & second();
-		T1 first() const { return a; }
-		T2 second() const { return b; }
-		Pair(const T1 & aval, const T2 & bval) : a(aval), b(bval) {}
-		Pair() {}
+		ManyFriend(const T & i) : item(i) {}
+		template <typename C, typename D> friend void show2(C &, D &);
 };
 
-template<class T1, class T2>
-T1 & Pair<T1, T2>::first()
+template <typename C, typename D> void show2(C & c, D & d)
 {
-	return a;
-}
-
-template<class T1, class T2>
-T2 & Pair<T1, T2>::second()
-{
-	return b;
+	cout << c.item << ", " << d.item << endl;
 }
 
 int main()
 {
-	using std::cout;
-	using std::endl;
-	using std::string;
-	Pair<string, int> ratings[4] = 
-	{
-		Pair<string, int>("이동갈비", 5),
-		Pair<string, int>("태릉갈비", 4),
-		Pair<string, int>("수원갈비", 5),
-		Pair<string, int>("LA갈비", 3)
-	};
+	ManyFriend<int> hfi1(10);
+	ManyFriend<int> hfi2(20);
+	ManyFriend<double> hfdb(10.5);
+	cout << "hfi1, hfi2 : ";
+	show2(hfi1, hfi2);
+	cout << "hfdb, hfi2 : ";
+	show2(hfdb, hfi2);
 
-	int joints = sizeof(ratings) / sizeof(Pair<string, int>);
-	cout << "등급 : \t 갈비 종류\n";
-	for (int i = 0; i < joints; i++)
-		cout << ratings[i].second() << " :\t "
-			 << ratings[i].first() << endl;
-	cout << "조정된 등급 : \n";
-	ratings[3].first() = "LA떡갈비";
-	ratings[3].second() = 6;
-	cout << ratings[3].second() << " :\t "
-		 << ratings[3].first() << endl;
 	return 0;
 }
