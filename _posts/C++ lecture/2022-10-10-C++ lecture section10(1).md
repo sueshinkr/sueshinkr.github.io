@@ -1,6 +1,6 @@
 ---
 title:  "C++ lecture section10 [1/2]"
-excerpt: "함수 포인터"
+excerpt: "콜백 함수"
 
 categories:
   - Cpp_lecture
