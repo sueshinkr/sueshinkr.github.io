@@ -1,63 +1,77 @@
-// stacktp.h
+// emp.h
 
-#ifndef STACKTP_H_
-#define STACKTP_H_
+#ifndef XXX_H_
+#define XXX_H_
+#include <iostream>
+#include <string>
 
-template <class Type>
-class Stack
+class abstr_emp
 {
 	private:
-		enum {MAX = 10};
-		Type items[MAX];
-		int top;
+		std::string fname;
+		std::string lname;
+		std::string job;
 	public:
-		Stack();
-		bool isempty();
-		bool isfull();
-		bool push(const Type & item);
-		bool pop(Type & item);
+		abstr_emp();
+		abstr_emp(const std::string & fn, const std::string & ln, const std::string & j);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+		friend std::ostream & operator<<(std::ostream & os, const abstr_emp & e);
+		virtual ~abstr_emp() = 0;
 };
 
-template <class Type>
-Stack<Type>::Stack()
+class employee : public abstr_emp
 {
-	top = 0;
-}
+	public:
+		employee();
+		employee(const std::string & fn, const std::string & ln, const std::string & j);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+};
 
-template <class Type>
-bool Stack<Type>::isempty()
+class manager : virtual public abstr_emp
 {
-	return top == 0;
-}
+	private:
+		int inchargeof;
+	protected:
+		int InChargeOf() const { return inchargeof; }
+		int & InChargeOf() { return inchargeof; }
+	public:
+		manager();
+		manager(const std::string & fn, const std::string & ln, const std::string & j, int ico = 0);
+		manager(const abstr_emp & e, int ico);
+		manager(const manager & m);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+};
 
-template <class Type>
-bool Stack<Type>::isfull()
+class fink : virtual public abstr_emp
 {
-	return top == MAX;
-}
+	private:
+		std::string reportsto;
+	protected:
+		const std::string ReportsTo() const { return reportsto; }
+		std::string & ReportsTo() { return reportsto; }
+	public:
+		fink();
+		fink(const std::string & fn, const std::string & ln, const std::string & j, const std::string & rpo);
+		fink(const abstr_emp & e, const std::string & rpo);
+		fink(const fink & e);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+};
 
-template <class Type>
-bool Stack<Type>::push(const Type & item)
+class highfink : public manager, public fink
 {
-	if (top < MAX)
-	{
-		items[top++] = item;
-		return true;
-	}
-	else
-		return false;
-}
-
-template <class Type>
-bool Stack<Type>::pop(Type & item)
-{
-	if (top > 0)
-	{
-		item = items[--top];
-		return true;
-	}
-	else
-		return false;
-}
+	public:
+		highfink();
+		highfink(const std::string & fn, const std::string & ln, const std::string & j, const std::string & rpo, int ico);
+		highfink(const abstr_emp & e, const std::string & rpo, int ico);
+		highfink(const fink & f, int ico);
+		highfink(const manager & m, const std::string & rpo);
+		highfink(const highfink & h);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+};
 
 #endif

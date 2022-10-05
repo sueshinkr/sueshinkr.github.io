@@ -1,118 +1,166 @@
-// stacktem.cpp
+// baddude.cpp
 
 #include "xxx.h"
-#include <iostream>
-#include <string>
-#include <cctype>
 using std::cout;
 using std::cin;
+using std::endl;
 
-Worker::~Worker() {}
-
-void Worker::Data() const
+abstr_emp::abstr_emp() : fname(""), lname(""), job("")
 {
-	cout << "사원 이름 : " << fullname << endl;
-	cout << "사원 번호 : " << id << endl;
 }
 
-void Worker::Get()
+abstr_emp::abstr_emp(const std::string & fn, const std::string & ln, const std::string & j)
+	: fname(fn), lname(ln), job(j)
 {
-	getline(cin, fullname);
-	cout << "사원 번호를 입력하십시오 : ";
-	cin >> id;
-	while (cin.get() != '\n')
-		continue;
 }
 
-void Waiter::Set()
+void abstr_emp::ShowAll() const
 {
-	cout << "웨이터의 이름을 입력하십시오 : ";
-	Worker::Get();
-	Get();
+	cout << "이름 : " << fname << " " << lname << endl;
+	cout << "직업 : " << job << endl;
 }
 
-void Waiter::Show() const
+void abstr_emp::SetAll()
 {
-	cout << "직종 : 웨이터 \n";
-	Worker::Data();
-	Data();
+	cout << "성을 입력하십시오 : ";
+	cin >> fname;
+	cout << "이름을 입력하십시오 : ";
+	cin >> lname;
+	cout << "직업을 입력하십시오 : ";
+	cin >> job;
 }
 
-void Waiter::Data() const
+abstr_emp::~abstr_emp()
 {
-	cout << "웨이터 등급 : " << panache << endl;
 }
 
-void Waiter::Get()
+std::ostream & operator<<(std::ostream & os, const abstr_emp & e)
 {
-	cout << "웨이터 등급을 입력하십시오 : ";
-	cin >> panache;
-	while (cin.get() != '\n')
-		continue;
+	return os << e.fname << " " << e.lname << endl;
 }
 
-char * Singer::pv[] = {"other", "alto", "contralto",
-					"soprano", "bass", "baritone", "tenor"};
-
-void Singer::Set()
+employee::employee() : abstr_emp()
 {
-	cout << "가수의 이름을 입력하십시오 : ";
-	Worker::Get();
-	Get();
 }
 
-void Singer::Show() const
+employee::employee(const std::string & fn, const std::string & ln, const std::string & j)
+	: abstr_emp(fn, ln, j)
 {
-	cout << "직종 : 가수\n";
-	Worker::Data();
-	Data();
 }
 
-void Singer::Data() const
+void employee::ShowAll() const
 {
-	cout << "목소리 유형 : " << pv[voice] << endl;
+	abstr_emp::ShowAll();
 }
 
-void Singer::Get()
+void employee::SetAll()
 {
-	cout << "가수의 목소리 유형 번호를 입력하십시오::\n";
-	int i;
-	for (i = 0; i < Vtypes; i++)
-	{
-		cout << i << " : " << pv[i] << " ";
-		if (i % 4 == 3)
-			cout << endl;
-	}
-	if (i % 4 != 0)
-		cout << endl;
-	while (cin >> voice && (voice < 0 || voice >= Vtypes))
-		cout << "0보다 크거나 같고 " << Vtypes << "보다 작은 값을 입력하세요." << endl;
-	while (cin.get() != '\n')
-		continue;
+	abstr_emp::SetAll();
 }
 
-void SingingWaiter::Data() const
+manager::manager() : abstr_emp(), inchargeof(0)
 {
-	Waiter::Data();
-	Singer::Data();
+};
+
+manager::manager(const std::string & fn, const std::string & ln, const std::string & j, int ico)
+	: abstr_emp(fn, ln, j), inchargeof(ico)
+{
 }
 
-void SingingWaiter::Get()
+manager::manager(const abstr_emp & e, int ico)
+	: abstr_emp(e), inchargeof(ico)
 {
-	Waiter::Get();
-	Singer::Get();
 }
 
-void SingingWaiter::Set()
+manager::manager(const manager & m) : abstr_emp(m), inchargeof(m.inchargeof)
 {
-	cout << "가수 겸 웨이터의 이름을 입력하십시오 : ";
-	Worker::Get();
-	Get();
 }
 
-void SingingWaiter::Show() const
+void manager::ShowAll() const
 {
-	cout << "직종 : 가수 겸 웨이터\n";
-	Worker::Data();
-	Data();
+	abstr_emp::ShowAll();
+	cout << "관리 수 : " << inchargeof << endl;
+}
+
+void manager::SetAll()
+{
+	abstr_emp::SetAll();
+	cout << "관리 수를 입력하십시오 : ";
+	cin >> inchargeof;
+}
+
+fink::fink() : abstr_emp(), reportsto("")
+{
+}
+
+fink::fink(const std::string & fn, const std::string & ln, const std::string & j, const std::string & rpo)
+	: abstr_emp(fn, ln, j), reportsto(rpo)
+{
+}
+
+fink::fink(const abstr_emp & e, const std::string & rpo)
+	: abstr_emp(e), reportsto(rpo)
+{
+}
+
+fink::fink(const fink & e) : abstr_emp(e), reportsto(e.reportsto)
+{
+}
+
+void fink::ShowAll() const
+{
+	abstr_emp::ShowAll();
+	cout << "보고 대상 : " << reportsto << endl;
+}
+
+void fink::SetAll()
+{
+	abstr_emp::SetAll();
+	cout << "보고 대상을 입력하십시오 : ";
+	cin >> reportsto;
+}
+
+highfink::highfink() : abstr_emp(), manager(), fink()
+{
+}
+
+highfink::highfink(const std::string & fn, const std::string & ln, const std::string & j, const std::string & rpo, int ico)
+	: abstr_emp(fn, ln, j), manager(fn, ln, j, ico), fink(fn, ln, j, rpo)
+{	
+}
+
+highfink::highfink(const abstr_emp & e, const std::string & rpo, int ico)
+	: abstr_emp(e), manager(e, ico), fink(e, rpo)
+{
+}
+
+highfink::highfink(const fink & f, int ico)
+	: abstr_emp(f), manager(f, ico), fink()
+{
+}
+
+highfink::highfink(const manager & m, const std::string & rpo)
+	: abstr_emp(m), manager(m), fink(m, rpo)
+{
+}
+
+highfink::highfink(const highfink & h)
+	: abstr_emp(h), manager(h), fink(h)
+{
+}
+
+void highfink::ShowAll() const
+{
+	abstr_emp::ShowAll();
+	cout << "관리 수 : " << InChargeOf() << endl;
+	cout << "보고 대상 : " << ReportsTo() << endl;
+}
+
+void highfink::SetAll()
+{
+	abstr_emp::SetAll();
+	cout << "관리 수를 입력하십시오 : ";
+	cin >> InChargeOf();
+	cout << "보고 대상을 입력하십시오 : ";
+	cin >> ReportsTo();
 }
