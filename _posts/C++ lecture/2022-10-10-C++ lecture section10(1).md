@@ -127,3 +127,68 @@ int main()
 
 # 함수 객체
 
+함수 포인터 단점
+* 함수 시그니처가 맞지 않으면 사용할 수 없음
+* 상태를 가질 수 없음
+
+함수 객체(Functor) : 함수처럼 동작하는 객체
+
+```cpp
+class Functor
+{
+	public:
+		void operator()()
+		{
+			cout << "Functor Test" << endl;
+			cout << _value << endl;
+		}
+		boll operator()(int num)
+		{
+			cout << "Functor Test" << endl;
+			_value += num;
+			cout << _value << endl;
+			return true;
+		}
+	private:
+		int _value = 0;
+}
+
+int main()
+{
+	Functor funcotr;
+
+	functor();
+	bool ret = functor(3);
+
+	return 0;
+}
+```
+
+함수 객체를 생성하는 시점과 실행하는 시점을 분리할 수 있음
+
+```cpp
+class MoveTask
+{
+	public:
+		void operator()()
+		{
+			cout << "해당 좌표로 플레이어 이동" << endl;
+		}
+	public:
+		int _playerid;
+		int _posX;
+		int _posY;
+}
+
+int main()
+{
+	MoveTask task;
+	task._plyaerid = 100;
+	task._posX = 5;
+	task._posY = 0;
+	// 이동 요청을 받아서 함수 객체에 저장
+
+	// 요청을 곧바로 실행하지 않고, 얼마든지 나중에 task를 실행할 수 있음
+	task();
+}
+```
