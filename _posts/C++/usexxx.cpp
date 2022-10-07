@@ -1,42 +1,60 @@
-// pe14-5.cpp
+// error4.cpp
 
 #include "xxx.h"
 #include <iostream>
-using namespace std;
+#include <cmath>
+
+double hmean(double a, double b) throw(bad_hmean);
+double gmean(double a, double b) throw(bad_gmean);
 
 int main()
 {
-	employee em("Trip", "Harris", "Thumper");
-	cout << em << endl;
-	em.ShowAll();
+	using std::cout;
+	using std::cin;
+	using std::endl;
 
-	manager ma("Amorphia", "Spindragon", "Nuancer", 5);
-	cout << ma << endl;
-	ma.ShowAll();
+	double x, y, z;
 
-	fink fi("Matt", "Oggs", "Oiler", "Juno Barr");
-	cout << fi << endl;
-	fi.ShowAll();
-
-	highfink hf(ma, "Curly Kew");
-	hf.ShowAll();
-	cout << "다음 출력을 위해 아무 키나 누르십시오 : \n";
-	cin.get();
-	highfink hf2;
-	hf2.SetAll();
-
-	cout << "abstr_emp * 포인터의 사용 : \n";
-
-	abstr_emp tri[4] = {em, fi, hf, hf2};
-	for (int i = 0; i < 4; i++)
-		tri[i].ShowAll();
-/*
-	abstr_emp * tri[4] = { &em, &fi, &hf, &hf2 };
-	for (int i = 0; i < 4; i++)
+	std::cout << "두 수를 입력하십시오 : ";
+	while (std::cin >> x >> y)
 	{
-		tri[i]->ShowAll();
-		cout << endl;
+		try {
+				z = hmean(x, y);
+				cout << x << ", " << y << "의 조화평균은 "
+					 << z << "입니다.\n";
+				cout << x << ", " << y << "의 기하평균은 "
+					 << gmean(x,y) << "입니다.\n";
+				cout << "다른 두 수를 입력하십시오 (끝내려면 q) : ";
+		}
+		catch (bad_hmean & bg)
+		{
+			bg.mesg();
+			cout << "다시 하십시오.\n";
+			continue;
+		}
+		catch (bad_gmean & hg)
+		{
+			cout << hg.mesg();
+			cout << "사용된 값 : " << hg.v1 << ", "
+				 << hg.v2 << endl;
+			cout << "죄송합니다. 더 이상 진행할 수 없습니다.\n";
+			break;
+		}
 	}
-*/
+	std::cout << "프로그램을 종료합니다.\n";
 	return 0;
+}
+
+double hmean(double a, double b) throw(bad_hmean)
+{
+	if (a == -b)
+		throw bad_hmean(a, b);
+	return 2.0 * a * b / (a + b);
+}
+
+double gmean(double a, double b) throw(bad_gmean)
+{
+	if (a < 0 || b < 0)
+		throw bad_gmean(a, b);
+	return std::sqrt(a * b);
 }
