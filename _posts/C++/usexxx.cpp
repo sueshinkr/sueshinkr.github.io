@@ -1,11 +1,7 @@
-// error4.cpp
+// use_sales.cpp
 
 #include "xxx.h"
 #include <iostream>
-#include <cmath>
-
-double hmean(double a, double b) throw(bad_hmean);
-double gmean(double a, double b) throw(bad_gmean);
 
 int main()
 {
@@ -13,48 +9,72 @@ int main()
 	using std::cin;
 	using std::endl;
 
-	double x, y, z;
-
-	std::cout << "두 수를 입력하십시오 : ";
-	while (std::cin >> x >> y)
+	double vals1[12] =
 	{
-		try {
-				z = hmean(x, y);
-				cout << x << ", " << y << "의 조화평균은 "
-					 << z << "입니다.\n";
-				cout << x << ", " << y << "의 기하평균은 "
-					 << gmean(x,y) << "입니다.\n";
-				cout << "다른 두 수를 입력하십시오 (끝내려면 q) : ";
-		}
-		catch (bad_hmean & bg)
+		1220, 1100, 1122, 2212, 1232, 2334,
+		2884, 2393, 3302, 2922, 3002, 3544
+	};
+
+	double vals2[12] =
+	{
+		12, 11, 22, 21, 32, 34,
+		28, 29, 33, 29, 32, 35
+	};
+
+	Sales sales1(2011, vals1, 12);
+	LabeledSales sales2("Blogstar", 2012, vals2, 12);
+
+	cout << "첫 번째 try 블록 : \n";
+	try
+	{
+		int i;
+		cout << "Year = " << sales1.Year() << endl;
+		for (i = 0; i < 12; ++i)
 		{
-			bg.mesg();
-			cout << "다시 하십시오.\n";
-			continue;
+			cout << sales1[i] << ' ';
+			if (i % 6 == 5)
+				cout << endl;
 		}
-		catch (bad_gmean & hg)
+		cout << "Year = " << sales2.Year() << endl;
+		cout << "Label = " << sales2.Label() << endl;
+		for (i = 0; i <= 12; ++i)
 		{
-			cout << hg.mesg();
-			cout << "사용된 값 : " << hg.v1 << ", "
-				 << hg.v2 << endl;
-			cout << "죄송합니다. 더 이상 진행할 수 없습니다.\n";
-			break;
+			cout << sales2[i] << ' ';
+			if (i % 6 == 5)
+				cout << endl;
 		}
 	}
-	std::cout << "프로그램을 종료합니다.\n";
+	catch(LabeledSales::nbad_index & bad)
+	{
+		cout << bad.what();
+		cout << "Company : " << bad.label_val() << endl;
+		cout << "잘못된 인덱스 : " << bad.bi_val() << endl;
+	}
+	catch(Sales::bad_index & bad)
+	{
+		cout << bad.what();
+		cout << "잘못된 인덱스 : " << bad.bi_val() << endl;
+	}
+
+	cout << "\n다음 try 블록 : \n";
+	try
+	{
+		sales2[2] = 37.5;
+		sales1[20] = 23345;
+		cout << "try 블록 2의 끝\n";
+	}
+	catch(LabeledSales::nbad_index & bad)
+	{
+		cout << bad.what();
+		cout << "Company : " << bad.label_val() << endl;
+		cout << "잘못된 인덱스 : " << bad.bi_val() << endl;
+	}
+	catch(Sales::bad_index & bad)
+	{
+		cout << bad.what();
+		cout << "잘못된 인덱스 : " << bad.bi_val() << endl;
+	}
+	cout << "프로그램을 종료합니다.\n";
+
 	return 0;
-}
-
-double hmean(double a, double b) throw(bad_hmean)
-{
-	if (a == -b)
-		throw bad_hmean(a, b);
-	return 2.0 * a * b / (a + b);
-}
-
-double gmean(double a, double b) throw(bad_gmean)
-{
-	if (a < 0 || b < 0)
-		throw bad_gmean(a, b);
-	return std::sqrt(a * b);
 }

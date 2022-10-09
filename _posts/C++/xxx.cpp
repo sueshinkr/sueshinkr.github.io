@@ -1,56 +1,73 @@
-// tv.cpp
+// sales.cpp
 
 #include "xxx.h"
-#include <iostream>
+using std::string;
 
-bool Tv::volup()
+Sales::bad_index::bad_index(int ix, const string &s)
+	: std::logic_error(s), bi(ix)
 {
-	if (volume < MaxVal)
-	{
-		volume++;
-		return true;
-	}
-	else
-		return false;
 }
 
-bool Tv::voldown()
+Sales::Sales(int yy)
 {
-	if (volume > MinVal)
-	{
-		volume--;
-		return true;
-	}
-	else
-		return false;
+	year = yy;
+	for (int i = 0; i < MONTHS; ++i)
+		gross[i] = 0;
 }
 
-void Tv::chanup()
+Sales::Sales(int yy, const double * gr, int n)
 {
-	if (channel < maxchannel)
-		channel++;
-	else
-		channel = 1;
+	year = yy;
+	int lim = (n < MONTHS) ? n : MONTHS;
+	int i;
+	for (i = 0; i < lim; ++i)
+		gross[i] = gr[i];
+	for ( ; i < MONTHS; ++i)
+		gross[i] = 0;
 }
 
-void Tv::chandown()
+double Sales::operator[](int i) const
 {
-	if (channel > 1)
-		channel--;
-	else
-		channel = maxchannel;
+	if (i < 0 || i >= MONTHS)
+		throw bad_index(i);
+	return gross[i];
 }
 
-void Tv::settings() const
+double & Sales::operator[](int i)
 {
-	using std::cout;
-	using std::endl;
-	cout << "TV = " << (state == Off ? "OFF" : "ON") << endl;
-	if (state == On)
-	{
-		cout << "볼륨 = " << volume << endl;
-		cout << "채널 = " << channel << endl;
-		cout << "모드 = " << (mode == Antenna ? "지상파 방송" : "케이블 방송") << endl;
-		cout << "입력 = " << (input == TV ? "TV" : "DVD") << endl;
-	}
+	if (i < 0 || i >= MONTHS)
+		throw bad_index(i);
+	return gross[i];
+}
+
+LabeledSales::nbad_index::nbad_index(const string & lb, int ix, const string & s)
+	: Sales::bad_index(ix, s)
+{
+	lbl = lb;
+}
+
+LabeledSales::LabeledSales(const string & lb, int yy)
+	: Sales(yy)
+{
+	label = lb;
+}
+
+LabeledSales::LabeledSales(const string &lb, int yy, const double * gr, int n)
+	: Sales(yy, gr, n)
+{
+	label = lb;
+}
+
+double LabeledSales::operator[](int i) const
+{
+	if (i < 0 || i >= MONTHS)
+		throw nbad_index(Label(), i);
+	return Sales::operator[](i);
+}
+
+double & LabeledSales::operator[](int i)
+{
+	if (i < 0 || i >= MONTHS)
+		throw nbad_index(Label(), i);
+	return Sales::operator[](i);
 }
