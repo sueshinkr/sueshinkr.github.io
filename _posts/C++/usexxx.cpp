@@ -44,15 +44,14 @@ int main()
 				cout << endl;
 		}
 	}
-	catch(LabeledSales::nbad_index & bad)
-	{
-		cout << bad.what();
-		cout << "Company : " << bad.label_val() << endl;
-		cout << "잘못된 인덱스 : " << bad.bi_val() << endl;
-	}
 	catch(Sales::bad_index & bad)
 	{
 		cout << bad.what();
+		if (typeid(LabeledSales::nbad_index) == typeid(bad))
+		{
+			LabeledSales::nbad_index nbad = dynamic_cast<LabeledSales::nbad_index &>(bad);
+			cout << "Company : " << nbad.label_val() << endl;
+		}
 		cout << "잘못된 인덱스 : " << bad.bi_val() << endl;
 	}
 
@@ -63,15 +62,14 @@ int main()
 		sales1[20] = 23345;
 		cout << "try 블록 2의 끝\n";
 	}
-	catch(LabeledSales::nbad_index & bad)
-	{
-		cout << bad.what();
-		cout << "Company : " << bad.label_val() << endl;
-		cout << "잘못된 인덱스 : " << bad.bi_val() << endl;
-	}
 	catch(Sales::bad_index & bad)
 	{
 		cout << bad.what();
+		if (typeid(LabeledSales::nbad_index) == typeid(bad))
+		{
+			LabeledSales::nbad_index nbad = dynamic_cast<LabeledSales::nbad_index &>(bad);
+			cout << "Company : " << nbad.label_val() << endl;
+		}
 		cout << "잘못된 인덱스 : " << bad.bi_val() << endl;
 	}
 	cout << "프로그램을 종료합니다.\n";

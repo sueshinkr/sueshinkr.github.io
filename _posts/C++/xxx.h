@@ -40,7 +40,7 @@ class LabeledSales : public Sales
 				nbad_index(const std::string & lb, int ix,
 			 			   const std::string & s = "LabeledSales 객체에서 인덱스 에러\n");
 				const std::string & label_val() const { return lbl; }
-				virtual ~nbad_index() noexcept {}
+				virtual ~nbad_index() throw() {}
 		};
 		explicit LabeledSales(const std::string & lb = "없음", int yy = 0);
 		LabeledSales(const std::string & lb, int yy, const double *gr, int n);
