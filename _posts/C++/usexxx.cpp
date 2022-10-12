@@ -1,88 +1,57 @@
-// vect3.cpp
+// usealgo.cpp
 
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
+#include <map>
+#include <iterator>
 #include <algorithm>
+#include <cctype>
+using namespace std;
 
-struct Review {
-	std::string title;
-	int rating;
-};
-
-bool operator<(const Review & r1, const Review & r2);
-bool worseThan(const Review & r1, const Review & r2);
-bool FillReview(Review & rr);
-void ShowReview(const Review & rr);
+char toLower(char ch) { return tolower(ch); }
+string & ToLower(string & st);
+void display(const string & s);
 
 int main()
 {
-	using namespace std;
+	vector<string> words;
+	cout << "단어들을 입력하십시오(끝내려면 quit) : \n";
+	string input;
+	while (cin >> input && input != "quit")
+		words.push_back(input);
 
-	vector<Review> books;
-	Review temp;
+	cout << "다음과 같은 단어들을 입력하셨습니다.\n";
+	for_each(words.begin(), words.end(), display);
+	cout << endl;
 
-	while (FillReview(temp))
-		books.push_back(temp);
+	set<string> wordset;
+	transform(words.begin(), words.end(),
+			  insert_iterator<set<string> >(wordset, wordset.begin()), ToLower);
+	cout << "\n단어들의 알파벳순 리스트 : \n";
+	for_each(wordset.begin(), wordset.end(), display);
+	cout << endl;
 
-	if (books.size() > 0)
-	{
-		cout << "감사합니다. 당신은 다음과 같이 "
-			 << books.size() << "개의 책 등급을 입력하셨습니다.\n"
-			 << "등급\t제목\n";
-		for_each(books.begin(), books.end(), ShowReview);
+	map<string, int> wordmap;
+	set<string>::iterator si;
+	for (si =wordset.begin(); si != wordset.end(); si++)
+		wordmap[*si] = count(words.begin(), words.end(), *si);
 
-		sort(books.begin(), books.end());
-		cout << "책 제목을 기준으로 정렬 : \n등급\t제목\n";
-		for_each(books.begin(), books.end(), ShowReview);
+	cout << "\n단어별 빈도 : \n";
+	for (si = wordset.begin(); si != wordset.end(); si++)
+		cout << *si << " : " << wordmap[*si] << endl;
 
-		sort(books.begin(), books.end(), worseThan);
-		cout << "책 등급을 기준으로 정렬 : \n등급\t제목\n";
-		for_each(books.begin(), books.end(), ShowReview);
-
-		random_shuffle(books.begin(), books.end());
-		cout << "무작위 순서로 다시 배치 : \n등급\t제목\n";
-		for_each(books.begin(), books.end(), ShowReview);
-	}
-	else
-		cout << "프로그램을 종료합니다.\n";
 	return 0;
 }
 
-bool operator<(const Review & r1, const Review & r2)
+string & ToLower(string & st)
 {
-	if (r1.title < r2.title)
-		return true;
-	else if (r1.title == r2.title && r1.rating < r2.rating)
-		return true;
-	else
-		return false;
+	transform(st.begin(), st.end(), st.begin(), toLower);
+	return st;
 }
 
-bool worseThan(const Review & r1, const Review & r2)
+void display(const string & s)
 {
-	if (r1.rating < r2.rating)
-		return true;
-	else
-		return false;
-}
-
-bool FillReview(Review & rr)
-{
-	std::cout << "책 제목을 입력하십시오(끝내려면 quit를 입력) : ";
-	std::getline(std::cin, rr.title);
-	if (rr.title == "quit")
-		return false;
-	std::cout << "책 등급(0-10)을 입력하십시오 : ";
-	std::cin >> rr.rating;
-	if (!std::cin)
-		return false;
-	while (std::cin.get() != '\n')
-		continue;
-	return true;
-}
-
-void ShowReview(const Review & rr)
-{
-	std::cout << rr.rating << "\t" << rr.title << std::endl;
+	cout << s << " ";
 }
