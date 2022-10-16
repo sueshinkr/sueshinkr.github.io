@@ -77,10 +77,193 @@ for (int i = 0; i < 1000; i++)
 
 # vector #2
 
+반복자(Iterator) : 포인터와 유사한 개념, 컨테이너의 원소(데이터)를 가리키고 다음/이전 원소로 이동 가능    
+* 값 참조, 증감 연산자들이 연산자 오버로딩을 통해 지원됨
+* `v.begin()`은 벡터의 시작 원소를, `v.end()`는 벡터의 마지막 원소 바로 다음 주소를 가리키는 이터레이터를 반환함
+* 복사 과정을 거치지 않는 전위증감이 후위증감보다 성능이 좋음
+* `iterator`는 `vector` 뿐 아니라 다른 컨테이너에도 공통적으로 있는 개념이기 때문에 일반화하여 사용할 수 있음
+
+```cpp
+int main()
+{
+	vector<int> v(10);
+
+	for (vector<int>::size_type i = 0; i < v.size(); i++)
+		v[i] = i;
+
+	vector<int>::iterator it;
+	int* ptr;
+
+	it = v.begin();
+	ptr = &v[0];
+
+	cout << (*it) << endl;
+	cout << (*pt) << endl;
+
+	vector<int>::iterator itBegin = v.begin();
+	vector<int>::iterator itEnd = v.end();
+	for (vector<int>::iterator it = v.begin(); it != v.end(); ++it)
+		cout << (*it) << endl;
+
+	return 0;
+}
+```
+
+`vector<int>::const_iterator cit = v.cbegin()`의 형태로 `const`처럼 사용 가능    
+`for (vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); ++it)`의 형태로 역순으로 사용 가능    
+
 ***
 
 # vector #3
 
+`vector`같은 배열 구조의 경우 처음/중간 위치의 삽입/삭제가 상당히 비효율적임    
+끝 위치의 삽입/삭제는 아무런 문제 없이 효율적으로 작동함    
+모든 데이터들이 연속되어있기 때문에 임의 접근(random access)이 가능    
+
+`v.insert(v.begin() + 2, 5);`의 형태로 중간에 삽입할 수 있음    
+`v.erase(v.begin() + 2);`의 형태로 중간 데이터를 삭제할 수 있음    
+
+```cpp
+for (vector<int>::iterator it = v.begin(); it != v.end(); )
+{
+	int data = *it;
+	if (data = 3)
+		it = v.erase();
+	else
+		++it;
+}
+```
+위와 같이 이터레이터를 사용하는 도중에 `erase()`, `clear()` 함수 등으로 조작할 경우 주의가 필요함    
+
 ***
 
 # vector #4
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template<typename T>
+class Iterator
+{
+	public:
+		Iterator() : _ptr(nullptr) {}
+		Iterator(T* ptr) : _ptr(ptr) {}
+		Iterator& operator++()
+		{
+			_ptr++;
+			return *this;
+		}
+		Iterator operator++(int)
+		{
+			Iterator temp = *this;
+			_ptr++;
+			return temp;
+		}
+
+		Iterator& operator--()
+		{
+			_ptr--;
+			return *this;
+		}
+		Iterator operator--(int)
+		{
+			Iterator temp = *this;
+			_ptr--;
+			return temp;
+		}
+
+		Iterator operator+(const int count)
+		{
+			Iterator temp = *this;
+			temp._ptr += count;
+			return temp;
+		}
+		Iterator operator-(const int count)
+		{
+			Iterator temp = *this;
+			temp._ptr -= count;
+			return temp;
+		}
+
+		bool operator==(const Iterator& right) { return _ptr == right._ptr; }
+		bool operator!=(const Iterator& right) { return !(*this == right); }
+		T& operator*() { return *_ptr; }
+
+	public:
+		T* _ptr;
+};
+
+
+template<typename T>
+class Vector
+{
+	public:
+		Vector() : _data(nullptr), _size(0), _capacity(0) {}
+		~Vector()
+		{
+			if (_data)
+				delete[] _data;
+		}
+
+		void push_back(const T& val)
+		{
+			if (_size == _capacity)
+			{
+				int newcapacity = static_cast<int>(_capacity * 1.5);
+				if (newcapacity == _capacity)
+					newcapacity++;
+				
+				reserve(newcapacity);
+			}
+			_data[_size] = val;
+			_size++;
+		}
+
+		void reserve(int capacity)
+		{
+			_capacity = capacity;
+			T* newData = new T[_capacity];
+			for (int i = 0; i < _size; i++)
+				newData[i] = _data[i];
+			if (_data)
+				delete[] _data;
+
+			_data = newData;
+		}
+		T& operator[](const int pos) { return _data[pos]; }
+		int size() { return _size; }
+		int capacity() { return _capacity; }
+	public:
+		typedef Iterator<T> iterator;
+		iterator begin() { return iterator(&_data[0]); }
+		iterator end() { return begin() + _size; }
+	private:
+		T* _data;
+		int _size;
+		int _capacity;
+
+};
+
+int main()
+{
+	Vector<int> v;
+
+	//v.reserve(100);
+
+	for (int i = 0; i < 100; i++)
+	{
+		v.push_back(i);
+		cout << v.size() << " " << v.capacity() << endl;
+	}
+
+	for (int i = 0; i < v.size(); i++)
+		cout << v[i] << endl;
+
+	cout << "-------------------" << endl;
+
+	for (Vector<int>::iterator it = v.begin(); it != v.end(); ++it)
+		cout << (*it) << endl;
+}
+```
