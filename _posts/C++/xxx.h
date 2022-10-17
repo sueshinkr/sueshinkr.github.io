@@ -1,55 +1,42 @@
-// sales.h
+// queue.h
 
-#ifndef XXX_H_
-#define XXX_H_
-#include <stdexcept>
-#include <string>
+#ifndef QUEUE_H_
+#define QUEUE_H_
 
-class Sales
+class Customer
 {
-	public:
-		enum {MONTHS = 12};
-		class bad_index : public std::logic_error
-		{
-			private:
-				int bi;
-			public:
-				explicit bad_index(int ix, const std::string & s = "Sales 객체에서 인덱스 에러\n");
-				int bi_val() const { return bi; }
-				virtual ~bad_index() throw() {}
-		};
-		explicit Sales(int yy = 0);
-		Sales(int yy, const double * gr, int n);
-		virtual ~Sales() {}
-		int Year() const { return year; }
-		virtual double operator[](int i) const;
-		virtual double & operator[](int i);
 	private:
-		double gross[MONTHS];
-		int year;
+		long arrive;
+		int processtime;
+	public:
+		Customer() { arrive = processtime = 0; };
+		void set(long when);
+		long when() const { return arrive; };
+		int ptime() const { return processtime; };
 };
 
-class LabeledSales : public Sales
-{
-	public:
-		class nbad_index : public Sales::bad_index
-		{
-			private:
-				std::string lbl;
-			public:
-				nbad_index(const std::string & lb, int ix,
-			 			   const std::string & s = "LabeledSales 객체에서 인덱스 에러\n");
-				const std::string & label_val() const { return lbl; }
-				virtual ~nbad_index() throw() {}
-		};
-		explicit LabeledSales(const std::string & lb = "없음", int yy = 0);
-		LabeledSales(const std::string & lb, int yy, const double *gr, int n);
-		virtual ~LabeledSales() {}
-		const std::string & Label() const { return label; }
-		virtual double operator[](int i) const;
-		virtual double & operator[](int i);
-	private:
-		std::string label;
-};
+typedef Customer Item;
 
+/*
+class Queue
+{
+	private:
+		struct Node { Item item; struct Node * next; };
+		enum { Q_SIZE = 10 };
+		Node * front;
+		Node * rear;
+		int items;
+		const int qsize;
+		Queue(const Queue & q) : qsize(0) {};
+		Queue & operator=(const Queue & q) { return *this; };
+	public:
+		Queue(int qs = Q_SIZE);
+		~Queue();
+		bool isempty() const;
+		bool isfull() const;
+		int queuecount() const;
+		bool enqueue(const Item & item);
+		bool dequeue(Item & item);
+};
+*/
 #endif
