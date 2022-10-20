@@ -1,42 +1,89 @@
-// queue.h
+// emp.h
 
-#ifndef QUEUE_H_
-#define QUEUE_H_
+#ifndef XXX_H_
+#define XXX_H_
+#include <iostream>
+#include <fstream>
+#include <string>
 
-class Customer
+class abstr_emp
 {
 	private:
-		long arrive;
-		int processtime;
+		std::string fname;
+		std::string lname;
+		std::string job;
 	public:
-		Customer() { arrive = processtime = 0; };
-		void set(long when);
-		long when() const { return arrive; };
-		int ptime() const { return processtime; };
+		enum classkind { Employee, Manager, Fink, Highfink };
+		abstr_emp();
+		abstr_emp(const std::string & fn, const std::string & ln, const std::string & j);
+		friend std::ostream & operator<<(std::ostream & os, const abstr_emp & e);
+		virtual ~abstr_emp() = 0;
+		virtual void ShowAll() const;
+		virtual void SetAll();
+		virtual void writeall(std::ofstream & fout);
+		virtual void getall(std::ifstream & fin);
 };
 
-typedef Customer Item;
+class employee : public abstr_emp
+{
+	public:
+		employee();
+		employee(const std::string & fn, const std::string & ln, const std::string & j);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+		virtual void writeall(std::ofstream & fout);
+		virtual void getall(std::ifstream & fin);
+};
 
-/*
-class Queue
+class manager : virtual public abstr_emp
 {
 	private:
-		struct Node { Item item; struct Node * next; };
-		enum { Q_SIZE = 10 };
-		Node * front;
-		Node * rear;
-		int items;
-		const int qsize;
-		Queue(const Queue & q) : qsize(0) {};
-		Queue & operator=(const Queue & q) { return *this; };
+		int inchargeof;
+	protected:
+		int InChargeOf() const { return inchargeof; }
+		int & InChargeOf() { return inchargeof; }
 	public:
-		Queue(int qs = Q_SIZE);
-		~Queue();
-		bool isempty() const;
-		bool isfull() const;
-		int queuecount() const;
-		bool enqueue(const Item & item);
-		bool dequeue(Item & item);
+		manager();
+		manager(const std::string & fn, const std::string & ln, const std::string & j, int ico = 0);
+		manager(const abstr_emp & e, int ico);
+		manager(const manager & m);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+		virtual void writeall(std::ofstream & fout);
+		virtual void getall(std::ifstream & fin);
 };
-*/
+
+class fink : virtual public abstr_emp
+{
+	private:
+		std::string reportsto;
+	protected:
+		const std::string ReportsTo() const { return reportsto; }
+		std::string & ReportsTo() { return reportsto; }
+	public:
+		fink();
+		fink(const std::string & fn, const std::string & ln, const std::string & j, const std::string & rpo);
+		fink(const abstr_emp & e, const std::string & rpo);
+		fink(const fink & e);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+		virtual void writeall(std::ofstream & fout);
+		virtual void getall(std::ifstream & fin);
+};
+
+class highfink : public manager, public fink
+{
+	public:
+		highfink();
+		highfink(const std::string & fn, const std::string & ln, const std::string & j, const std::string & rpo, int ico);
+		highfink(const abstr_emp & e, const std::string & rpo, int ico);
+		highfink(const fink & f, int ico);
+		highfink(const manager & m, const std::string & rpo);
+		highfink(const highfink & h);
+		virtual void ShowAll() const;
+		virtual void SetAll();
+		virtual void writeall(std::ofstream & fout);
+		virtual void getall(std::ifstream & fin);
+};
+
 #endif

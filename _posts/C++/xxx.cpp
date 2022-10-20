@@ -1,73 +1,239 @@
-// sales.cpp
+// emp.cpp
 
 #include "xxx.h"
-using std::string;
+using std::cout;
+using std::cin;
+using std::endl;
 
-Sales::bad_index::bad_index(int ix, const string &s)
-	: std::logic_error(s), bi(ix)
+abstr_emp::abstr_emp() : fname(""), lname(""), job("")
 {
 }
 
-Sales::Sales(int yy)
+abstr_emp::abstr_emp(const std::string & fn, const std::string & ln, const std::string & j)
+	: fname(fn), lname(ln), job(j)
 {
-	year = yy;
-	for (int i = 0; i < MONTHS; ++i)
-		gross[i] = 0;
 }
 
-Sales::Sales(int yy, const double * gr, int n)
+void abstr_emp::ShowAll() const
 {
-	year = yy;
-	int lim = (n < MONTHS) ? n : MONTHS;
-	int i;
-	for (i = 0; i < lim; ++i)
-		gross[i] = gr[i];
-	for ( ; i < MONTHS; ++i)
-		gross[i] = 0;
+	cout << "이름 : " << fname << " " << lname << endl;
+	cout << "직업 : " << job << endl;
 }
 
-double Sales::operator[](int i) const
+void abstr_emp::SetAll()
 {
-	if (i < 0 || i >= MONTHS)
-		throw bad_index(i);
-	return gross[i];
+	cout << "성을 입력하십시오 : ";
+	cin >> fname;
+	cout << "이름을 입력하십시오 : ";
+	cin >> lname;
+	cout << "직업을 입력하십시오 : ";
+	cin >> job;
 }
 
-double & Sales::operator[](int i)
+abstr_emp::~abstr_emp()
 {
-	if (i < 0 || i >= MONTHS)
-		throw bad_index(i);
-	return gross[i];
 }
 
-LabeledSales::nbad_index::nbad_index(const string & lb, int ix, const string & s)
-	: Sales::bad_index(ix, s)
+std::ostream & operator<<(std::ostream & os, const abstr_emp & e)
 {
-	lbl = lb;
+	return os << e.fname << " " << e.lname << endl;
 }
 
-LabeledSales::LabeledSales(const string & lb, int yy)
-	: Sales(yy)
+void abstr_emp::writeall(std::ofstream & fout)
 {
-	label = lb;
+	fout << fname << endl;
+	fout << lname << endl;
+	fout << job << endl;
 }
 
-LabeledSales::LabeledSales(const string &lb, int yy, const double * gr, int n)
-	: Sales(yy, gr, n)
+void abstr_emp::getall(std::ifstream & fin)
 {
-	label = lb;
+	fin >> fname >> lname >> job;
 }
 
-double LabeledSales::operator[](int i) const
+// -------------------------------------------------------
+
+employee::employee() : abstr_emp()
 {
-	if (i < 0 || i >= MONTHS)
-		throw nbad_index(Label(), i);
-	return Sales::operator[](i);
 }
 
-double & LabeledSales::operator[](int i)
+employee::employee(const std::string & fn, const std::string & ln, const std::string & j)
+	: abstr_emp(fn, ln, j)
 {
-	if (i < 0 || i >= MONTHS)
-		throw nbad_index(Label(), i);
-	return Sales::operator[](i);
+}
+
+void employee::ShowAll() const
+{
+	abstr_emp::ShowAll();
+}
+
+void employee::SetAll()
+{
+	abstr_emp::SetAll();
+}
+
+void employee::writeall(std::ofstream & fout)
+{
+	fout << abstr_emp::Employee << std::endl;
+	abstr_emp::writeall(fout);
+}
+
+void employee::getall(std::ifstream & fin)
+{
+	abstr_emp::getall(fin);
+}
+
+// --------------------------------------------------
+
+manager::manager() : abstr_emp(), inchargeof(0)
+{
+};
+
+manager::manager(const std::string & fn, const std::string & ln, const std::string & j, int ico)
+	: abstr_emp(fn, ln, j), inchargeof(ico)
+{
+}
+
+manager::manager(const abstr_emp & e, int ico)
+	: abstr_emp(e), inchargeof(ico)
+{
+}
+
+manager::manager(const manager & m) : abstr_emp(m), inchargeof(m.inchargeof)
+{
+}
+
+void manager::ShowAll() const
+{
+	abstr_emp::ShowAll();
+	cout << "관리 수 : " << inchargeof << endl;
+}
+
+void manager::SetAll()
+{
+	abstr_emp::SetAll();
+	cout << "관리 수를 입력하십시오 : ";
+	cin >> inchargeof;
+}
+
+void manager::writeall(std::ofstream & fout)
+{
+	fout << abstr_emp::Manager << std::endl;
+	abstr_emp::writeall(fout);
+	fout << inchargeof << endl;
+}
+
+void manager::getall(std::ifstream & fin)
+{
+	abstr_emp::getall(fin);
+	fin >> inchargeof;
+}
+
+// -------------------------------------------------
+
+fink::fink() : abstr_emp(), reportsto("")
+{
+}
+
+fink::fink(const std::string & fn, const std::string & ln, const std::string & j, const std::string & rpo)
+	: abstr_emp(fn, ln, j), reportsto(rpo)
+{
+}
+
+fink::fink(const abstr_emp & e, const std::string & rpo)
+	: abstr_emp(e), reportsto(rpo)
+{
+}
+
+fink::fink(const fink & e) : abstr_emp(e), reportsto(e.reportsto)
+{
+}
+
+void fink::ShowAll() const
+{
+	abstr_emp::ShowAll();
+	cout << "보고 대상 : " << reportsto << endl;
+}
+
+void fink::SetAll()
+{
+	abstr_emp::SetAll();
+	cout << "보고 대상을 입력하십시오 : ";
+	cin >> reportsto;
+}
+
+void fink::writeall(std::ofstream & fout)
+{
+	fout << abstr_emp::Fink << std::endl;
+	abstr_emp::writeall(fout);
+	fout << reportsto << endl;
+}
+
+void fink::getall(std::ifstream & fin)
+{
+	abstr_emp::getall(fin);
+	fin >> reportsto;
+}
+
+
+// ---------------------------------------------------
+
+highfink::highfink() : abstr_emp(), manager(), fink()
+{
+}
+
+highfink::highfink(const std::string & fn, const std::string & ln, const std::string & j, const std::string & rpo, int ico)
+	: abstr_emp(fn, ln, j), manager(fn, ln, j, ico), fink(fn, ln, j, rpo)
+{	
+}
+
+highfink::highfink(const abstr_emp & e, const std::string & rpo, int ico)
+	: abstr_emp(e), manager(e, ico), fink(e, rpo)
+{
+}
+
+highfink::highfink(const fink & f, int ico)
+	: abstr_emp(f), manager(f, ico), fink()
+{
+}
+
+highfink::highfink(const manager & m, const std::string & rpo)
+	: abstr_emp(m), manager(m), fink(m, rpo)
+{
+}
+
+highfink::highfink(const highfink & h)
+	: abstr_emp(h), manager(h), fink(h)
+{
+}
+
+void highfink::ShowAll() const
+{
+	abstr_emp::ShowAll();
+	cout << "관리 수 : " << InChargeOf() << endl;
+	cout << "보고 대상 : " << ReportsTo() << endl;
+}
+
+void highfink::SetAll()
+{
+	abstr_emp::SetAll();
+	cout << "관리 수를 입력하십시오 : ";
+	cin >> InChargeOf();
+	cout << "보고 대상을 입력하십시오 : ";
+	cin >> ReportsTo();
+}
+
+void highfink::writeall(std::ofstream & fout)
+{
+	fout << abstr_emp::Highfink << std::endl;
+	abstr_emp::writeall(fout);
+	fout << InChargeOf() << endl;
+	fout << ReportsTo() << endl;
+}
+
+void highfink::getall(std::ifstream & fin)
+{
+	abstr_emp::getall(fin);
+	fin >> InChargeOf();
+	fin >> ReportsTo();
 }
