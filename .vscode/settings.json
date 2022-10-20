@@ -75,6 +75,11 @@
 		"__functional_03": "cpp",
 		"iomanip": "cpp",
 		"stack": "cpp",
-		"valarray": "cpp"
+		"valarray": "cpp",
+		"map": "cpp",
+		"__tree": "cpp",
+		"list": "cpp",
+		"set": "cpp",
+		"queue": "cpp"
 	}
 }
