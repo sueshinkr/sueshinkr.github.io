@@ -1,5 +1,5 @@
 ---
-title:  "server lecture section1 [1/8]"
+title:  "Server lecture section1 [1/8]"
 excerpt: "멀티쓰레드 프로그래밍"
 
 categories:
@@ -217,7 +217,7 @@ int main()
 데이터 경합이 일어나는 동작 전에 `lock()` 함수로 Lock을 걸어주어 다른 쓰레드가 동시에 데이터에 접근하는 것을 방지, 동작 후에 `unlock()` 함수를 사용하여 다음 동작이 발생하도록 허용
 * 단, `mutex` 사용시 사실상 싱글쓰레드처럼 동작하기 때문에 속도가 저하됨    
 * `mutex`는 재귀적 호출이 불가능
-* Lock을 해제하지 않았을 경우 해당 데이터에 영원히 접근이 불가능해지는 문제가 발생
+* Lock을 해제하지 않았을 경우 교착상태가 되어 해당 데이터에 영원히 접근이 불가능해지는 문제가 발생
 
 RAII (Resource Acquisition is initialization) : `mutex`를 멤버로 가지는 클래스를 만들어 생성자에서 Lock, 소멸자에서 Unlock    
 클래스의 객체를 스택변수로 사용하기 때문에 자동으로 소멸자가 호출되어 Unlock됨    
