@@ -119,5 +119,5 @@ int main()
 
 이벤트를 활용하여 무의미한 대기를 제거    
 쓰레드는 시그널이 있을 때까지 `block`되고, 커널이 이벤트의 시그널을 확인한 후 쓰레드에 알려주면 다시 활성화됨    
-`CreateEvent`는 window에서 사용 가능하며, linux에서는 `semaphore`를 사용해야 하는 듯 함    
+`CreateEvent`는 winAPI에서 제공하는 함수이며, linux에서는 `semaphore`를 사용해야 하는 듯 함    
 위처럼 커널 오브젝트를 활용하는경우 다른 프로그램과의 동기화에도 유리함    
