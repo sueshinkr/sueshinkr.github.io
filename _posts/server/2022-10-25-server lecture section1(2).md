@@ -139,3 +139,120 @@ lock_guard<mutex> g2(m2, std::adopt_lock);
 
 # Lock 구현 이론
 
+존버메타(스핀락) / 랜덤메타 / 갑질메타    
+
+컨텍스트 스위칭 : 유저모드와 커널모드 사이를 이동하면서 부하가 발생    
+
+***
+
+# SpinLock
+
+SpinLock : 경합상황에 무한정으로 대기    
+컨텍스트 스위칭이 발생하지 않기 때문에 CPU 점유율이 상당히 높아짐    
+
+`volatile` : 컴파일러의 최적화를 금지    
+`atomic`에는 `volatile` 기능이 포함되어있음    
+
+```cpp
+#include <thread>
+#include <mutex>
+
+class SpinLock
+{
+	public:
+		void lock()
+		{
+			bool expected = false;
+			bool desired = true;
+
+			// CAS(Compare-And-Swap) 의사코드
+			/*
+			if (_locked == expected)
+			{
+				expected = _locked;
+				_locked = desired;
+				return true;
+			}
+			else
+			{
+				expected = _locked;
+				return false;
+			}
+			*/
+
+			while (_locked.compare_exchange_strong(expected, desired) == false)
+			{
+				expected = false;
+			}
+		}
+
+		void unlock()
+		{
+			_locked.store(false);
+		}
+	private:
+		atomic<bool> _locked = {false};
+};
+
+int32 sum = 0;
+mutex m;
+SpinLock spinLock;
+
+void Add()
+{
+	for (int32 i = 0; i < 100000; i++)
+	{
+		lock_guard<SpinLock> guard(spinLock);
+		sum++;
+	}
+}
+
+void Sub()
+{
+	for (int32 i = 0; i < 100000; i++)
+	{
+		lock_guard<SpinLock> guard(spinLock);
+		sum--;
+	}
+}
+
+int main()
+{
+	std::thread t1(Add);
+	std::thread t2(Sub);
+
+	t1.join();
+	t2.join();
+
+	cout << sum << endl;
+}
+```
+
+`atiomic`의 `compare_exchange_strong` 메소드로 락을 확인하고 획득하는 부분을 atomic하게 처리할 수 있음    
+즉, `while(_locked){}`와 `_locked_ture;` 두가지 행동으로 이루어진 코드를 `_locked.compare_exchange_strong(expected, desired)` 구문을 통해 한번에 처리하여 Lock에 동시 접근하는 것을 방지함    
+
+***
+
+# Sleep
+
+시스템 콜(system call)은 유저모드가 아닌 커널모드에서 동작함    
+실행중인 쓰레드는 할당시간 경과(time slice 소진), 인터럽트 발생시 `ready` 상태로 돌아감    
+쓰레드에서 입출력 등의 시스템 콜(system call) 발생시 `waiting` 상태가 됨    
+`sleep` 역시 시스템 콜의 일부로 특정 시간동안 쓰레드를 `block`시켜 스케쥴링되지 않도록 만든 후 `ready` 상태로 만듬    
+단, 이 때 `ready` 상태가 되는 것이므로 특정 시간이 지났다고 해서 쓰레드가 곧바로 재실행되는 것이 아님에 유의    
+
+```cpp
+while (_locked.compare_exchange_strong(expected, desired) == false)
+{
+	expected = false;
+
+	//this_thread::sleep_for(std::chrono::milliseconds(100));
+	this_thread::sleep_for(100ms);
+	this_thread::yield(); // == sleep_for(0ms);
+}
+```
+
+위와 같이 스핀락 도중 sleep을 걸어주는 것도 가능    
+`yield()`의 경우 현재 timeslice를 포기하고 쓰레드를 곧바로 `ready` 큐에 다시 집어넣음    
+따라서 `sleep_for(0)`과 `yield()`는 동일한 효과를 발생시킴    
+`ms`와 같은 접미사의 경우 c++14부터 도입된 기능임    
