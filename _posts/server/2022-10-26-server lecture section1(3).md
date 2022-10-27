@@ -9,7 +9,7 @@ tags:
 toc: true
 toc_sticky: true
 toc_label: "목차"
-date: 2022.10.24 18:00:00
+date: 2022.10.26 18:00:00
 ---
 
 # Event
@@ -293,3 +293,6 @@ int main()
 `async` : 원하는 함수를 비동기적으로 실행    
 `promise` : 결과물을 `promise`를 통해 `future`로 받아줌    
 `packaged_task` : 원하는 함수의 실행 결과를 `packaged_task`를 통해 `future`로 받아줌    
+
+***
+
