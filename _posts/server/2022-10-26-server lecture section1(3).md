@@ -1,5 +1,5 @@
 ---
-title:  "Server lecture section1 [3/8]"
+title:  "Server lecture section1 [3/7]"
 excerpt: "멀티쓰레드 프로그래밍"
 
 categories:
@@ -190,7 +190,7 @@ int main()
 	t2.join();
 }
 ```
-`Condition Variable`(조건변수)은 `mutex`과 `condition_variable` 헤더에 포함되어있는 C++ 표준    
+`Condition Variable`(조건변수)은 `mutex`와 `condition_variable` 헤더에 포함되어있는 C++ 표준    
 `Condition Variable`은 `mutex`를 직접 Lock, Unlock하기 때문에 이를 가능하게 해주는 `unique_lock`을 사용함    
 
 `Condition Variable`은 이벤트와 비슷한 개념이라고 볼 수 있으나, 조건을 한번 더 확인함    

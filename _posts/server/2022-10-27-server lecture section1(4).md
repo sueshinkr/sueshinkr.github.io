@@ -1,5 +1,5 @@
 ---
-title:  "Server lecture section1 [4/8]"
+title:  "Server lecture section1 [4/7]"
 excerpt: "멀티쓰레드 프로그래밍"
 
 categories:

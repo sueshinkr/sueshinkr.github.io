@@ -9,7 +9,7 @@ tags:
 toc: true
 toc_sticky: true
 toc_label: "목차"
-date: 2022.10.19 19:00:00
+date: 2022.10.20 19:00:00
 ---
 
 # 람다(lambda)
