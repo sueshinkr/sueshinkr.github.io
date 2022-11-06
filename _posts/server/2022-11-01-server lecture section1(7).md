@@ -173,7 +173,6 @@ void Lock::ReadUnlock()
 
 
 ```cpp
-
 // CoreGlobal.h
 extern class DeadLockProfiler* GDeadLockProfiler;
 
@@ -204,9 +203,237 @@ void Lock::ReadLock(const char* name)
 
 ```
 
+```cpp
+// DeadLockProfiler.h
 
+#include <stack>
+#include <map>
+#include <vector>
 
+/*---------------------
+	DeadLockProfiler
+---------------------*/
+
+class DeadLockProfiler
+{
+	public:
+		void PushLock(const char* name);
+		void PopLock(const char* name);
+		void CheckCycle();
+
+	private:
+		void Dfs(int32 index);
+
+	private:
+		unordered_map<const char*, int32>	_nameTold;
+		unordered_map<int32, const char*>	_IdToName;
+		stack<int32>						_lockStack;
+		map<int32, set<int32>>				_lockHistory;
+
+		Mutex _lock;
+
+	private:
+		vector<int32> _discoveredOrder; // 노드가 발견된 순서를 기록하는 배열
+		int32 _discoveredCount = 0; // 노드가 발견된 순서
+		vector<bool> _finished; // Dfs()가 종료되었는지 여부
+		vector<int32> _parent;
+};
+```
+
+```cpp
+// DeadLockProfiler.cpp
+
+#include "DeadLockProfiler.h"
+
+void DeadLockProfiler::PushLock(const char* name)
+{
+	LockGuard guard(_lock);
+
+	// 아이디를 찾거나 발급
+	int32 lockid = 0;
+
+	auto findit = _nameTold.find(name);
+	if (findit == _nameTold.end())
+	{
+		lockid = static_cast<int32>(_nameTold.size());
+		_nameTold[name] = lockid;
+		_IdToName[lockid] = name;
+	}
+	else
+	{
+		lockid = findit->second;
+	}
+
+	// 잡고있는 락이 있었다면
+	if (LLockStack.empty() == false)
+	{
+		// 기존에 발견되지 않은 케이스라면 데드락 여부를 다시 확인
+		const int32 previd = LLockStack.top();
+		if (lockid != previd)
+		{
+			set<int32>& history = _lockHistory[previd];
+			if (history.find(lockid) == history.end())
+			{
+				history.insert(lockid);
+				CheckCycle();
+			}
+		}
+	}
+
+	LLockStack.push(lockid);
+}
+
+void DeadLockProfiler::PopLock(const char* name)
+{
+	LockGuard guard(_lock);
+
+	if (_lockStack.empty())
+		CRASH("MULTIPLE_UNLOCK");
+
+	int32 lockid = _nameTold[name];
+	if (_lockStack.top() != lockid)
+		CRASH("INVALID_UNLOCK")
+
+	_lockStack.pop();
+}
+
+void DeadLockProfiler::CheckCycle()
+{
+	const int32 lockCount = static_cast<int32>(_nameTold.size());
+	_discoveredOrder = vector<int32>(lockCount, -1);
+	_discoveredCount = 0;
+	_finished = vector<bool>(lockCount, false);
+	_parent = vector<int32>(lockCount, -1);
+
+	for (int32 lockid = 0; lockid < lockCount; lockid++)
+		Dfs(lockid);
+
+	_discoveredOrder.clear();
+	_finished.clear();
+	_parent.clear();
+}
+
+void DeadLockProfiler::Dfs(int32 here)
+{
+	if (_discoveredOrder[here] != -1)
+		return;
+
+	_discoveredOrder[here] = _discoveredCount++;
+
+	// 모든 인접한 정점을 순회
+	auto findit = _lockHistory.find(here);
+	if (findit == _lockHistory.end())
+	{
+		_finished[here] = true;
+		return;
+	}
+	
+	set<int32>& nextSet = findit->second;
+	for (int32 there : nextSet)
+	{
+		// 아직 방문한 적이 없다면 방문
+		if (_discoveredOrder[there] == -1)
+		{
+			_parent[there] = here;
+			Dfs(there);
+			continue;
+		}
+
+		// here가 there보다 먼저 발견되었다면 there은 here의 후손 (순방향 간선)
+		if (_discoveredOrder[here] < _discoveredOrder[there])
+			continue;
+
+		// 순방향이 아니고, Dfs(there)이 아직 종료되지 않았다면 there은 here의 선조 (역방향 간선)
+		if (_finished[there] == false)
+		{
+			printf("%s -> %s\n", _IdToName[here], _IdToName[there]);
+
+			int32 now = here;
+			while (true)
+			{
+				printf("%s -> %s\n", _IdToName[_parent[now]], _IdToName[now]);
+				now = _parent[now];
+				if (now == there)
+					break;
+			}
+			CRASH("DEADLOCK_DETECTED");
+		}
+	}
+
+	_finished[here] = true;
+}
+```
+
+`unordered_map`을 사용하여 `_nameToId`, `IdToName`에 쓰레드 이름과 번호를 쌍으로 저장    
+`#if _DEBUG`로 디버그 모드에서만 데드락이 일어날 수 있는 상황인지를 확인    
+
+`PushLock` 함수에 들어온 쓰레드가 `_nameToId`에 저장되어있는 쓰레드가 아닐경우 새로 저장    
+`_lockStack` 스택을 확인하여 잡고있는 락이 존재하며 현재 쓰레드가 바로 이전에 락이 걸린 쓰레드가 아니고, `_lockHistory` 에도 저장되어있지 않을 경우 새롭게 넣어주면서 싸이클을 체크    
+
+`CheckCycle` 함수에서는 `Dfs`를 사용하여 모든 정점들을 순회하며 그래프의 방향을 확인    
 
 ***
 
 # 연습문제
+
+```cpp
+// 소수 구하기
+
+bool IsPrime(int number)
+{
+	if (number <= 1)
+		return false;
+	if (number == 2 || number == 3)
+		return true;
+
+	for (int i = 2; i < number; i++)
+	{
+		if (number % i == 0)
+			return false;
+	}
+	return true;
+}
+
+int CountPrime(int start, int end)
+{
+	int count = 0;
+
+	for (int number = start; number <= end; number++)
+	{
+		if (IsPrime(number))
+			count++;
+	}
+	return count;
+}
+
+int main()
+{
+	const int MAX_NUMBER = 100'0000;
+	// 1~MAX_NUMBER까지의 소수 개수
+
+	vector<thread> threads;
+
+	int coreCount = thread::hardware_concurrency();
+	int jobCount = (MAX_NUMBER / coreCount) + 1;
+
+	atomic<int> primeCount = 0;
+
+	for (int i = 0; i < coreCount; i++)
+	{
+		int start = (i * jobCount) + 1;
+		int end = min(MAX_NUMBER, ((i + 1) * jobCount));
+
+		threads.push_back(thread([start, end, &primeCount]()
+			{
+				primeCount += CountPrime(start, end);
+			}));
+	}
+
+	for (thread& t : threads)
+		t.join();
+
+	cout << primeCount << endl;
+}
+```
+
+서로 공유하는 자원끼리 영향을 끼치지 않으므로 자유롭게 병렬 처리가 가능    
