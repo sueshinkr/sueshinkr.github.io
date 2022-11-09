@@ -1,5 +1,5 @@
 ---
-title:  "Server lecture section2 [1/5]"
+title:  "Server lecture section2 [1/4]"
 excerpt: "메모리 관리"
 
 categories:

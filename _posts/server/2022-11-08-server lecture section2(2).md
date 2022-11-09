@@ -1,5 +1,5 @@
 ---
-title:  "Server lecture section2 [1/5]"
+title:  "Server lecture section2 [2/4]"
 excerpt: "메모리 관리"
 
 categories:
@@ -9,7 +9,7 @@ tags:
 toc: true
 toc_sticky: true
 toc_label: "목차"
-date: 2022.11.07 16:30:00
+date: 2022.11.08 16:30:00
 ---
 
 # Allocator
@@ -176,7 +176,6 @@ int main()
 
 # Stomp Allocator
 
-
 ```cpp
 int main()
 {
@@ -307,3 +306,98 @@ void StompAllocator::Release(void* ptr)
 
 할당하는 메모리를 끝쪽에 배치하여 오버플로우가 일어나는 경우 크래시가 나도록 유도    
 단, 이 경우 언더플로우는 방지할 수 없음    
+
+***
+
+# STL Allocator
+
+`vector`, `map`과 같은 STL 자료구조는 기본적으로 `new`와 `delete`를 사용    
+대신 사용자 정의 `allocator`를 사용하기 위해서는 `vector<int32, BaseAllocator> v;`와 같은 형식을 사용해 인자로 넣어주면 됨    
+단, 이 때 인자로 받는 `allocator`에는 요구하는 형식이 있기 때문에 이를 맞춰주어야함    
+
+```cpp
+// Allocator.h
+
+/*------------------
+	STL Allocator
+-------------------*/
+
+template<typename T>
+class StlAllocator
+{
+public:
+	using value_type = T;
+
+	StlAllocator() {}
+
+	template<typename Other>
+	StlAllocator(const StlAllocator<Other>&) {}
+
+	T* allocate(size_t count)
+	{
+		const int32 size = static_cast<int32>(count * sizeof(T));
+		return static_cast<T*>(xAlloc(size));
+	}
+
+	void deallocate(T* ptr, size_t count)
+	{
+		xRelease(ptr);
+	}
+};
+```
+
+이후 각각의 자료구조에 대해 사용자 정의 `allocator`를 사용한 버전을 아래와 같이 각각 선언하여 편하게 사용    
+
+```cpp
+// Container.h
+
+#include "Types.h"
+#include "Allocator.h"
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
+
+using namespace std;
+
+template<typename T>
+using Vector = vector<T, StlAllocator<T>>;
+
+template<typename T>
+using List =  list<T, StlAllocator<T>>;
+
+template<typename Key, typename T, typename Pred = less<Key>>
+using Map = map<Key, T, Pred, StlAllocator<pair<const Key, T>>>;
+
+template<typename Key, typename Pred = less<Key>>
+using Set = set<Key, Pred, StlAllocator<Key>>;
+
+template<typename T>
+using Deque = deque<T, StlAllocator<T>>;
+
+template<typename T, typename Container = Deque<T>>
+using Queue = queue<T, Container>;
+
+template<typename T, typename Container = Deque<T>>
+using Stack = stack<T, Container>;
+
+template<typename T, typename Container = Vector<T>, typename Pred = less<typename Container::value_type>>
+using PriorityQueue = priority_queue<T, Container, Pred>;
+
+using String = basic_string<char, char_traits<char>, StlAllocator<char>>;
+using Wstring = basic_string<wchar_t, char_traits<wchar_t>, StlAllocator<wchar_t>>;
+
+template<typename Key, typename T, typename Hasher = hash<Key>, typename KeyEq = equal_to<Key>>
+using HashMap = unordered_map<Key, T, Hasher, KeyEq, StlAllocator<pair<const Key, T>>>;
+
+template<typename Key, typename Hasher = hash<Key>, typename KeyEq = equal_to<Key>>
+using HashSet = unordered_set<Key, Hasher, KeyEq, StlAllocator<Key>>;
+```
+
+
+
+
