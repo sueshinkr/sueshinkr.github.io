@@ -182,3 +182,5 @@ int main()
 
 
 `TypeList`는 컴파일시 크기가 정해짐    
+
+`Conversion` : `From`에서 `To`로 변환이 가능한지를 판별    
