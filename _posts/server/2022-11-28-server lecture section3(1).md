@@ -28,10 +28,12 @@ date: 2022.11.28 18:00:00
 * 안내 = Accept(별도의 소켓에 연결)
 * 클라이언트 세션을 통해 통신 가능
 
+***
+
+# 소켓 프로그래밍 기초 #2
+
 ```cpp
 // DummyClient.cpp
-#include "pch.h"
-#include <iostream>
 
 #include <WinSock2.h>
 #include <MSWSock.h>
@@ -77,7 +79,7 @@ int main()
 	}
 
 	// ----------------
-	// 연결 성공!
+	// 연결 성공! 데이터 송수신 가능능
 
 	cout << "Connected To Server!" << endl;
 
@@ -96,14 +98,6 @@ int main()
 
 ```cpp
 // GameServer.cpp
-#include "pch.h"
-#include <iostream>
-#include "CorePch.h"
-#include <atomic>
-#include <mutex>
-#include <windows.h>
-#include <future>
-#include "ThreadManager.h"
 
 #include <WinSock2.h>
 #include <MSWSock.h>
