@@ -98,7 +98,7 @@ int main()
 * `t.hardware_concurrency()` : CPU 코어 개수 확인 (100% 정확하지는 않음)
 * `t.get_id()` : 쓰레드에 부여된 id 확인, 쓰레드 객체와 실제 쓰레드가 연결되지 않았을 경우 0을 리턴
 * `t.detach()` : 쓰레드 객체에서 실제 쓰레드를 분리
-* `t.joinable()` : 쓰레드에 부여된 id가 0인지를 체크하여 연결이 되어있는지 확인
+* `t.joinable()` : 쓰레드에 부여된 id가 0인지를 체크하여 연결이 되어있는지 확인(연결된경우 TRUE 리턴)
 * `t.join()` : 쓰레드가 종료되기까지 대기
 
 쓰레드 진입 함수에 매개변수가 존재할경우 `std::thread threadName(Function, arg1, arg2, ...)` 형식으로 쓰레드 객체 생성 및 초기화 가능     
@@ -150,6 +150,10 @@ int main()
 변수를 `atomic`으로 선언시 Cpu가 해당 변수를 조작하는 연산이 끝날 때까지 다음 연산을 대기하도록 함    
 단, 연산 속도가 저하되므로 필요한 곳에만 사용    
 
+`fetch_add`, `fetch_sub`
+* `atomic`으로 선언된 변수에만 사용할 수 있음
+* 연산이 일어나기 전의 값을 리턴함
+
 ***
 
 # Lock 기초
@@ -194,10 +198,11 @@ void Push()
 		LockGuard<std::mutex> lockGuard(m);
 		v.push_back(i);
 
-		std::lock_guard<std::mutex> lockGuard2(m);
-	
-		std::unique_lock<std::mutex> uniqueLock(m, std::defer_lock);
-		uniqueLock.lock();
+		// 표준
+		// std::lock_guard<std::mutex> lockGuard2(m);
+
+		//std::unique_lock<std::mutex> uniqueLock(m, std::defer_lock);
+		//uniqueLock.lock();
 	}
 }
 
@@ -213,14 +218,16 @@ int main()
 }
 ```
 
-`mutex` : Mutual Exclusive(상호배타), <mutex> 헤더를 사용    
+`mutex` : Mutual Exclusive(상호배타), `<mutex>` 헤더를 사용    
 데이터 경합이 일어나는 동작 전에 `lock()` 함수로 Lock을 걸어주어 다른 쓰레드가 동시에 데이터에 접근하는 것을 방지, 동작 후에 `unlock()` 함수를 사용하여 다음 동작이 발생하도록 허용
 * 단, `mutex` 사용시 사실상 싱글쓰레드처럼 동작하기 때문에 속도가 저하됨    
 * `mutex`는 재귀적 호출이 불가능
 * Lock을 해제하지 않았을 경우 교착상태가 되어 해당 데이터에 영원히 접근이 불가능해지는 문제가 발생
 
-RAII (Resource Acquisition is initialization) : `mutex`를 멤버로 가지는 클래스를 만들어 생성자에서 Lock, 소멸자에서 Unlock    
-클래스의 객체를 스택변수로 사용하기 때문에 자동으로 소멸자가 호출되어 Unlock됨    
+RAII (Resource Acquisition is initialization) : 자원의 안전한 사용을 위해 객체가 쓰이는 스코프(범위)를 벗어나면 자원을 해제해주는 기법    
+* `mutex`를 멤버로 가지는 클래스를 만들어 생성자에서 Lock, 소멸자에서 Unlock    
+* 클래스의 객체를 스택변수로 사용하기 때문에 자동으로 소멸자가 호출되어 Unlock됨    
+* 스마트포인터도 RAII 디자인 패턴을 사용한 예시
 
 `std::lock_guard`가 표준으로 존재    
 `std::unique_lock`의 경우 세부적인 옵션을 설정 가능    

@@ -148,7 +148,9 @@ lock_guard<mutex> g2(m2, std::adopt_lock);
 # SpinLock
 
 SpinLock : 경합상황에 무한정으로 대기    
-컨텍스트 스위칭이 발생하지 않기 때문에 CPU 점유율이 상당히 높아짐    
+* 다른 스레드가 lock 되어있는 경우 unlock될 때까지 계속 확인하면서 기다림
+* lock-unlock 과정이 짧아서 lock되어있는 경우가 드문 경우 유용    
+* 그렇지 않은 경우 컨텍스트 스위칭이 발생하지 않기 때문에 CPU 점유율이 상당히 높아짐    
 
 `volatile` : 컴파일러의 최적화를 금지    
 `atomic`에는 `volatile` 기능이 포함되어있음    
@@ -228,8 +230,14 @@ int main()
 }
 ```
 
+`compare_exchange_strong`
+* `(atomic 객체).compare_exchange_strong(expected, desired)` 형태로 사용
+* 객체의 현재 값과 `expected`가 일치할 경우 현재 값을 `desired`로 교체
+* 객체의 현재 값이 `expected`와 같지 않을경우 `expected`를 현재 값으로 교체
+
 `atiomic`의 `compare_exchange_strong` 메소드로 락을 확인하고 획득하는 부분을 atomic하게 처리할 수 있음    
 즉, `while(_locked){}`와 `_locked_ture;` 두가지 행동으로 이루어진 코드를 `_locked.compare_exchange_strong(expected, desired)` 구문을 통해 한번에 처리하여 Lock에 동시 접근하는 것을 방지함    
+
 
 ***
 
