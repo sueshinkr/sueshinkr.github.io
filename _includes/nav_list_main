@@ -26,13 +26,13 @@
                     {% endif %} 
                 {% endfor %}
             </ul>
-            <ul>
-                {% for category in site.categories %}
-                    {% if category[0] == "algorithm" %}
-                        <li><a href="/categories/algorithm" class="">algorithm ({{category[1].size}})</a></li>
-                    {% endif %} 
-                {% endfor %}
-            </ul>
+			<ul>
+				{% for category in site.categories %}
+					{% if category[0] == "CPP_Module" %}
+						<li><a href="/categories/CPP_Module" class="">CPP_Module ({{category[1].size}})</a></li>
+					{% endif %}
+				{% endfor %}
+			</ul>
             <ul>
                 {% for category in site.categories %}
                     {% if category[0] == "ft_printf" %}
@@ -48,6 +48,13 @@
                 {% endfor %}
             </ul>
 		<span class="nav__sub-title">개인공부</span>
+			<ul>
+				{% for category in site.categories %}
+					{% if category[0] == "algorithm" %}
+						<li><a href="/categories/algorithm" class="">algorithm ({{category[1].size}})</a></li>
+					{% endif %} 
+				{% endfor %}
+			</ul>
 			<ul>
 				{% for category in site.categories %}
 					{% if category[0] == "Cpp" %}

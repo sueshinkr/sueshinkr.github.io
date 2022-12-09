@@ -80,6 +80,7 @@
 		"__tree": "cpp",
 		"list": "cpp",
 		"set": "cpp",
-		"queue": "cpp"
+		"queue": "cpp",
+		"thread": "cpp"
 	}
 }

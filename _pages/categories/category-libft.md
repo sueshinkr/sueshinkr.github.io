@@ -1,6 +1,6 @@
 ---
 title: "libft"
-layout: archive
+layout: category
 permalink: categories/libft
 author_profile: true
 sidebar_main: true

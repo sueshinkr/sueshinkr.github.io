@@ -1,6 +1,6 @@
 ---
 title: "born2beroot"
-layout: archive
+layout: category
 permalink: categories/born2beroot
 author_profile: true
 sidebar_main: true

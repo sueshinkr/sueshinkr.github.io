@@ -1,6 +1,6 @@
 ---
 title: "ft_printf"
-layout: archive
+layout: category
 permalink: categories/ft_printf
 author_profile: true
 sidebar_main: true
