@@ -156,10 +156,6 @@ int main()
 
 	// CAS (Compare-And-Swap) 조건부 수정
 	{
-		bool expected = false;
-		bool desired = true;
-		flag.compare_exchange_strong(expected, desired);
-
 		/*
 		if (flag == expected)
 		{
@@ -241,5 +237,8 @@ Memory Model(정책)
 
 절취선을 그어주는 C++ 표준인 `std::atomic_thread_fence()`와 같은 함수도 존재함    
 메모리 가시성을 강제하고, 메모리 재배치를 금지하는 효과    
+
+[`memory_order`에 대한 전체적인 내용](https://modoocode.com/271)
+[`memory_order`에 대한 자세한 정보](https://en.cppreference.com/w/cpp/atomic/memory_order)
 
 

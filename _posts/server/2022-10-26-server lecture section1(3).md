@@ -158,10 +158,10 @@ void Producer()
 		{
 			unique_lock<mutex> lock(m);
 			q.push(100);
+			// wait중인 쓰레드 하나를 깨움
+			cv.notify_one();
 		}
 
-		// wait중인 쓰레드 하나를 깨움
-		cv.notify_one();
 		//this_thread::sleep_for(10000ms);
 	}
 }

@@ -14,9 +14,11 @@ date: 2022.10.28 18:00:00
 
 # Thread Local Storage
 
-쓰레드마다 개별적으로 가지고있는 저장공간이 존재    
-각 쓰레드에서 필요한 데이터들을 모두 TLS로 옮겨온 후에 사용    
-스택은 불안정한 메모리, TLS는 자신만의 전역 메모리    
+쓰레드마다 개별적으로 가지고있는 Stack 저장공간이 존재    
+그러나 정적 변수, 전역 변수 등은 모든 쓰레드가 공유    
+따라서 각 쓰레드에서 필요한 데이터들을 모두 TLS로 옮겨온 후에 사용    
+* `TLS(Thread Local Storage)` : 쓰레드별로 가질 수 있는 고유한 저장공간    
+* 스택은 불안정한 메모리, TLS는 자신만의 독립적인 전역 메모리    
 
 C++11에서 TLS를 사용하는 표준이 정의됨    
 ```cpp
@@ -100,7 +102,6 @@ class LockQueue
 {
 	public:
 		LockQueue() {}
-		
 		LockQueue(const LockQueue&) = delete;
 		LockQueue& operator=(const LockQueue&) = delete;
 
@@ -174,6 +175,11 @@ int main()
 C++에서의 `pop()`은 `empty()`여부를 확인 후 `top()`으로 데이터를 체크하고, 이후에 `pop()`을 하는 방식으로 이루어짐    
 그러나 멀티쓰레드 환경에서의 `empty()`는 거의 의미가 없음    
 또한 `pop`하기 전 데이터를 확인하여 실행 여부를 결정하는 것보다 그냥 크래시가 나도록 하는 것이 게임에서는 더 유리함    
+
+멀티쓰레드 환경은 복사 연산에 취약하기 때문에 복사 생성자와 대입연산자를 `= delete`를 통해 막아둠    
+`TryPop()` 사용시 `condition_variable`을 사용하지 않았으므로 무한으로 돌며 SpinLock 발생    
+`WaitPop()` 사용시 `condition_varibale`을 활용한 방식으로 진행    
+
 
 ***
 

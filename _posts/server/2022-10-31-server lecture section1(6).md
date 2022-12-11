@@ -209,7 +209,6 @@ class CoreGlobal
 #endif
 
 
-
 // CoreGlobal.cpp
 ThreadManager* GThreadManager = nullptr;
 
@@ -232,7 +231,6 @@ CoreGlobal::~CoreGlobal()
 extern thread_local uint32 LThreadId;
 
 #endif
-
 
 
 // CoreTls.cpp
@@ -289,7 +287,6 @@ class ThreadManager
 };
 
 #endif
-
 
 
 // ThreadManager.cpp
