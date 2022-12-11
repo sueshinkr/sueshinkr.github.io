@@ -16,7 +16,7 @@ date: 2022.09.15 19:00:00
 
 특정 조건을 만족할때까지 반복해서 실행
 
-```assembly
+```x86asm
 mov ecx, 10
 LABEL_LOOF:
 	PRINT_STRING msg
@@ -26,7 +26,7 @@ LABEL_LOOF:
 	jne LABEL_LOOF
 ```
 
-```assembly
+```x86asm
 mov eax, 100
 xor ebx, ebx ; = mov ebx, 0
 xor ecx, ecx
@@ -43,7 +43,7 @@ NEWLINE
 
 `cmp`와 `jmp`를 사용하여 반복문 생성 가능    
 
-```assembly
+```x86asm
 mov ecx, 100
 xor ebx, ebx
 LABEL_LOOP_SUM:
@@ -66,7 +66,7 @@ NEWLINE
 * 배열의 위치를 가리키는 숫자를(index)라고 함
 * `a db 0x01, 0x02, 0x03, 0x04`, `b times 5 dw 1`, `num resb 10`등의 형태로 사용
 
-```assembly
+```x86asm
 xor ecx, ecx
 
 LABEL_PRINT_LOOP:
@@ -79,7 +79,7 @@ LABEL_PRINT_LOOP:
 a db 0x01, 0x02, 0x03, 0x04
 ```
 
-```assembly
+```x86asm
 xor ecx, ecx
 
 LABEL_PRINT_LOOP:
@@ -100,7 +100,7 @@ b times 5 dw 1
 
 어셈블리에서는 함수보다 프로시저(procedure)라는 용어를 더 많이 사용함    
 
-```assembly
+```x86asm
 CMAIN:
 	call PRINT_MSG
 	ret
@@ -113,7 +113,7 @@ PRINT_MSG:
 
 함수로 하나의 기능 단위를 관리할 수 있음    
 
-```assembly
+```x86asm
 MAX:
 	cmp eax, ebx
 	jg L1
@@ -147,7 +147,7 @@ CODE / DATA / BSS / HEAP / STACK
 `push`로 데이터를 스택에 저장하고, `pop`으로 꺼내옴    
 단, `pop`의 경우 실제로 저장되어있는 데이터를 제거하지는 않고 top을 가리키는 포인터인 `sp`의 위치만 조정함    
 
-```assembly
+```x86asm
 mov rbp, rsp
 
 push 1

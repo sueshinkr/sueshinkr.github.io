@@ -12,6 +12,8 @@ toc_label: "목차"
 date: 2022.10.26 18:00:00
 ---
 
+**공식문서를 열심히 읽어볼 필요가 있음**
+
 # Event
 
 ```cpp
@@ -87,8 +89,8 @@ void Consumer()
 	while (true)
 	{
 		::WaitForSingleObject(handle, INFINITE);
-		// Auto일경우 곧바로 Non-Signal로 바뀜
-		// Manual일경우 ::ResetEvent(handle); 필요
+		// 이벤트 객체가 Auto일경우 곧바로 Non-Signal로 바뀜
+		// 이벤트 객체가 Manual일경우 ::ResetEvent(handle); 필요
 
 		unique_lock<mutex> lock(m);
 		if (q.empty() == false)
@@ -120,12 +122,16 @@ int main()
 이벤트를 활용하여 무의미한 대기를 제거    
 쓰레드는 시그널이 있을 때까지 `block`되고, 커널이 이벤트의 시그널을 확인한 후 쓰레드에 알려주면 다시 활성화됨    
 `CreateEvent`는 winAPI에서 제공하는 함수이며, linux에서는 `semaphore`를 사용해야 하는 듯 함    
-* `SetEvent()` : 시그널 변경
-* `WaitForSingleObject()` : 시그널이 있을때까지 대기
+* `SetEvent()` : 이벤트를 `Signaled` 상태로 변경
+* `WaitForSingleObject()` : 시그널이 있을때까지 대기    
 
 위처럼 커널 오브젝트를 활용하는경우 다른 프로그램과의 동기화에도 유리    
 
 단, 이벤트와 LOCK이 한묶음으로 실행되는 것이 아닌 것에 유의해야함    
+
+[`CreateEvent()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventa)     
+[`SetEvent()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent?source=recommendations)    
+[`WaitForsingleObject()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)    
 
 ***
 
@@ -196,9 +202,16 @@ int main()
 `Condition Variable`은 이벤트와 비슷한 개념이라고 볼 수 있으나, 조건을 한번 더 확인함    
 즉 이벤트에서는 시그널을 확인하여 대기상태 해제 후 Lock을 걸어줌과 동시에 코드를 진행하였으나, `Condition Variable`에서는 함수를 통해 대기상태 해제 후 Lock을 걸어준 뒤 조건을 확인하여 만족할 경우에만 코드를 진행함    
 
+
 `notify_one`을 함수를 사용하여 대기상태가 해제되었을 때는 Lock이 걸려있지 않은 상태이기 때문에 `Spurious Wakeup` 상황이 발생할 수 있음    
+
 이를 해결하기 위해 잠금을 유지한 채로 `notify` 등의 함수를 사용해 통지할 수 있으나, 이럴 경우 통지된 쓰레드는 이전의 Lock이 해제될 때까지 대기해야 하기 때문에 성능이 저하됨    
 따라서 `wait()`함수 내에서 루프를 돌며 조건문을 확인하는 절차가 필요    
+`wait()`함수 진입시 Lock은 자동으로 해제되고, 현재 쓰레드를 블락시킨 후 대기 리스트에 추가함    
+
+[`condition_variable`에 대한 자세한 정보](https://en.cppreference.com/w/cpp/thread/condition_variable)    
+[`Spurious Wakeup`에 대한 설명 영상](https://www.youtube.com/watch?v=yboiAqUWluE)    
+[`notify_one()`에 대한 자세한 정보](https://en.cppreference.com/w/cpp/thread/condition_variable/notify_one)    
 
 ***
 
@@ -245,7 +258,7 @@ int main()
 		std::future<int64> future = std::async(std::launch::async, Calculate);
 		 
 		std::future_status status = future.wait_for(1ms);
-		if (status == future_status::ready)
+		if (status == future_status::ready) // 값이 설정되지 않은경우 future_status::timeout 리턴
 		{
 
 		}
@@ -270,6 +283,7 @@ int main()
 
 		thread t(PromiseWorker, std::move(promise));
 
+		// get()을 호출할시 future에 있던 데이터가 '이동'됨에 유의 (복사가 아님)
 		string message = future.get();
 		cout << message << endl;
 
@@ -282,6 +296,7 @@ int main()
 		std::future<int64> future = task.get_future();
 
 		thread t(TaskWorker, std::move(task));
+
 		int64 sum = future.get();
 		cout << sum << endl;
 
@@ -293,6 +308,15 @@ int main()
 `async` : 원하는 함수를 비동기적으로 실행    
 `promise` : 결과물을 `promise`를 통해 `future`로 받아줌    
 `packaged_task` : 원하는 함수의 실행 결과를 `packaged_task`를 통해 `future`로 받아줌    
+[위 셋의 특징과 차이점](https://stackoverflow.com/questions/17729924/when-to-use-promise-over-async-or-packaged-task)    
+
+
+[`future`관련 내용에 대한 전체적인 내용](https://modoocode.com/284)    
+[`future`에 대한 자세한 정보](https://en.cppreference.com/w/cpp/thread/future)    
+[`async()`에 대한 자세한 정보](https://en.cppreference.com/w/cpp/thread/async)    
+[`wait_for()`에 대한 자세한 정보](https://en.cppreference.com/w/cpp/thread/future/wait_for)
+[`promise`에 대한 자세한 정보](https://en.cppreference.com/w/cpp/thread/promise)    
+[`packaged_task()`에 대한 자세한 정보]    
 
 ***
 
