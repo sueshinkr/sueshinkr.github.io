@@ -172,6 +172,11 @@ int main()
 `new(memory)Type(forward<Args>(args)...);` 형식의 `new`를 사용하여 
 지정한 메모리 위치에 할당, 가변인자에 따른 생성자 호출    
 
+`forward` : 템플릿으로 들어오는 타입에 따라 `L-value` 참조와 `R-value` 참조를 구별    
+[`std::forward`에 대한 자세한 정보](https://en.cppreference.com/w/cpp/utility/forward)    
+
+`placement new`를 통해 생성된 객체는 `delete`로 직접 지우는 대신, 해당 객체의 소멸자를 호출하는 방식을 사용해야함    
+
 ***
 
 # Stomp Allocator
@@ -229,7 +234,7 @@ int main()
 }
 ```
 
-잘못된 캐스팅으로 인해 사용해야하는 영역을 초과하여 건드리는 메모리 오염 발생    
+잘못된 캐스팅(다운캐스팅)으로 인해 사용해야하는 영역을 초과하여 건드리는 메모리 오염 발생    
 
 유저 레벨의 프로그램들은 가상 메모리를 사용    
 가상 메모리는 실제 메모리에 매핑됨    
@@ -242,6 +247,11 @@ int main()
 * `int* test = (int*)::VirtualAlloc(NULL, 4, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE)`과 같은 형식으로 사용
 * 즉, 옵션을 세부적으로 설정할 수 있음
 * `VirtualFree()`시 메모리를 완전하게 해제하여 더이상 해당 주소를 사용할 수 없음 (Use-After-Free 문제 해결)
+* 가상 메모리 함수 사용시 메모리를 예약 상태로 할당할 수 있음 : 물리적인 메모리를 소비하지 않으면서 주소 공간만을 미리 할당
+* 할당한 메모리의 엑세스 권한 지정 가능
+
+[`VirtualAlloc()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc)    
+[`VirtualFree()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualfree)    
 
 ```cpp
 // Allocator.h
