@@ -97,15 +97,12 @@ int main()
 		{
 			if (missile->Update())
 			{
+				//delete missile;
 				missile->ReleaseRef();
 				missile = nullptr;
 			}
 		}
 	}
-
-	//delete missile;
-	missile->ReleaseRef();
-	missile = nullptr;
 }
 ```
 
@@ -167,7 +164,7 @@ class TSharePtr
 
 		T*			operator*() { return _ptr; }
 		const T*	operator*() const { return _ptr; }
-					operator T* () const { return _ptr; }
+					operator T* () const { return _ptr; } // 캐스팅
 		T*			operator->() { return _ptr; }
 		const T*	operator->() const { return _ptr; }
 
@@ -191,7 +188,7 @@ class TSharePtr
 		}
 
 	private:
-		T* ptr = nullptr;
+		T* _ptr = nullptr;
 };
 ```
 
@@ -223,12 +220,14 @@ class TSharePtr
 `shared_ptr`
 * `shared_ptr<Knight> spr = make_shared<Knight>();`과 같이 `make_shared` 사용시 객체와 `RefCountingBlock`을 하나로 합쳐서 할당함
 * `UseCount`가 0이 되면 객체가 제거되지만 `weakCount`가 남아있을경우 `RefCountBlock`은 제거하지 않음
+* `shared_ptr`끼리 서로 참조할경우 순환 문제 발생
 
 `weak_ptr`
 * `bool expired = wpr.expired();` 또는 `shared_ptr<Knight> spr2 = wpr.lock();` 방식을 사용하여 존재 여부를 확인해야함
 * 객체 자체에는 영향을 주지 않음
 * 순환 문제를 방지할 수 있음
 
+[`shared_ptr`과 `weak_ptr`에 대한 자세한 내용](https://modoocode.com/252)    
 
 
 
