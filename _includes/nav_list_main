@@ -33,6 +33,13 @@
 					{% endif %}
 				{% endfor %}
 			</ul>
+			<ul>
+				{% for category in site.categories %}
+					{% if category[0] == "Netpractice" %}
+						<li><a href="/categories/Netpractice" class="">Netpractice ({{category[1].size}})</a></li>
+					{% endif %}
+				{% endfor %}
+			</ul>
             <ul>
                 {% for category in site.categories %}
                     {% if category[0] == "ft_printf" %}
