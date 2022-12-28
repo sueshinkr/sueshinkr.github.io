@@ -44,7 +44,6 @@ int main()
 	// socket, level, option관련 
 	// level : 옵션을 해석하고 처리할 주체
 	//		   소켓 - SOL_SOCKET, IPv4 - IPPROTO_IP, TCP - IPPROTO_TCP
-
 	// SO_KEEPALIVE : 주기적으로 연결 상태 확인 여부(TCP Only)
 	bool enable = true;
 	::setsockopt(serverSocket, SOL_SOCKET, SO_KEEPALIVE, (char*)&enable, sizeof(enable));
@@ -88,6 +87,45 @@ int main()
 	::WSACleanup();
 }
 ```
+
+`setsockopt()` 함수로 소켓 세부 설정이 가능    
+* 첫 번째 매개변수로 설정을 변경할 소켓을 지정    
+* 두 번째 매개변수로 옵션을 설정할 프로토콜의 레벨을 전달
+* 세 번째 매개변수로 설정할 옵션 지정
+* 네 번째 매개변수로 옵션 요청에 대한 결과를 확인할 버퍼 지정
+* 다섯 번째 매개변수로 버퍼의 크기 지정    
+
+공식 문서에서 볼 수 있듯 적용할 수 있는 옵션의 갯수가 상당히 많음    
+* `SO_KEEPALIVE` : 주기적으로 연결 상태를 확인 (TCP 연결만 가능)
+* `SO_LINGER` : 소켓 리소스 반환 후 (`closesocket()` 호출 후) 전송되지 않은 데이터가 있는 경우 (송신 버퍼에 데이터가 남아있는 경우) 소켓을 즉시 닫을 것인지 아닐지를 결정    
+	* `LINGER` : 데이터가 전송되기 위해 대기중이거나 `closesocket()` 함수가 호출되었을 때 소켓의 동작방식에 대한 정보를 저장해놓은 구조체
+	* ```cpp
+	  typedef struct linger {
+		u_short l_onoff;
+		u_short l_linger;
+		} LINGER, *PLINGER, *LPLINGER;
+	  ```
+	* `l_onoff` : `closesocket()` 호출시 대기중인 데이터를 전송하기 위해 소켓을 열어둘 것인지를 설정    
+	* `l_linger` : `l_onoff`가 `nonzero` 값으로 설정되어있을 경우, 얼마만큼의 시간동안 소켓을 열어둘 것인지를 설정    
+* `SO_REUSEADDR` : 이미 사용중인 주소나 포트에 대해서도 바인드 허용    
+* `TCP_NODELAY` : TCP 소켓의 NAGLE 알고리즘 작동 여부를 설정, 기본값은 작동으로 설정되어있음    
+	* `NAGLE` 알고리즘 - 데이터가 충분히 크면 전송하고, 그렇지 않으면 충분히 쌓일 때까지 대기    
+	* 게임에서는 트래픽 효율보다 빠른 반응성이 유리하기 때문에 잘 쓰이지 않음    
+
+`getsockopt()` 함수로 소켓 세부설정 사항을 확인 가능    
+
+[`setsockopt()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-setsockopt)    
+[`LINGER`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/ns-winsock-linger)    
+[`getsockopt()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-getsockopt)    
+
+<br/>
+
+`shutdown()` 함수로 소켓을 닫을 수 있음    
+두 호스트간의 연결을 완전 종료시키는 `closesocket()`과는 달리 `half-close`가 가능    
+즉, 송신은 가능하지만 수신은 불가능하거나, 그 반대의 상황을 만들 수 있음    
+따라서 마지막 데이터의 송신 시점을 확인하는데 사용
+
+[`shutdown()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-shutdown)    
 
 ***
 
@@ -190,6 +228,18 @@ int main()
 }
 ```
 
+`accept()`, `connect()`, `recv()`, `send()` 등은 모두 블로킹 함수    
+호출 쓰레드를 블로킹 상태로 만들기 때문에 조건 만족 혹은 타임아웃시까지 블로킹 상태가 유지됨    
+그렇기 때문에 클라이언트가 여러개일 때 일부가 블로킹될경우, 서버가 블로킹된 클라이언트의 패킷을 기다리며 대기하게 되기 때문에 문제가 발생할 수 있음    
+
+`ioctlsocket()` 함수로 소켓을 논블로킹(nonblocking)으로 전환 가능    
+* 첫 번째 매개변수로 설정할 소켓을 지정    
+* 두 번째 매개변수인 커맨드에 `FIONBIO`, 세 번째 매개변수인 설정값을 1로 놓으면 노블로킹 소켓으로 설정됨    
+
+[`ioctlsocket()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-ioctlsocket)    
+[`ioctl` 커맨드에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/winsock/winsock-ioctls)    
+
+
 ```cpp
 // GameServer.cpp
 
@@ -210,7 +260,6 @@ int main()
 	// recv, recvfrom - 수신 버퍼에 도착한 데이터가 있고, 이를 유지레벨 버퍼에 복사했을 때
 	// 게임에서는 블로킹이 일어날경우 문제가 발생할 수 있음
 
-	// 논블로킹(Non-Blocking) 소켓
 	SOCKET listenSocket = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (listenSocket == INVALID_SOCKET)
 		return 0;
@@ -299,7 +348,9 @@ int main()
 }
 ```
 
-무한루프를 돌면서 확인하기 때문에 비효율이 발생할 수 있음    
+논블로킹 소켓에서는 원래 블록되어야 할 경우 대신 -1을 반환하고 `WSAGetLastError()` 값을 `WSAEWOULDBLOCK`으로 설정함    
+따라서 while문 내에서 `connect()`, `send()` 등을 수행하며 `WSAEWOULDBLOCK`인 경우 계속 루프를 돌도록 하면 논블로킹 소켓을 활용할 수 있음    
+단, 논블로킹 소켓의 경우 블로킹 상황 발생 여부를  무한루프를 돌면서 확인하기 때문에 비효율이 발생할 수 있음    
 
 ***
 
@@ -455,5 +506,41 @@ int main()
 }
 ```
 
-FD_SETSIZE에 한계가 존재한다는 문제점이 있음    
-단, FD_SET을 여러개 둠으로써 해결은 가능함    
+`fd_set` : 소켓을 FD로 그룹짓기 위해 사용되는 구조체    
+```cpp
+typedef struct fd_set {
+  u_int  fd_count;
+  SOCKET fd_array[FD_SETSIZE];
+} fd_set, FD_SET, *PFD_SET, *LPFD_SET;
+```
+* `fd_count` : 집합에 존재하는 소켓 수    
+* `fd_array[FD_SETSIZE]` : 집합에 존재하는 소켓 배열    
+
+`fd_set`을 조작하는 매크로가 존재    
+* `FD_ZERO(*set)` : set을 empty로 초기화    
+* `FD_CLR(s, *set)` : set에서 소켓 s를 제거    
+* `FD_ISSET(s, *set)` : 소켓 s가 set에 존재하는지 확인    
+* `FD_SET(s, *set)` : 소켓 s를 set에 추가    
+
+<br/>
+
+`select()` 함수는 `send()`, `recv()` 함수 등의 호출이 성공할 수 있는 시점을 알려줌    
+소켓이 블로킹이든 논블로킹이든 관계없이 여러 소켓을 한 쓰레드로 처리할 수 있음    
+* 블로킹 소켓 : 함수 호출의 조건이 만족되지 않아 블로킹되는 상황 예방     
+* 논블로킹 소켓 : 함수 호출의 조건이 만족되지 않아 불필요하게 반복 체크하는 상황을 예방
+* 첫 번째 매개변수는 가장 큰 fd의 값으로 일반적으로 무시됨
+* 두 번째 매개변수에는 `read set`을 지정
+* 세 번째 매개변수에는 `write set`을 지정
+* 네 번째 매개변수에는 `exception set`을 지정
+* 다섯 번째 매개변수에는 타임아웃 시간을 지정, 타임아웃이 되면 `select()` 함수는 무조건 리턴
+	* 타임아웃 값이 `NULL`일 경우 : 최소한 한 소켓이 조건을 만족할 때까지 무한히 대기하고, 조건을 만족하는 소켓 개수를 리턴함
+	* 타임아웃 값이 {0, 0}일 경우 : 소켓 셋에 포함된 모든 소켓을 검사한 후, 조건을 만족하는 소켓의 개수를 리턴    
+	* 타임아웃 값이 양수 : 최소한 한 소켓이 조건을 만족하거나 타임아웃 시간이 지나면 조건을 만족하는 소켓 개수를 리턴    
+
+`select()` 함수 호출시 각 소켓 set에서 함수 호출이 성공할 수 있는 소켓만 집합에 남겨두고 나머지는 제거함    
+따라서 다음에는 다시 `fd_set`에 소켓들을 추가해주어야함    
+
+[`select()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-select)    
+
+`FD_SETSIZE`에 한계가 존재한다는 문제점이 있음    
+단, `fd_set`을 여러개 둠으로써 해결은 가능함    
