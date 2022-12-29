@@ -210,8 +210,41 @@ int main()
 }
 ```
 
-Select와 달리 매번마다 전체를 리셋할 필요가 없음    
-WSAWaitForMultipleEvents에도 전체 이벤트 개수에 한계가 존재함    
+`WSACreateEvent()` 함수로 `WSAEVENT` 객체를 생성    
+`WSACloseEvent()` 함수로 객체 삭제    
+* 생성된 객체는 `non-signaled` 상태로 `manual-reset`되어있음    
+
+`WSAEventSelect()` 함수로 소켓과 이벤트 객체를 연동, 소켓과 관련된 네트워크 이벤트를 이벤트 객체를 통해 감지    
+* `select()`와 달리 비동기로 진행     
+* `select()`와 달리 매번마다 소켓 set을 리셋할 필요가 없음    
+* 첫 번째 매개변수로 소켓을 지정    
+* 두 번째 매개변수로 이벤트 객체를 지정    
+* 세 번째 매개변수로 네트워크 이벤트 비트마스크를 설정    
+	* `FD_ACCEPT` / `FD_READ` / `FD_WRITE` / `FD_CONNECT` / `FD_CLOSE` 등이 존재    
+
+`WSAWaitForMultipleEvents()` 함수로 신호 상태를 감지    
+* 첫 번째 매개변수로 이벤트 객체 핸들의 개수를 설정    
+* 두 번째 매개변수로 이벤트 객체 핸들을 지정    
+* 세 번째 매개변수로 대기시 동작을 결정
+	* `TRUE` : 모든 이벤트 핸들이 `signaled`일 경우 리턴
+	* `FALSE` : 최소한 하나의 이벤트 객체가 `signaled`일 경우 리턴
+		* 이 때(리턴값 - WSA_WAIT_EVENT_0) 값이 함수를 리턴시킨 이벤트 객체의 인덱스를 나타냄     
+		* `signaled`인 이벤트 객체가 여러개일 경우 인덱스 값이 가장 작은 이벤트 객체에 대한 값이 리턴됨    
+* 네 번째 매개변수로 타임아웃 시간을 설정    
+* 다섯 번째 매개변수로 입출력 완료 루틴을 설정, `WSAEventSelect` 모델에서는 항상 `FALSE`로 설정    
+
+`WSAEnumNetworkEvents()` 함수로 구체적인 네트워크 이벤트를 확인    
+* 첫 번째 매개변수로 소켓을 지정
+* 두 번째 매개변수로 소켓과 연동된 이벤트 객체 핸들을 넘겨주어 `non-signaled` 상태로 변경
+* 세 번째 매개변수에는 네트워크 이벤트 / 오류 정보가 저장됨    
+
+`WSAWaitForMultipleEvents`에도 전체 이벤트 개수에 한계가 존재한다는 단점이 있음    
+
+[`WSACreateEvent()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsacreateevent)    
+[`WSACloseEvent()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsacloseevent)    
+[`WSAWaitForMultipleEvents()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsawaitformultipleevents)    
+[`WSAEnumNetworkEvents()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsaenumnetworkevents)    
+
 
 ***
 
