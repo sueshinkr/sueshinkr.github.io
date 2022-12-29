@@ -302,7 +302,7 @@ int main()
 	// - Alertable Wait 상태로 들어가서 APC 큐 비우기(콜백 함수)
 	// 단, APC큐가 쓰레드마다 있다는 단점이 존재
 
-	// ICOP (Completion Port) 모델
+	// IOCP (Completion Port) 모델
 	// - APC X -> Completion Port(쓰레드마다 존재하지 않음, 중앙에서 관리하는 APC 큐)
 	// - Alertable Wait X -> CP 결과 처리를 GetQueuedCompletionStatus에서 함
 	// 멀티쓰레드와 궁합이 굉장히 좋음
@@ -366,3 +366,23 @@ int main()
 	::WSACleanup();
 }
 ```
+
+`Completion Port` 모델은 `APC Queue` 대신 `Completion Port`를 사용하는 것이 핵심    
+비동기 입출력 결과 및 쓰레드에 대한 정보를 담고있는 구조이며, `CreateIoCompletionPort()` 함수로 생성    
+* 첫 번째 인자로 `overlapped` 입출력을 지원하는 객체로서의 핸들, 또는 `INVALID_HANDLE_VALUE`로 지정함    
+* 두 번째 인자로 이미 존재하는 `completion port`를, 없을 경우 `NULL`로 지정    
+* 세 번째 인자로 `I/O completion packet`에 들어갈 부가적인 정보인 `CompletionKey`를 입력
+* 네 번째 인자로 동시에 실행할 수 잇는 작업자 쓰레드의 개수를 설정, 0으로 설정시 CPU 개수와 같을 수로 설정됨
+
+보통 `Completion Port`에 접근하는 쓰레드인 작업자(Worker) 쓰레드를 CPU 개수 * n개만큼 생성하여 사용함    
+작업자 쓰레드에서 `Completion Port`에 저장된 결과를 감시하고 처리하는 `GetQueuedCompletionStatus()` 함수를 호출하여 사용    
+* 첫 번째 인자로 `Completion Port`를 지정    
+* 두 번째 인자에 비동기 입출력 작업으로 전송된 바이트 수를 저장    
+* 세 번째 인자에 `Create
+* 네 번째 인자에 비동기 입출력 함수 호출시 사용한 `OVERLAPPED` 구조체를 받아옴    
+* 네 번째 인자로 `CreateIoCompletionPort()`시 사용한 `CompletionKey`를 받아옴    
+* 다섯 번째 인자로 작업자 쓰레드가 대기할 시간을 지정, `INFINITE`로 설정시 입출력 완료 패킷이 생성되어 운영체제가 깨울 때까지 무한정 대기    
+
+[`Overlapped` / `Completion Port` 모델에 대한 자세한 내용이 적힌 글](https://dbehdrhs.tistory.com/85)    
+[`CreateIoCompletionPort()`에 대한 자세한 내용](https://learn.microsoft.com/en-us/windows/win32/fileio/createiocompletionport)    
+[`GetQueuedCompletionStatus()`에 대한 자세한 내용](https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus)    
