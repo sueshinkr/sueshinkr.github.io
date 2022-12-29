@@ -439,6 +439,8 @@ typedef struct _WSABUF {
 } WSABUF, *LPWSABUF;
 ```
 * 버퍼의 시작주소와 길이를 가지고있음    
+* `scatter/gatter I/O` : 분리된 버퍼들에 차례로 데이터를 받게 할 수 있는 기법    
+분리된 버퍼들을 한곳에 복사하는 임시 버퍼를 사용하지 않고 한번에 보내고 받을 수 있어 네트워크 성능 향상이 가능    
 
 [`WSAOVERLAPPED`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/ns-winsock2-wsaoverlapped)    
 [`WSABUF`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-wsabuf)     
