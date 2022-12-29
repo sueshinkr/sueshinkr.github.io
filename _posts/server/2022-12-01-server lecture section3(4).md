@@ -245,7 +245,6 @@ int main()
 [`WSAWaitForMultipleEvents()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsawaitformultipleevents)    
 [`WSAEnumNetworkEvents()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsaenumnetworkevents)    
 
-
 ***
 
 # Overlapped 모델(이벤트 기반)
@@ -260,6 +259,26 @@ int main()
 * 전화로 질문 - 동기 / 메일로 질문 - 비동기
 * 비동기는 함수 호출을 Callback으로 함
 * `recv`, `send`, `accept`와 같은 기본 함수들은 모두 동기 함수    
+
+[블록/논블록, 동기/비동기`에 대해 자세히 정리되어있는 글](https://inpa.tistory.com/entry/%F0%9F%91%A9%E2%80%8D%F0%9F%92%BB-%EB%8F%99%EA%B8%B0%EB%B9%84%EB%8F%99%EA%B8%B0-%EB%B8%94%EB%A1%9C%ED%82%B9%EB%85%BC%EB%B8%94%EB%A1%9C%ED%82%B9-%EA%B0%9C%EB%85%90-%EC%A0%95%EB%A6%AC)    
+
+<br/>
+
+`select` 모델은 동기/블록    
+입출력 함수를 안전하게 호출할 수 있는 시점을 운영체제로부터 전달받는 `통지(Notification)` 또한 동기적으로 이루어짐    
+즉, 사건을 등록하는 함수 호출/반환 시점과 사건 발생을 통지하는 시점이 일치하며 `select()` 함수의 반복을 통해 입출력이 완료 가능한 상태인지를 계속 체크함     
+
+`WSAEventSelect` 모델은 동기/논블록 방식    
+`WSAEventSelect()` 함수는 입출력 완료 여부에 상관없이 바로 반환되기 때문에 입출 력 통지가 비동기적으로 이루어짐    
+즉, 사건을 등록하는 함수 호출/반환 시점과 사건 발생을 통지하는 시점이 일치하지 않음    
+이를 `비동기 통지(asynchronous notification)`이라고 부르며, 입출력 방식과 통지 방식의 동기/비동기 여부는 별개이기 때문에 `WSAEventSelect()`는 동기 입출력 방식과 비동기 통지 방식을 가짐    
+
+동기 입출력 방식인 `select`와 `WSAEventSelect` 모델은 모두 입출력 완료 시점과 함수 리턴 시점이 일치함    
+다만 통지를 받기 때문에 단순한 동기 입출력 방식보다는 소켓들을 편리하게 처리할 수 있음    
+반면 `Overlapped`와 `Completion Port` 모델은 비동기 입출력 방식이며, 비동기 통지가 결합되어있음    
+따라서 해당 모델들은 입출력 완료 시점과 함수 리턴 시점이 일치하지 않음    
+
+[각 모델에 따른 동기/비동기 차이점에 대해 정리되어있는 글](https://dbehdrhs.tistory.com/85)    
 
 ```cpp
 // GameServer.cpp
