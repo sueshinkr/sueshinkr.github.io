@@ -222,7 +222,7 @@ int main()
 * 세 번째 매개변수로 네트워크 이벤트 비트마스크를 설정    
 	* `FD_ACCEPT` / `FD_READ` / `FD_WRITE` / `FD_CONNECT` / `FD_CLOSE` 등이 존재    
 
-`WSAWaitForMultipleEvents()` 함수로 신호 상태를 감지    
+`WSAWaitForMultipleEvents()` 함수로 신호 상태를 감지 = 이벤트 발생 유무 확인    
 * 첫 번째 매개변수로 이벤트 객체 핸들의 개수를 설정    
 * 두 번째 매개변수로 이벤트 객체 핸들을 지정    
 * 세 번째 매개변수로 대기시 동작을 결정
@@ -233,7 +233,7 @@ int main()
 * 네 번째 매개변수로 타임아웃 시간을 설정    
 * 다섯 번째 매개변수로 입출력 완료 루틴을 설정, `WSAEventSelect` 모델에서는 항상 `FALSE`로 설정    
 
-`WSAEnumNetworkEvents()` 함수로 구체적인 네트워크 이벤트를 확인    
+`WSAEnumNetworkEvents()` 함수로 구체적인 네트워크 이벤트의 종류 확인    
 * 첫 번째 매개변수로 소켓을 지정
 * 두 번째 매개변수로 소켓과 연동된 이벤트 객체 핸들을 넘겨주어 `non-signaled` 상태로 변경
 * 세 번째 매개변수에는 네트워크 이벤트 / 오류 정보가 저장됨    
@@ -418,6 +418,59 @@ int main()
 }
 ```
 
+`WSAOVERLAPPED` 구조체는 `overlapped I/O`를 수행하기 위한 정보를 저장하기 위해 사용    
+```cpp
+typedef struct _WSAOVERLAPPED {
+  DWORD    Internal;
+  DWORD    InternalHigh;
+  DWORD    Offset;
+  DWORD    OffsetHigh;
+  WSAEVENT hEvent;
+} WSAOVERLAPPED, *LPWSAOVERLAPPED;
+```
+* `DWORD` 타입 변수들은 운영체제 내부적으로 사용됨    
+* `hEvent` 변수는 이벤트 객체 핸들로 사용    
+
+`WSABUF` 구조체는 winsock 함수에서 사용되는 데이터 버퍼를 생성하거나 조작하기 위해 사용     
+```cpp
+typedef struct _WSABUF {
+  ULONG len;
+  CHAR  *buf;
+} WSABUF, *LPWSABUF;
+```
+* 버퍼의 시작주소와 길이를 가지고있음    
+
+[`WSAOVERLAPPED`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/ns-winsock2-wsaoverlapped)    
+[`WSABUF`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-wsabuf)     
+
+<br/>
+
+`Overlapped I/O` 모델에서는 비동기 입출력 함수인 `WSASend()`와 `WSARecv()`를 사용    
+* 첫 번째 매개변수로 비동기 입출력 소켓을 지정    
+* 두 번째 매개변수로 `WSABUF` 구조체를 지정    
+* 세 번째 매개변수로 지정한 `WSABUF` 구조체의 크기를 설정    
+* 네 번째 매개변수로 전송하거나 수신한 데이터의 크기를 받아옴     
+* 다섯 번째 매개변수로 상세 옵션을 지정, 기본으로는 0 사용    
+* 여섯 번째 매개변수로 `WSAOVERLAPPED` 구조체를 지정    
+* 일곱 번째 매개변수로 입출력 완료시 OS가 호출할 콜백 함수 지정(이벤트를 사용하는 모델에서는 `NULL`로 지정)    
+
+[`WSASend()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsasend)    
+[`WSARecv()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsarecv)    
+
+<br/>
+
+`Overlapped I/O` 모델에서는 소켓과 이벤트 객체를 생성한 후 먼저 비동기 입출력 함수인 `WSASend()`나 `WSARecv()`를 호출함    
+입출력 작업이 완료되지 않은 경우 함수는 `WSA_IO_PENDING` 오류를 반환    
+`WSAWaitForMultipleEvents()` 함수로 이벤트 객체가 `signaled`가 될 때까지 대기    
+신호가 주어진 경우 `WSAGetOverlappedResult()` 함수로 입출려 결과 확인 및 데이터를 처리함    
+* 첫 번째 매개변수로 소켓을 지정
+* 두 번째 매개변수로 `WSAOVERLAPPED` 구조체 지정    
+* 세 번째 매개변수로 전송하거나 수신한 데이터의 크기를 받아옴    
+* 네 번째 매개변수로 대기여부를 지정, `WSAWaitForMultipleEvents()`로 이미 비동기 입출력 작업이 끝났음을 확인했으므로 `FALSE`로 설정    
+* 다섯 번째 매개변수로 부가정보를 받아옴    
+
+[`WSAGetOverlappedResult()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsagetoverlappedresult)    
+
 ```cpp
 // DummyClient.cpp
 
@@ -507,4 +560,4 @@ int main()
 }
 ```
 
-`WSARecv` 도중 `overlapped`나 `recvBuffer`의 값을 변경하지 않도록 주의해야함    
+비동기 입출력 함수 실행 도중 사용하고있는 `WSAOVERLAPPED` 구조체나 버퍼를 변경하지 않도록 주의해야함    
