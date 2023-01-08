@@ -210,8 +210,40 @@ int main()
 }
 ```
 
-Select와 달리 매번마다 전체를 리셋할 필요가 없음    
-WSAWaitForMultipleEvents에도 전체 이벤트 개수에 한계가 존재함    
+`WSACreateEvent()` 함수로 `WSAEVENT` 객체를 생성    
+`WSACloseEvent()` 함수로 객체 삭제    
+* 생성된 객체는 `non-signaled` 상태로 `manual-reset`되어있음    
+
+`WSAEventSelect()` 함수로 소켓과 이벤트 객체를 연동, 소켓과 관련된 네트워크 이벤트를 이벤트 객체를 통해 감지    
+* `select()`와 달리 비동기로 진행     
+* `select()`와 달리 매번마다 소켓 set을 리셋할 필요가 없음    
+* 첫 번째 매개변수로 소켓을 지정    
+* 두 번째 매개변수로 이벤트 객체를 지정    
+* 세 번째 매개변수로 네트워크 이벤트 비트마스크를 설정    
+	* `FD_ACCEPT` / `FD_READ` / `FD_WRITE` / `FD_CONNECT` / `FD_CLOSE` 등이 존재    
+
+`WSAWaitForMultipleEvents()` 함수로 신호 상태를 감지 = 이벤트 발생 유무 확인    
+* 첫 번째 매개변수로 이벤트 객체 핸들의 개수를 설정    
+* 두 번째 매개변수로 이벤트 객체 핸들을 지정    
+* 세 번째 매개변수로 대기시 동작을 결정
+	* `TRUE` : 모든 이벤트 핸들이 `signaled`일 경우 리턴
+	* `FALSE` : 최소한 하나의 이벤트 객체가 `signaled`일 경우 리턴
+		* 이 때(리턴값 - WSA_WAIT_EVENT_0) 값이 함수를 리턴시킨 이벤트 객체의 인덱스를 나타냄     
+		* `signaled`인 이벤트 객체가 여러개일 경우 인덱스 값이 가장 작은 이벤트 객체에 대한 값이 리턴됨    
+* 네 번째 매개변수로 타임아웃 시간을 설정    
+* 다섯 번째 매개변수로 입출력 완료 루틴을 설정, `WSAEventSelect` 모델에서는 항상 `FALSE`로 설정    
+
+`WSAEnumNetworkEvents()` 함수로 구체적인 네트워크 이벤트의 종류 확인    
+* 첫 번째 매개변수로 소켓을 지정
+* 두 번째 매개변수로 소켓과 연동된 이벤트 객체 핸들을 넘겨주어 `non-signaled` 상태로 변경
+* 세 번째 매개변수에는 네트워크 이벤트 / 오류 정보가 저장됨    
+
+`WSAWaitForMultipleEvents`에도 전체 이벤트 개수에 한계가 존재한다는 단점이 있음    
+
+[`WSACreateEvent()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsacreateevent)    
+[`WSACloseEvent()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsacloseevent)    
+[`WSAWaitForMultipleEvents()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsawaitformultipleevents)    
+[`WSAEnumNetworkEvents()`에 대한 자세한 설명](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsaenumnetworkevents)    
 
 ***
 
@@ -227,6 +259,26 @@ WSAWaitForMultipleEvents에도 전체 이벤트 개수에 한계가 존재함
 * 전화로 질문 - 동기 / 메일로 질문 - 비동기
 * 비동기는 함수 호출을 Callback으로 함
 * `recv`, `send`, `accept`와 같은 기본 함수들은 모두 동기 함수    
+
+[블록/논블록, 동기/비동기`에 대해 자세히 정리되어있는 글](https://inpa.tistory.com/entry/%F0%9F%91%A9%E2%80%8D%F0%9F%92%BB-%EB%8F%99%EA%B8%B0%EB%B9%84%EB%8F%99%EA%B8%B0-%EB%B8%94%EB%A1%9C%ED%82%B9%EB%85%BC%EB%B8%94%EB%A1%9C%ED%82%B9-%EA%B0%9C%EB%85%90-%EC%A0%95%EB%A6%AC)    
+
+<br/>
+
+`select` 모델은 동기/블록    
+입출력 함수를 안전하게 호출할 수 있는 시점을 운영체제로부터 전달받는 `통지(Notification)` 또한 동기적으로 이루어짐    
+즉, 사건을 등록하는 함수 호출/반환 시점과 사건 발생을 통지하는 시점이 일치하며 `select()` 함수의 반복을 통해 입출력이 완료 가능한 상태인지를 계속 체크함     
+
+`WSAEventSelect` 모델은 동기/논블록 방식    
+`WSAEventSelect()` 함수는 입출력 완료 여부에 상관없이 바로 반환되기 때문에 입출 력 통지가 비동기적으로 이루어짐    
+즉, 사건을 등록하는 함수 호출/반환 시점과 사건 발생을 통지하는 시점이 일치하지 않음    
+이를 `비동기 통지(asynchronous notification)`이라고 부르며, 입출력 방식과 통지 방식의 동기/비동기 여부는 별개이기 때문에 `WSAEventSelect()`는 동기 입출력 방식과 비동기 통지 방식을 가짐    
+
+동기 입출력 방식인 `select`와 `WSAEventSelect` 모델은 모두 입출력 완료 시점과 함수 리턴 시점이 일치함    
+다만 통지를 받기 때문에 단순한 동기 입출력 방식보다는 소켓들을 편리하게 처리할 수 있음    
+반면 `Overlapped`와 `Completion Port` 모델은 비동기 입출력 방식이며, 비동기 통지가 결합되어있음    
+따라서 해당 모델들은 입출력 완료 시점과 함수 리턴 시점이 일치하지 않음    
+
+[각 모델에 따른 동기/비동기 차이점에 대해 정리되어있는 글](https://dbehdrhs.tistory.com/85)    
 
 ```cpp
 // GameServer.cpp
@@ -366,6 +418,61 @@ int main()
 }
 ```
 
+`WSAOVERLAPPED` 구조체는 `overlapped I/O`를 수행하기 위한 정보를 저장하기 위해 사용    
+```cpp
+typedef struct _WSAOVERLAPPED {
+  DWORD    Internal;
+  DWORD    InternalHigh;
+  DWORD    Offset;
+  DWORD    OffsetHigh;
+  WSAEVENT hEvent;
+} WSAOVERLAPPED, *LPWSAOVERLAPPED;
+```
+* `DWORD` 타입 변수들은 운영체제 내부적으로 사용됨    
+* `hEvent` 변수는 이벤트 객체 핸들로 사용    
+
+`WSABUF` 구조체는 winsock 함수에서 사용되는 데이터 버퍼를 생성하거나 조작하기 위해 사용     
+```cpp
+typedef struct _WSABUF {
+  ULONG len;
+  CHAR  *buf;
+} WSABUF, *LPWSABUF;
+```
+* 버퍼의 시작주소와 길이를 가지고있음    
+* `scatter/gatter I/O` : 분리된 버퍼들에 차례로 데이터를 받게 할 수 있는 기법    
+분리된 버퍼들을 한곳에 복사하는 임시 버퍼를 사용하지 않고 한번에 보내고 받을 수 있어 네트워크 성능 향상이 가능    
+
+[`WSAOVERLAPPED`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/ns-winsock2-wsaoverlapped)    
+[`WSABUF`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/ws2def/ns-ws2def-wsabuf)     
+
+<br/>
+
+`Overlapped I/O` 모델에서는 비동기 입출력 함수인 `WSASend()`와 `WSARecv()`를 사용    
+* 첫 번째 매개변수로 비동기 입출력 소켓을 지정    
+* 두 번째 매개변수로 `WSABUF` 구조체를 지정    
+* 세 번째 매개변수로 지정한 `WSABUF` 구조체의 크기를 설정    
+* 네 번째 매개변수로 전송하거나 수신한 데이터의 크기를 받아옴     
+* 다섯 번째 매개변수로 상세 옵션을 지정, 기본으로는 0 사용    
+* 여섯 번째 매개변수로 `WSAOVERLAPPED` 구조체를 지정    
+* 일곱 번째 매개변수로 입출력 완료시 OS가 호출할 콜백 함수 지정(이벤트를 사용하는 모델에서는 `NULL`로 지정)    
+
+[`WSASend()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsasend)    
+[`WSARecv()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsarecv)    
+
+<br/>
+
+`Overlapped I/O` 모델에서는 소켓과 이벤트 객체를 생성한 후 먼저 비동기 입출력 함수인 `WSASend()`나 `WSARecv()`를 호출함    
+입출력 작업이 완료되지 않은 경우 함수는 `WSA_IO_PENDING` 오류를 반환    
+`WSAWaitForMultipleEvents()` 함수로 이벤트 객체가 `signaled`가 될 때까지 대기    
+신호가 주어진 경우 `WSAGetOverlappedResult()` 함수로 입출려 결과 확인 및 데이터를 처리함    
+* 첫 번째 매개변수로 소켓을 지정
+* 두 번째 매개변수로 `WSAOVERLAPPED` 구조체 지정    
+* 세 번째 매개변수로 전송하거나 수신한 데이터의 크기를 받아옴    
+* 네 번째 매개변수로 대기여부를 지정, `WSAWaitForMultipleEvents()`로 이미 비동기 입출력 작업이 끝났음을 확인했으므로 `FALSE`로 설정    
+* 다섯 번째 매개변수로 부가정보를 받아옴    
+
+[`WSAGetOverlappedResult()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsagetoverlappedresult)    
+
 ```cpp
 // DummyClient.cpp
 
@@ -455,4 +562,4 @@ int main()
 }
 ```
 
-`WSARecv` 도중 `overlapped`나 `recvBuffer`의 값을 변경하지 않도록 주의해야함    
+비동기 입출력 함수 실행 도중 사용하고있는 `WSAOVERLAPPED` 구조체나 버퍼를 변경하지 않도록 주의해야함    

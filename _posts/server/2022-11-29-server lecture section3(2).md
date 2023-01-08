@@ -21,6 +21,7 @@ date: 2022.11.29 18:00:00
 
 int main
 {
+	// socket() -> connect()
 	...
 	...
 
@@ -68,11 +69,23 @@ int main
 }
 ```
 
+`send()` 함수로 데이터를 송신    
+* 첫 번째 매개변수로 사용할 소켓의 디스크립터 지정     
+* 두 번째 매개변수로 보낼 데이터를 지정    
+* 세 번째 매개변수에는 보낼 데이터의 크기를 지정    
+* 네 번째 매개변수로 플래그 설정(보통은 0)    
+
+`recv()` 함수로 데이터를 수신, 매개변수의 사용은 `send()`와 동일함    
+
+[`send()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-send)    
+[`recv()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recv)    
+
 ```cpp
 // GameServer.cpp
 
 int main()
 {
+	// socket() -> bind() -> listen() -> accept()
 	...
 	...
 
@@ -317,3 +330,19 @@ int main()
 }
 ```
 
+UDP 소켓은 기본적으로 `unconnected UDP`로 생성됨   
+`unconnected UDP`는 데이터를 송신할 때마다 아래의 과정을 수행
+* UDP 소켓에 목적지 IP, 포트 정보 등록
+* 데이터 전송
+* 소켓에 등록된 정보 삭제    
+
+따라서 해당 과정을 수행할 수 있는 `sendto()`, `recvfrom()` 함수를 사용해야함    
+
+[`snedto()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-sendto)    
+[`recvfrom()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-recvfrom)    
+
+<br/>
+
+하나의 서버와 지속적으로 자주 통신해야 하는 경우 `unconnected UDP` 소켓을 사용하는건 비효율적이기 때문에 `connected UDP` 소켓을 사용    
+간단하게 `connect()` 함수를 호출하여 `connected UDP`로 변경할 수 있음    
+이 때는 목적지 정보가 저장되어있으므로 `send()`, `recv()` 함수도 사용 가능    

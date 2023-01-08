@@ -70,21 +70,6 @@ int main()
 
 	cout << "Accept" << endl;
 
-	// Overlapped IO (비동기 + 논블로킹)
-	// - Overlapped 함수를 호출 (WSARecv, WSASend 등)
-	// - Overlapped 함수가 성공했는지 확인
-	// 성공시 결과 얻어서 처리, 실패시 사유 확인
-
-	// WSASend
-	// WSARecv
-	// 1) 비동기 입출력 소켓
-	// 2) WSABUF 배열의 시작 주소 + 개수 
-	//	  Scatter-Gather 기능을 위해 배열을 사용
-	// 3) 보내거나 받은 바이트 수
-	// 4) 상세 옵션, 기본으로 0 사용
-	// 5) WSAOVERLAPPED 구조체 주소값
-	// 6) 입출력이 완료되면 OS가 호출할 콜백 함수(이벤트 사용시 사용 안함)
-
 	// Overlapped 모델 (Competion Routine 콜백 기반)
 	// - 비동기 입출력 지원하는 소켓 생성
 	// - 비동기 입출력 함수 호출 (완료 루틴의 시작 주소를 넘겨줌)
@@ -164,13 +149,43 @@ int main()
 }
 ```
 
+`_stdcall`은 함수 호출 규약(Calling Convention)의 방식 중 하나    
+호출자(Caller)와 피호출자(Callee)간 패러미터 전달방식 및 사용 후 스택 정리에 대한 규칙을 지정    
+
+[함수 호출 규약에 대한 정보가 담긴 글](https://moc0.tistory.com/36)
+
+<br/>
+
+`Competion Routine 콜백` 기반의 `Overlapped` 모델은 이벤트를 사용하는 대신 콜백함수를 사용    
+비동기 입출력 함수에서 완료 루틴의 시작 주소를 넘겨주고, 해당 함수를 호출한 쓰레드를 `Alertable wait` 상태로 만듬    
+* `Alertable wait` : 비동기 입출력을 위한 특별한 대기 상태, 비동기 입출력 함수를 요청한 쓰레드가 이 상태일 때만 완료 루틴이 호출될 수 있음    
+* `WaitForSingleObjectEx()`, `WaitForMultipleObjectsEx()`, `SleepEx()`, `WSAWaitForMultipleEvents()` 등의 함수 사용    
+비동기 입출력 작업 결과는 `APC Queue(Asynchronous Procedure Call Queue)`에 저장됨    
+* `APC Queue` : 비동기 입출력 결과 저장을 위해 운영체제가 각 쓰레드마다 할당하는 메모리 영역, 쓰레드별로 독립적    
+ `APC Queue`를 참조하여 입출력이 완료되면 완료 루틴을 호출하고, 호출이 끝나면 쓰레드가 `Alertable Wait` 상태에서 빠져나옴    
+
+<br/>
+
+루틴으로 사용되는 함수에는 요구되는 형식이 존재    
+* 첫 번째 인자로 입출력의 완료 상태를 지정    
+* 두 번째 인자로 전송된 데이터의 바이트를 지정, 오류시 0    
+* 세 번째 인자로 `WSAOVERLAPPED` 구조체를 지정    
+* 네 번째 인자로 플래그를 지정    
+
+[`OVERLAPPED_COMPLETION_ROUTINE`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nc-winsock2-lpwsaoverlapped_completion_routine)    
+
+
+<br/>
+
 이벤트 사용시
 * 소켓 하나당 이벤트 하나 연동
 * 다수의 이벤트 체크시의 한계 존재
 
 콜백 사용시
 * `WaitForSingleObjectEx`, `WaitForMultipleObjectsEx`, `SleepEx` 등을 통해 APC queue로 진입하는 순간 예약된 모든 콜백함수들을 실행
-* 콜백 함수는 `LPWSAOVERLAPPED`로 선언한 `overlapped`의 주소를 매개변수로 받는데, 이를 `session`의 주소로 캐스팅하여 사용할 수 있음(단, `overlapped`가 `session` 구조체의 처음에 위치하도록 구조가 짜여있어야 함)    
+* 콜백 함수는 `WSAOVERLAPPED` 구조체의 주소를 매개변수로 받는데, 이를 상위 구조체로 묶어둔 `session`의 주소로 캐스팅하여 사용할 수 있음(단, `overlapped`가 `session` 구조체의 처음에 위치하도록 구조가 짜여있어야 함)    
+
+<br/>
 
 모델 정리
 * Select 모델
@@ -190,8 +205,8 @@ int main()
 	* 단점 : 모든 비동기 소켓 함수에서 사용 가능하지는 않음 (accept 등), 빈번한 Alertable wait로 인한 성능 저하
 * IOCP : 끝판왕
 
-Reactor Pattern : 소켓 상태 확인 후 뒤늦게 `recv`, `send` 호출
-Proactor Pattern : `Overlapped WSA-` 기능을 이용하여 미리 `recv`, `send`를 걸어놓음
+Reactor Pattern : 소켓 상태 확인 후 뒤늦게 `recv`, `send` 호출    
+Proactor Pattern : `Overlapped WSA-` 기능을 이용하여 미리 `recv`, `send`를 걸어놓음    
 
 ***
 
@@ -287,7 +302,7 @@ int main()
 	// - Alertable Wait 상태로 들어가서 APC 큐 비우기(콜백 함수)
 	// 단, APC큐가 쓰레드마다 있다는 단점이 존재
 
-	// ICOP (Completion Port) 모델
+	// IOCP (Completion Port) 모델
 	// - APC X -> Completion Port(쓰레드마다 존재하지 않음, 중앙에서 관리하는 APC 큐)
 	// - Alertable Wait X -> CP 결과 처리를 GetQueuedCompletionStatus에서 함
 	// 멀티쓰레드와 궁합이 굉장히 좋음
@@ -351,3 +366,23 @@ int main()
 	::WSACleanup();
 }
 ```
+
+`Completion Port` 모델은 `APC Queue` 대신 `Completion Port`를 사용하는 것이 핵심    
+비동기 입출력 결과 및 쓰레드에 대한 정보를 담고있는 구조이며, `CreateIoCompletionPort()` 함수로 생성    
+* 첫 번째 인자로 `overlapped` 입출력을 지원하는 객체로서의 핸들, 또는 `INVALID_HANDLE_VALUE`로 지정함    
+* 두 번째 인자로 이미 존재하는 `completion port`를, 없을 경우 `NULL`로 지정    
+* 세 번째 인자로 `I/O completion packet`에 들어갈 부가적인 정보인 `CompletionKey`를 입력
+* 네 번째 인자로 동시에 실행할 수 잇는 작업자 쓰레드의 개수를 설정, 0으로 설정시 CPU 개수와 같을 수로 설정됨
+
+보통 `Completion Port`에 접근하는 쓰레드인 작업자(Worker) 쓰레드를 CPU 개수 * n개만큼 생성하여 사용함    
+작업자 쓰레드에서 `Completion Port`에 저장된 결과를 감시하고 처리하는 `GetQueuedCompletionStatus()` 함수를 호출하여 사용    
+* 첫 번째 인자로 `Completion Port`를 지정    
+* 두 번째 인자에 비동기 입출력 작업으로 전송된 바이트 수를 저장    
+* 세 번째 인자에 `Create
+* 네 번째 인자에 비동기 입출력 함수 호출시 사용한 `OVERLAPPED` 구조체를 받아옴    
+* 네 번째 인자로 `CreateIoCompletionPort()`시 사용한 `CompletionKey`를 받아옴    
+* 다섯 번째 인자로 작업자 쓰레드가 대기할 시간을 지정, `INFINITE`로 설정시 입출력 완료 패킷이 생성되어 운영체제가 깨울 때까지 무한정 대기    
+
+[`Overlapped` / `Completion Port` 모델에 대한 자세한 내용이 적힌 글](https://dbehdrhs.tistory.com/85)    
+[`CreateIoCompletionPort()`에 대한 자세한 내용](https://learn.microsoft.com/en-us/windows/win32/fileio/createiocompletionport)    
+[`GetQueuedCompletionStatus()`에 대한 자세한 내용](https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus)    

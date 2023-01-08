@@ -49,8 +49,8 @@ int main()
 		return 0;
 
 	// 소켓 생성
-	// socket(ad, type, protocol)
-	// ad : Address Family(AF_INET = IPv4, AF_INET6 = IPv6
+	// socket(af, type, protocol)
+	// af : Address Family(AF_INET = IPv4, AF_INET6 = IPv6
 	// type : TCP(SOCK_STREAM) vs UDP(SOCK_DGRAM)
 	// protocol : 0일경우 알아서 선택
 	// return : descriptor
@@ -95,6 +95,66 @@ int main()
 	::WSACleanup();
 }
 ```
+
+`#pragma comment(lib, "xxxx.lib")`와 같이 사용하면 라이브러리를 명시적으로 링크할 수 있음    
+기본 형식은 `#pragma comment(comment-type, ["comment string"])`
+* comment type에는 `compiler`, `exestr`, `lib`, `linker`, `user`등이 올 수 있음
+* `[]`안의 구문은 형식에 따라 필요한 것을 사용
+
+<br/>
+
+`WSAStartup` 함수는 `winsock` 동적 연결 라이브러리를 초기화하고 어플리케이션 요구사항을 충족하는지 확인함    
+* 첫 번째 매개변수인 `wVersionRequested`에서 버전값을 받으며, `MAKEWORD` 매크로를 통해 편리하게 사용할 수 있음    
+	* `WORD MAKEWORD(BYTE bLow, BYTE bHigh)`의 형식, 하위 8비트와 상위 8비트를 각각 인자로 전달    
+* 두 번째 매개변수인 `IpWSAData`에 WSADATA 구조체 포인터 주소를 넣어주면 해당 구조체에 세부 정보들이 채워짐    
+* `WSAStartup` 함수 호출시 반드시 `WSACleanup()` 함수를 호출하여 짝을 맞춰주어야함    
+
+[`WSAStartup()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup)    
+
+<br/>
+
+`socket()` 함수를 통해 소켓 생성    
+* 첫 번째 매개변수인 `af`에서 `Winsock2.h` 헤더파일에 정의되어잇는 `address family` 형식 중 하나를 받음    
+	* `AF_INET` : IPv4 / `AF_INET6` : IPv6 등이 존재
+* 두 번째 매개변수인 `type`에서 소켓 타입을 선택
+	* `SOCK_STREAM` : TCP / `SOCK_DGRAM` : UDP
+* 세 번째 매개변수에는 프로토콜을 입력
+	* 0으로 입력시 자동으로 적절한 프로토콜을 선택    
+
+[`socket()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket)    
+
+<br/>
+
+`SOCKADDR_IN` 구조체에 소켓에 사용할 정보들을 저장    
+```cpp
+typedef struct sockaddr_in {
+  short          sin_family;
+  u_short        sin_port;
+  struct in_addr sin_addr;
+  char           sin_zero[8];
+} SOCKADDR_IN, *PSOCKADDR_IN, *LPSOCKADDR_IN;
+```
+
+* `sin_family`에 `address family` 형식을 지정
+* `inet_pton()`함수를 사용해 연결할 목적지 IP 주소를 `sin_addr`에 지정
+* `htons()` 함수를 사용해 연결할 목적지 포트를 `sin_port`에 지정
+	* `htons` : host to network short   
+* `sin_zero[8]`은 전체 크기를 16바이트로 맞추기 위한 더미    
+
+[`SOCKADDR_IN`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/ns-winsock-sockaddr_in)    
+[`inet_pton()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_pton)    
+[`htons()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-htons)    
+
+<br/>
+
+`connect()` 함수로 생성한 소켓을 서버의 주소에 연결 요청    
+* 첫 번째 매개변수에는 연결할 소켓을 지정
+* 두 번째 매개변수에는 `SOCKADDR` 구조체를 지정
+	* `SOCKADDR` 구조체는 `SOCKADDR_IN`과 같은 데이터를 가짐
+	* 단, IP주소와 포트 번호가 `data[14]`로 묶여있는 `SOCKADDR`보다 `SOCKADDR_IN`이 사용하기 편리함    
+
+[`connect()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect)
+
 
 ```cpp
 // GameServer.cpp
@@ -170,4 +230,26 @@ int main()
 }
 ```
 
+`bind()` 함수로 `listen`소켓을 바인딩 - 소켓에 IP주소와 포트를 할당    
+매개변수는 `connect()` 함수와 동일    
+[`bind()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-bind)    
 
+<br/>
+
+`listen()` 함수로 소켓을 통해 들어오는 연결을 대기열에 추가함    
+* 첫 번째 매개변수로 `listen`소켓을 지정    
+* 두 번째 매개변수로 대기열의 크기를 지정    
+
+[`listen()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-listen)    
+
+<br/>
+
+`accept()` 함수로 수신 대기열에 있는 클라이언트의 연결 요청을 받아들이며 새 소켓을 생성    
+* 첫 번째 매개변수로 `listen` 소켓을 지정    
+* 두 번째 매개변수로 클라이언트의 주소 및 포트정보를 구조체에 복사하여 넘겨줌    
+* 세 번째 매개변수로 구조체의 크기    
+
+[`accept()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-accept)    
+
+`inet_ntop()` 함수는 IPv4나 IPv6 주소를 binary 형태에서 사람이 알아보기 쉬운 텍스트로 전환해줌    
+[`inet_ntop()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_ntop)    
