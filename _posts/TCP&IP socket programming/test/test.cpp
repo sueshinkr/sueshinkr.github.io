@@ -1,42 +1,28 @@
+#undef UNICODE
+#undef _UNICODE
 #include <iostream>
-#include <fcntl.h>
-#include <unistd.h>
-#define BUF_SIZE 100
+#include <arpa/inet.h>
 
 using namespace std;
 
-void	error_handling(char* message);
-
-int		main()
+int main(int argc, char *argv[])
 {
-	int		fd;
-	char	buf[] = "HELOOOOOOO";
-	char	buf2[BUF_SIZE];
+	char* strAddr = "203.211.218.102:9190";
 
-	fd = open("data.txt", O_CREAT|O_WRONLY|O_TRUNC, 0644);
-	if (fd == -1)
-		error_handling("open() error");
-	cout << "file descriptor : " << fd << endl;
+	char		strAddrBuf[50];
+	sockaddr_in	servAddr;
+	int			size;
 
-	if (write(fd, buf, sizeof(buf)) == -1)
-		error_handling("write() error");
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-	close(fd);
+	size = sizeof(servAddr);
+	WSAStringToAddress(strAddr, AF_INET, NULL, (SOCKADDR*)&servAddr, &size);
+	
+	size = sizeof(strAddrBuf);
+	WSAAddressToString((SOCKADDR*)&servAddr, sizeof(servAddr), NULL, strAddrBuf, &size);
 
-	fd = open("data.txt", O_RDONLY);
-
-	if (read(fd, buf2, sizeof(buf)) == -1)
-		error_handling("read() error");
-	cout << "file data : " << buf2 << endl;
-
-	close(fd);
-
+	cout << "Second conv result : " << strAddrBuf << endl;
+	WSACleanup();
 	return 0;
-}
-
-void	error_handling(char* message)
-{
-	fputs(message, stderr);
-	fputc('\n', stderr);
-	exit(1);
 }

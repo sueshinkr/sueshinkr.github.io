@@ -1,10 +1,11 @@
-// hello_client_iterative_win.cpp
+// echo_client_win.cpp
 
 #include <iostream>
 #include <winsock2.h>
 
 using namespace std;
 
+#define BUF_SIZE 1024
 void	ErrorHandling(char *message);
 
 int		main(int argc, char *argv[])
@@ -13,7 +14,7 @@ int		main(int argc, char *argv[])
 	SOCKET		hSocket;
 	SOCKADDR_IN	servAddr;
 
-	char	message[30];
+	char	message[BUF_SIZE];
 	int		strLen;
 
 	if(argc != 3)
@@ -47,13 +48,12 @@ int		main(int argc, char *argv[])
 		if (!strcmp(message, "q") || !strcmp(message, "Q"))
 			break;
 
-
+		send(hSocket, message, strlen(message), 0);
+		strLen = recv(hSocket, message, BUF_SIZE - 1, 0);
+		message[strLen] = 0;
+		cout << "Message from server : " << message << endl;
 	}
-	strLen = recv(hSocket, message, sizeof(message) - 1, 0);
-	if (strLen == -1)
-		error_handling("read() error");
 
-	cout << "Message from server : " << message << endl;
 	closesocket(hSocket);
 	WSACleanup();
 	return 0;

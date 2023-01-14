@@ -1,10 +1,11 @@
-// hello_server_iterative_win.cpp
+// echo_server_win.cpp
 
 #include <iostream>
 #include <winsock2.h>
 
 using namespace std;
 
+#define BUF_SIZE 1024
 void	ErrorHandling(char* message);
 
 int		main(int argc, char* argv[])
@@ -13,8 +14,9 @@ int		main(int argc, char* argv[])
 	SOCKET		hServSock, hClntSock;
 	SOCKADDR_IN	servAddr, clntAddr;
 
-	int		szClntAddr;
-	char	message = "Hello World!";
+	int		clntAddrSize;
+	char	message[BUF_SIZE];
+	int		strLen, i;
 
 	if (argc != 2)
 	{
@@ -40,17 +42,18 @@ int		main(int argc, char* argv[])
 	if (::listen(hServSock, 5) == SOCKET_ERROR)
 		ErrorHandling("listen() error");
 	
-	szClntAddr = sizeof(clntAddr);
+	clntAddrSize = sizeof(clntAddr);
 
-	while (1)
+	for (i = 0; i < 5; i++)
 	{
-		hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &szClntAddr);
+		hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &clntAddrSize);
 		if (hClntSock == INVALID_SOCKET)
 			ErrorHandling("accept() error");
 		else
-			cout << "Connected clinet " << i + 1 << endl;
+			cout << "Connected client " << i + 1 << endl;
 
-		send(hClntSock, message, sizeof(message), 0);
+		while ((strLen = recv(hClntSock, message, BUF_SIZE, 0)) != 0)
+			send(hClntSock, message, strLen, 0);
 
 		closesocket(hClntSock);
 	}
