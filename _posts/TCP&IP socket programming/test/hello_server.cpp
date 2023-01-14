@@ -1,3 +1,5 @@
+// hello_server.cpp
+
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -18,6 +20,7 @@ int		main(int argc, char *argv[])
 
 	socklen_t	clnt_addr_size;
 	string		message = "Hello World!";
+
 	if(argc != 2)
 	{
 		cout << "Usage : " << argv[0] << " <port>\n";
@@ -44,7 +47,17 @@ int		main(int argc, char *argv[])
 	if (clnt_sock == -1)
 		error_handling("accept() error");
 
-	write(clnt_sock, message.c_str(), sizeof(message));
+	int	idx = 0, str_len = 0, write_len = 0;
+	while ((write_len = write(clnt_sock, &((message.c_str())[idx++]), 1)))
+	{
+		if (write_len == -1)
+			error_handling("write() error!");
+
+		str_len += write_len;
+		if (str_len == message.length())
+			break;
+	}
+
 	close(clnt_sock);
 	close(serv_sock);
 	return 0;

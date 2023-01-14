@@ -1,3 +1,5 @@
+// hello_client.cpp
+
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -34,6 +36,9 @@ int		main(int argc, char *argv[])
 
 	if (::connect(sock, (sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
 		error_handling("connect() error");
+
+	for (int i = 0; i < 3000; i++)
+		cout << "Wait time " << i << endl;
 
 	str_len = read(sock, message, sizeof(message) - 1);
 	if (str_len == -1)
