@@ -1,4 +1,4 @@
-// hello_server.cpp
+// file_transfer_server.cpp
 
 #include <iostream>
 #include <fstream>
@@ -8,6 +8,7 @@
 
 using namespace std;
 
+#define BUFFER_SIZE 1024
 void	error_handling(char *message);
 
 int		main(int argc, char *argv[])
@@ -17,10 +18,8 @@ int		main(int argc, char *argv[])
 
 	struct sockaddr_in	serv_addr;
 	struct sockaddr_in	clnt_addr;
-
-	socklen_t	clnt_addr_size;
-	string		message = "Hello World!";
-
+	socklen_t			clnt_addr_size;
+	
 	if(argc != 2)
 	{
 		cout << "Usage : " << argv[0] << " <port>\n";
@@ -47,15 +46,23 @@ int		main(int argc, char *argv[])
 	if (clnt_sock == -1)
 		error_handling("accept() error");
 
-	int	idx = 0, str_len = 0, write_len = 0;
-	while ((write_len = write(clnt_sock, &((message.c_str())[idx++]), 1)))
+	char	filename[BUFFER_SIZE];
+	int		filename_len;
+	if (read(clnt_sock, &filename_len, sizeof(int)))
 	{
-		if (write_len == -1)
-			error_handling("write() error!");
+		read(clnt_sock, filename, filename_len);
 
-		str_len += write_len;
-		if (str_len == message.length())
-			break;
+		cout << "filename : " << filename << endl;
+		if (access(filename, F_OK) == -1)
+			error_handling("file doesn't exist");
+		else
+		{
+			FILE	*sendfile = fopen(filename, "r");
+			char	buf[1];
+
+			while (fread(buf, sizeof(buf), 1, sendfile))
+				write(clnt_sock, buf, 1);
+		}
 	}
 
 	close(clnt_sock);

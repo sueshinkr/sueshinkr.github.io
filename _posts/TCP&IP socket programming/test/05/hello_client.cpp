@@ -1,4 +1,4 @@
-// hello_client.cpp
+// q5_tcp_client.cpp
 
 #include <iostream>
 #include <fstream>
@@ -8,6 +8,7 @@
 
 using namespace std;
 
+#define BUFFER_SIZE 1024
 void	error_handling(char *message);
 
 int		main(int argc, char *argv[])
@@ -15,9 +16,6 @@ int		main(int argc, char *argv[])
 	int	sock;
 
 	struct sockaddr_in	serv_addr;
-
-	char	message[30];
-	int		str_len;
 
 	if(argc != 3)
 	{
@@ -37,14 +35,26 @@ int		main(int argc, char *argv[])
 	if (::connect(sock, (sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
 		error_handling("connect() error");
 
-	for (int i = 0; i < 3000; i++)
-		cout << "Wait time " << i << endl;
+	for (int i = 0; i < 3; i++)
+	{
+		char	str[BUFFER_SIZE];
+		int		write_len, read_len;
 
-	str_len = read(sock, message, sizeof(message) - 1);
-	if (str_len == -1)
-		error_handling("read() error");
+		cout << "Read message from server : ";
+		read(sock, &read_len, sizeof(int));
+		if (read(sock, str, read_len) != read_len)
+			error_handling("read() error!");
+		cout << str << endl;
+		memset(str, 0, read_len);
 
-	cout << "Message from server : " << message << endl;
+		cout << "Write message to server : ";
+		cin.getline(str, BUFFER_SIZE);
+		write_len = strlen(str);
+		write(sock, &write_len, sizeof(int));
+		if (write(sock, str, write_len) != write_len)
+			error_handling("write() error!");
+	}
+
 	close(sock);
 	return 0;
 }
