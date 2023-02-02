@@ -1,4 +1,4 @@
-// echo_storeserver.c
+// echo_storeserver.cpp
 // 클라이언트는 이전의 echo_mpclient.cpp를 사용
 
 #include <iostream>
