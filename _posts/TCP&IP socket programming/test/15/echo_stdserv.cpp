@@ -1,4 +1,4 @@
-// echo_stdserv.c
+// echo_stdserv.cpp
 
 #include <iostream>
 #include <unistd.h>
