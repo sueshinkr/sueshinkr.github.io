@@ -378,11 +378,11 @@ int main()
 작업자 쓰레드에서 `Completion Port`에 저장된 결과를 감시하고 처리하는 `GetQueuedCompletionStatus()` 함수를 호출하여 사용    
 * 첫 번째 인자로 `Completion Port`를 지정    
 * 두 번째 인자에 비동기 입출력 작업으로 전송된 바이트 수를 저장    
-* 세 번째 인자에 `Create
+* 세 번째 인자에 `COmpletionKey`를 저장    
 * 네 번째 인자에 비동기 입출력 함수 호출시 사용한 `OVERLAPPED` 구조체를 받아옴    
 * 네 번째 인자로 `CreateIoCompletionPort()`시 사용한 `CompletionKey`를 받아옴    
 * 다섯 번째 인자로 작업자 쓰레드가 대기할 시간을 지정, `INFINITE`로 설정시 입출력 완료 패킷이 생성되어 운영체제가 깨울 때까지 무한정 대기    
 
 [`Overlapped` / `Completion Port` 모델에 대한 자세한 내용이 적힌 글](https://dbehdrhs.tistory.com/85)    
-[`CreateIoCompletionPort()`에 대한 자세한 내용](https://learn.microsoft.com/en-us/windows/win32/fileio/createiocompletionport)    
-[`GetQueuedCompletionStatus()`에 대한 자세한 내용](https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus)    
+[`CreateIoCompletionPort()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/fileio/createiocompletionport)    
+[`GetQueuedCompletionStatus()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus)    

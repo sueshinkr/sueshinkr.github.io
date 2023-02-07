@@ -102,7 +102,6 @@ int main()
 	// eventObject : socket과 연동된 이벤트 객체 핸들을 넘겨줄시 이벤트 객체를 non-signaled 상태로 변경
 	// networkEvent : 네트워크 이벤트 / 오류 정보가 저장
 	
-
 	vector<WSAEVENT> wsaEvents;
 	vector<Session> sessions;
 	sessions.reserve(100);

@@ -49,8 +49,9 @@ private:
 
 // TEMP
 extern IocpCore GIocpCore;
+```
 
-
+```cpp
 // iocpCore.cpp
 
 #include "IocpCore.h"
@@ -205,6 +206,9 @@ void IocpEvent::Init()
 	OVERLAPPED::OffsetHigh = 0;
 }
 ```
+
+`OVERLAPPED`를 상속받는 `IocpEvent`의 경우 `OVERLAPPED` 구조체가 메모리의 시작주소에 들어가게되므로 호환되게 사용 가능    
+그러나 `virtual` 키워드를 쓸 경우 가상함수 테이블이 메모리 시작주소에 생성되므로 사용하지 않아야 함    
 
 ```cpp
 // Listener.h
@@ -363,6 +367,13 @@ void Listener::ProcessAccept(AcceptEvent* acceptEvent)
 }
 ```
 
+`getpeername()` 함수는 연결된 상대측 소켓의 주소 정보를 가져옴    
+* 첫 번재 인자에 소켓을 지정
+* 두 번째 인자로 주소정보가 담긴 `sockaddr` 구조체의 주소 저장
+* 세 번째 인자로 가져온 정보의 크기 저장
+
+[`getpeername()`에 대한 자세한 정보](https://learn.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-getpeername)    
+
 ```cpp
 // Session.h
 
@@ -430,3 +441,37 @@ void Session::Dispatch(IocpEvent* iocpEvent, int32 numOfBytes)
 	// TODO
 }
 ```
+
+```cpp
+// GameServer.cpp
+
+int main()
+{
+	Listener listener;
+	listener.StartAccept(NetAddress(L"127.0.0.1", 7777));
+
+	for (int32 i = 0; i < 5; i++)
+	{
+		GThreadManager->Launch([=]()
+			{
+				while (true)
+				{
+					GIocpCore.Dispatch();
+				}
+			});
+	}
+
+	GThreadManager->Join();
+}
+```
+
+작동 구조 정리
+1. `listnerSocket` 생성
+2. `Completion Port(IocpCore)`에 `listenerSocket` 등록 및 연결
+3. `listenerSocket` 설정
+4. `AcceptEvent` 생성
+	* `clientSocket` 생성
+	* `AcceptEvent`를 통해 `clientSocket`에 `accept`를 걸어줌
+5. `GetQueuedCompetionStatus` 실행
+6. `Completion packet`이 없다면 쓰레드 대기, 있으면 `Listener::Dispatch` 수행
+7. 4번에서 `AcceptEvent`를 통해 연결된 `clientSocket`과 IP주소 등을 받아 사용
