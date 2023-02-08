@@ -1,4 +1,5 @@
-// chat_server.cpp
+// echo_mtserv.cpp
+// 클라이언트는 이전의 echo.client.cpp를 사용
 
 #include <iostream>
 #include <unistd.h>
@@ -15,8 +16,7 @@ void*	handle_clnt(void *arg);
 void	send_msg(char *msg, int len);
 void	error_handling(char *msg);
 
-int		clnt_cnt = 0;
-int		clnt_socks[MAX_CLNT];
+char	msg[BUF_SIZE];
 pthread_mutex_t	mutx;
 
 int	main(int argc, char *argv[])
@@ -50,11 +50,6 @@ int	main(int argc, char *argv[])
 		clnt_adr_sz = sizeof(clnt_adr);
 		clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_adr, &clnt_adr_sz);
 
-		pthread_mutex_lock(&mutx);
-		clnt_socks[clnt_cnt++] = clnt_sock;
-		pthread_mutex_unlock(&mutx);
-
-		cout << "clnt_sock[" << clnt_cnt - 1 << "] : " << clnt_sock << endl;
 		pthread_create(&t_id, NULL, handle_clnt, (void*)&clnt_sock);
 		pthread_detach(t_id);
 		cout << "Connected client IP : " << inet_ntoa(clnt_adr.sin_addr) << endl;
@@ -67,34 +62,20 @@ void*	handle_clnt(void *arg)
 {
 	int		clnt_sock = *((int*)arg);
 	int		str_len = 0;
-	char	msg[BUF_SIZE];
 
-	while ((str_len = read(clnt_sock, msg, sizeof(msg))) != 0)
-		send_msg(msg, str_len);
-
-	pthread_mutex_lock(&mutx);
-
-	for (int i = 0; i < clnt_cnt; i++)	// remove disconnected client
+	while (1)
 	{
-		if (clnt_sock == clnt_socks[i])
-		{
-			while (i++ < clnt_cnt - 1)
-				clnt_socks[i] = clnt_socks[i + 1];
+		pthread_mutex_lock(&mutx);
+		str_len = read(clnt_sock, msg, sizeof(msg));
+		if (str_len <= 0)
 			break;
-		}
+		else
+			write(clnt_sock, msg, str_len);
+		pthread_mutex_unlock(&mutx);
 	}
-	clnt_cnt--;
-	pthread_mutex_unlock(&mutx);
+
 	close(clnt_sock);
 	return NULL;
-}
-
-void	send_msg(char *msg, int len)	// send to all
-{
-	pthread_mutex_lock(&mutx);
-	for (int i = 0; i < clnt_cnt; i++)
-		write(clnt_socks[i], msg, len);
-	pthread_mutex_unlock(&mutx);
 }
 
 void	error_handling(char *message)
