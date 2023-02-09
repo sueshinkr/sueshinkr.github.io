@@ -1,4 +1,5 @@
 // IOCPEchoServ_win.cpp
+// 클라이언트는 이전의 StableEchoClnt_win.cpp를 사용
 
 #include <iostream>
 #include <process.h>
