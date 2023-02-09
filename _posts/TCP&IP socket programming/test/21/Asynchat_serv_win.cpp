@@ -1,16 +1,20 @@
-// AsynNotiEchoServ_win.cpp
-// 클라이언트는 아무 에코 클라이언트나 사용
+// Asynchat_serv_win.cpp
 
 #include <iostream>
-#include <winsock2.h>
+#include <unistd.h>
+#include <windows.h>
+#include <process.h>
 
 using namespace std;
 
 #define BUF_SIZE 100
+#define MAX_CLNT 256
+
 
 void	CompressSockets(SOCKET hSockArr[], int idx, int total);
 void	CompressEvents(WSAEVENT hEventArr[], int idx, int total);
-void	ErrorHandling(char *msg);
+void	SendMsg(SOCKET clntSocks[], int clntCnt, char *msg, int len);
+void	ErrorHandling(char* message);
 
 int	main(int argc, char *argv[])
 {
@@ -86,6 +90,7 @@ int	main(int argc, char *argv[])
 					hEventArr[numOfClntSock] = newEvent;
 					hSockArr[numOfClntSock] = hClntSock;
 					numOfClntSock++;
+
 					cout << "connected new client...\n";
 				}
 
@@ -97,7 +102,7 @@ int	main(int argc, char *argv[])
 						break;
 					}
 					strLen = recv(hSockArr[sigEventIdx], msg, sizeof(msg), 0);
-					send(hSockArr[sigEventIdx], msg, strLen, 0);
+					SendMsg(hSockArr, numOfClntSock, msg, strLen);
 				}
 
 				if (netEvents.lNetworkEvents & FD_CLOSE)	// 종료요청시
@@ -117,8 +122,15 @@ int	main(int argc, char *argv[])
 			}
 		}
 	}
+	closesocket(hServSock);
 	WSACleanup();
 	return 0;
+}
+
+void	SendMsg(SOCKET clntSocks[], int clntCnt, char *msg, int len)	// send to all
+{
+	for (int i = 0; i < clntCnt; i++)
+		send(clntSocks[i], msg, len, 0);
 }
 
 void	CompressSockets(SOCKET hSockArr[], int idx, int total)
@@ -133,7 +145,7 @@ void	CompressEvents(WSAEVENT hEventArr[], int idx, int total)
 		hEventArr[i] = hEventArr[i + 1];
 }
 
-void	ErrorHandling(char *msg)
+void	ErrorHandling(char *message)
 {
 	fputs(message, stderr);
 	fputc('\n', stderr);
