@@ -78,6 +78,13 @@
 			</ul>
 			<ul>
 				{% for category in site.categories %}
+					{% if category[0] == "TCP_IP" %}
+						<li><a href="/categories/TCP_IP" class="">TCP_IP ({{category[1].size}})</a></li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+			<ul>
+				{% for category in site.categories %}
 					{% if category[0] == "Server_lecture" %}
 						<li><a href="/categories/Server_lecture" class="">Server_lecture ({{category[1].size}})</a></li>
 					{% endif %}
